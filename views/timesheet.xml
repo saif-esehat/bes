@@ -49,7 +49,7 @@
                                     <tree editable="bottom">
                                         <!-- <field name="arrival_date_time"/> -->
                                         <field name="commence_exam"/>
-                                        <!-- <field name="lunch_break"/> -->
+                                        <field name="remarks"/>
                                         <field name="completion_time"/>
                                         <field name="candidate_examined"/>
                                         <field name="debriefing_inst"/>

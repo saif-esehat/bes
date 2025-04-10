@@ -67,10 +67,8 @@
                             <field name="dob"/>
                         </group>
                        
-
-
                     <footer>
-                        <button string="Edit" type="object" class="oe_highlight" name="edit_info"/>
+                        <button string="Update" type="object" class="oe_highlight" name="edit_info"/>
                     </footer>                    
                 </form>
             </field>

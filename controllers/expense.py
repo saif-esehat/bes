@@ -198,6 +198,7 @@ class ExpenseController(http.Controller):
         timesheet_line.write({
             'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
             'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
+            'remarks': kw.get('remarks'),
             'candidate_examined': kw.get('candidates_examined'),
             'debriefing_inst': kw.get('debriefing_time'),
         })
@@ -224,9 +225,18 @@ class ExpenseController(http.Controller):
         timesheet_line.write({
             'commence_exam': datetime.strptime(kw.get('commencement_time'), '%Y-%m-%dT%H:%M'),
             'completion_time': datetime.strptime(kw.get('completion_time'), '%Y-%m-%dT%H:%M'),
+            'remarks': kw.get('remarks'),
             'candidate_examined': kw.get('candidates_examined'),
             'debriefing_inst': kw.get('debriefing_time'),
         })
+
+        file_field_map = {
+            'left_residence_line_id': 'supporting_document_left_residence',
+            'arrival_institute_line_id': 'supporting_document_arrival_institute',
+            'left_institute_line_id': 'supporting_document_left_institute',
+            'arrival_residence_line_id': 'supporting_document_arrival_residence',
+        }
+
 
                 # Retrieve and update individual travel records
         travel_updates = [
@@ -234,21 +244,25 @@ class ExpenseController(http.Controller):
                 'date_time': kw.get('left_residence_date_time'),
                 'mode_of_travel': kw.get('left_residence_mode_of_travel'),
                 'expense': kw.get('left_residence_expenses'),
+                'supporting_document': kw.get('left_residence_expenses'),
             }),
             ('arrival_institute_line_id', {
                 'date_time': kw.get('arrival_institute_hotel_date_time'),
                 'mode_of_travel': kw.get('arrival_institute_hotel_mode_of_travel'),
                 'expense': kw.get('arrival_institute_hotel_expenses'),
+                'supporting_document': kw.get('left_residence_expenses'),
             }),
             ('left_institute_line_id', {
                 'date_time': kw.get('left_institute_date_time'),
                 'mode_of_travel': kw.get('left_institute_mode_of_travel'),
                 'expense': kw.get('left_institute_expenses'),
+                'supporting_document': kw.get('left_residence_expenses'),
             }),
             ('arrival_residence_line_id', {
                 'date_time': kw.get('arrival_residence_date_time'),
                 'mode_of_travel': kw.get('arrival_residence_mode_of_travel'),
                 'expense': kw.get('arrival_residence_expenses'),
+                'supporting_document': kw.get('left_residence_expenses'),
             })
         ]
         
@@ -262,6 +276,14 @@ class ExpenseController(http.Controller):
                         'mode_of_travel': fields['mode_of_travel'],
                         'expenses': fields['expense'],
                     })
+                    # Get file from the request (if uploaded)
+                    file_field = file_field_map.get(line_id_key)
+                    uploaded_file = request.httprequest.files.get(file_field)
+                    if uploaded_file:
+                        travel_record.write({
+                            'supporting_document': base64.b64encode(uploaded_file.read()),
+                            'supporting_document_filename': uploaded_file.filename,
+                        })
 
         # import wdb;wdb.set_trace();
 

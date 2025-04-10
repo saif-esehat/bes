@@ -424,15 +424,19 @@
                                     <input type="hidden" id="assign_id" name="assign_id"/>
                                     <input type="hidden" id="exam_date" name="exam_date" t-att-value='assignment.exam_date'/>
                                     <div class="form-group">
-                                        <label for="commencement_time">Commencement Time of Exam</label>
+                                        <label for="commencement_time">Commencement Date &amp; Time of Exam</label>
                                         <input type="datetime-local" class="form-control" id="commencement_time" name="commencement_time" required='1'/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="completion_time">Completion Time of Exam</label>
+                                        <label for="completion_time">Completion Date &amp; Time of Exam</label>
                                         <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" required='1'/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="debriefing_time">Debriefing Time</label>
+                                        <label for="remarks">Remark( give reason if commencement date and assignment date is different)</label>
+                                        <input type="text" class="form-control" id="remarks" name="remarks"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="debriefing_time">Debriefing Time(hrs)</label>
                                         <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" required='1'/>
                                     </div>
                                 </div>
@@ -445,7 +449,7 @@
                                                 <th>Date &amp; Time</th>
                                                 <th>Mode of Travel</th>
                                                 <th>Expense(if occured)</th>
-                                                <th>Documents</th>
+                                                <th>Supporting Documents</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -546,15 +550,19 @@
 
                                     <t t-foreach="timesheets.timesheet_examinations" t-as="timesheet">
                                         <div class="form-group">
-                                            <label for="commencement_time">Commencement Time</label>
+                                            <label for="commencement_time">Commencement Date &amp; Time of Exam</label>
                                             <input type="datetime-local" class="form-control" id="commencement_time" name="commencement_time" t-att-value ="timesheet.commence_exam"/>
                                         </div>
                                         <div class="form-group">
-                                            <label for="completion_time">Completion Time</label>
+                                            <label for="completion_time">Completion Date &amp; Time of Exam</label>
                                             <input type="datetime-local" class="form-control" id="completion_time" name="completion_time" t-att-value ="timesheet.completion_time"/>
                                         </div>
                                         <div class="form-group">
-                                            <label for="debriefing_time">Debriefing Time</label>
+                                            <label for="remarks">Remark( give reason if commencement date and assignment date is different)</label>
+                                            <input type="text" class="form-control" id="remarks" name="remarks"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="debriefing_time">Debriefing Time(hrs)</label>
                                             <input type="number" class="form-control" id="debriefing_time" name="debriefing_time" t-att-value ="timesheet.debriefing_inst"/>
                                         </div>
                                     </t>
@@ -599,6 +607,9 @@
                                                             <input type="number" class="form-control" name="left_residence_expenses" id="left_residence_expenses"
                                                                 t-att-value="record.expenses or ''"/>
                                                         </td>
+                                                        <td>
+                                                            <input type="file" class="form-control" name="supporting_document_left_residence" id="supporting_document_left_residence" accept=".pdf, .jpg, .jpeg, .png"/>
+                                                        </td>
                                                         
 
                                                     </tr>
@@ -630,6 +641,9 @@
                                                             <input type="number" class="form-control" name="arrival_institute_hotel_expenses" id="arrival_institute_hotel_expenses"
                                                                 t-att-value="record.expenses or ''"/>
                                                         </td>
+                                                        <td>
+                                                            <input type="file" class="form-control" name="supporting_document_arrival_institute" id="supporting_document_arrival_institute" accept=".pdf, .jpg, .jpeg, .png"/>
+                                                        </td>
                                                     </tr>
                                                 </t>
 
@@ -659,6 +673,9 @@
                                                             <input type="number" class="form-control" name="left_institute_expenses" id="left_institute_expenses"
                                                                 t-att-value="record.expenses or ''"/>
                                                         </td>
+                                                        <td>
+                                                            <input type="file" class="form-control" name="supporting_document_left_institute" id="supporting_document_left_institute" accept=".pdf, .jpg, .jpeg, .png"/>
+                                                        </td>
                                                     </tr>
                                                 </t>
 
@@ -687,6 +704,9 @@
                                                         <td>
                                                             <input type="number" class="form-control" name="arrival_residence_expenses" id="arrival_residence_expenses"
                                                                 t-att-value="record.expenses or ''"/>
+                                                        </td>
+                                                        <td>
+                                                            <input type="file" class="form-control" name="supporting_document_arrival_residence" id="supporting_document_arrival_residence" accept=".pdf, .jpg, .jpeg, .png"/>
                                                         </td>
                                                     </tr>
                                                 </t>

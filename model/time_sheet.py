@@ -51,6 +51,7 @@ class TimesheetLines(models.Model):
     candidate_examined = fields.Integer(string='No.of candidates examined',related='time_sheet_id.examiner_assignment.candidates_count')
     debriefing_inst = fields.Integer(string='Time spent for debriefing the Institute (Last day of examination):')
     travel_details = fields.One2many('travel.details', 'time_sheet_id', string="Travel Details")
+    remarks = fields.Text(string='Remarks')
 
 class TravelDetails(models.Model):
     _name = 'travel.details'

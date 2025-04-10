@@ -460,7 +460,7 @@ class ExamMiscExpenseApprovalWizard(models.TransientModel):
         ('approved_ec', 'EC Approved'),
         ('pending','Pending'),
         ('modified_approved','Modified & Approved')
-    ], string='State',related="expense.approval_status")
+    ], string='Status',related="expense.approval_status")
     
     modification_comment = fields.Text(string='Modification Comment')
     total_expenses = fields.Integer(string="Total Expenses",related="expense.total_expenses")
@@ -545,7 +545,7 @@ class ExamMiscExpense(models.Model):
     def open_approval_wizard(self):
                 
         return {
-            'name': 'Expense Approval Wizard',
+            'name': 'Expense Approval',
             'type': 'ir.actions.act_window',
             'res_model': 'exam.misc.expense.approval.wizard',
             'view_mode': 'form',
