@@ -391,6 +391,7 @@
                     <field name="attendance_criteria"  optional="show" widget="badge" decoration-success= "attendance_criteria == 'passed'" decoration-danger="attendance_criteria == 'pending'"/>
                     <field name="ship_visit_criteria"  optional="show" widget="badge" decoration-success= "ship_visit_criteria == 'passed'" decoration-danger="ship_visit_criteria == 'pending'"/>
                     <field name="absent_status" optional="hide"/>
+                    <field name="absent_status_repeater" optional="hide"/>
                     <!-- <field name="stcw_criteria" optional="show"/>
                     <field name="attendance_criteria" optional="show"/>
                     <field name="ship_visit_criteria" optional="show"/> -->

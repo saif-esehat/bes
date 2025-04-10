@@ -400,7 +400,7 @@ class ExaminationReport(models.Model):
                 for record in applied_records:
                     index = 0
                     row = [ ]
-                    if record.gsk_oral_prac_carry_forward:
+                    if record.gsk_oral_prac_carry_forward and record.gsk_oral_prac_status == 'passed':
                         gsk_status = "AP"
                         row.append(gsk_status)
                     elif record.gsk_oral_prac_status == 'passed':
@@ -413,7 +413,7 @@ class ExaminationReport(models.Model):
                         gsk_status = "F"
                         row.append(gsk_status)
                          
-                    if record.mek_oral_prac_carry_forward:
+                    if record.mek_oral_prac_carry_forward and record.mek_oral_prac_status == 'passed':
                         mek_status = "AP"
                         row.append(mek_status)
                     elif record.mek_oral_prac_status == 'passed':
@@ -426,7 +426,7 @@ class ExaminationReport(models.Model):
                         mek_status = "F"
                         row.append(mek_status)
                     
-                    if record.mek_online_carry_forward:
+                    if record.mek_online_carry_forward and record.mek_online_status == 'passed':
                         mek_online_status = "AP"
                         row.append(mek_online_status)
                     elif record.mek_online_status == 'passed':
@@ -439,7 +439,7 @@ class ExaminationReport(models.Model):
                         mek_online_status = "F"
                         row.append(mek_online_status)
                     
-                    if record.gsk_online_carry_forward:
+                    if record.gsk_online_carry_forward and record.gsk_online_status == 'passed':
                         gsk_online_status = "AP"
                         row.append(gsk_online_status)
                     elif record.gsk_online_status == 'passed':

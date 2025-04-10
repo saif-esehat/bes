@@ -3789,7 +3789,83 @@ class GPExam(models.Model):
     absent_status = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Absent Status",compute="_compute_absent_status",store=True)
+    ],string="Absent Status (Fresh)) ",compute="_compute_absent_status",store=True)
+    
+    absent_status_repeater = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+    ],string="Absent Status (Repeater) ",compute="_compute_absent_status_repeater",store=True)
+    
+    @api.depends('gsk_oral_prac_attendance','gsk_online_attendance','mek_oral_prac_attendance','mek_online_attendance')
+    def _compute_absent_status_repeater(self):
+        for record in self:
+            index = 0
+            row = [ ]
+            
+            if record.gsk_oral_prac_carry_forward and record.gsk_oral_prac_status == 'passed':
+                gsk_status = "AP"
+                row.append(gsk_status)
+            elif record.gsk_oral_prac_status == 'passed':
+                gsk_status = "P"
+                row.append(gsk_status)
+            elif record.gsk_oral_prac_attendance == 'absent':
+                    gsk_status = "A"
+                    row.append(gsk_status)
+            else:
+                gsk_status = "F"
+                row.append(gsk_status)
+                    
+            if record.mek_oral_prac_carry_forward and record.mek_oral_prac_status == 'passed':
+                mek_status = "AP"
+                row.append(mek_status)
+            elif record.mek_oral_prac_status == 'passed':
+                mek_status = "P"
+                row.append(mek_status)
+            elif record.mek_oral_prac_attendance == 'absent':
+                    mek_status = "A"
+                    row.append(mek_status)
+            else:
+                mek_status = "F"
+                row.append(mek_status)
+            
+            if record.mek_online_carry_forward and record.mek_online_status == 'passed':
+                mek_online_status = "AP"
+                row.append(mek_online_status)
+            elif record.mek_online_status == 'passed':
+                mek_online_status = "P"
+                row.append(mek_online_status)
+            elif record.mek_online_attendance == 'absent':
+                    mek_online_status = "A"
+                    row.append(mek_online_status)
+            else:
+                mek_online_status = "F"
+                row.append(mek_online_status)
+            
+            if record.gsk_online_carry_forward and record.gsk_online_status == 'passed':
+                gsk_online_status = "AP"
+                row.append(gsk_online_status)
+            elif record.gsk_online_status == 'passed':
+                gsk_online_status = "P"
+                row.append(gsk_online_status)
+            elif record.gsk_online_attendance == 'absent':
+                    gsk_online_status = "A"
+                    row.append(gsk_online_status)
+            else:
+                gsk_online_status = "F"
+                row.append(gsk_online_status)
+            
+            allowed_values = {'AP', 'A'}
+
+            # Convert the record to a set to find unique values
+            unique_values = set(row)
+            # absent_status = False
+            # Check if the unique values are a subset of allowed values
+            if unique_values.issubset(allowed_values) and len(unique_values) <= len(allowed_values):
+                record.absent_status_repeater = 'absent'
+            else:
+                record.absent_status_repeater = 'present'
+                
+                # absent = absent + 1
     
     @api.depends('gsk_oral_prac_attendance','gsk_online_attendance','mek_oral_prac_attendance','mek_online_attendance')
     def _compute_absent_status(self):
