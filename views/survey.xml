@@ -571,6 +571,7 @@
                 <xpath expr="//div[@class='oe_title']" position="before">
                     <label for="q_no" />
                     <field name="q_no" />
+                    <!-- <field name="computed_sequence" /> -->
                 </xpath>
                 <xpath expr="//field[@name='title']" position="after">
                     <field name="difficulty_level" />
@@ -602,7 +603,7 @@
                         </group>
                         <group>   
                             <span style="font-size: 18px;">
-                                Click <a href="https://bestrust.in/document/share/9/4f0f3222-2ce0-413e-94d9-53cc59e7851c"
+                                Click <a href="https://bestrust.in//document/share/10/15da4da9-ca46-4c6b-a229-038c4c817e61"
                                 target="_blank"><strong style="color: red;">here</strong></a> 
                                 to download the uploading format for bulk upload.
                             </span>

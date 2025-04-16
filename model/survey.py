@@ -30,6 +30,39 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('no', 'No')
     ], string='Delete Previous Questions', default='no')
 
+    def excel_to_mcq_json(self,encoded_file):
+        # Decode base64-encoded file
+        excel_data = base64.b64decode(encoded_file)
+        df = pd.read_excel(BytesIO(excel_data))
+        # import wdb;wdb.set_trace()
+
+        # Build JSON from the Excel
+        df.columns = df.columns.str.strip()
+        questions = []
+        for _, row in df.iterrows():
+            question = {
+                "question_number": row['Sr.No'],
+                "title": row['Question'],
+                "marks": row['Marks'],
+                "options": []
+            }
+
+            option_map = {'A': 'Option1', 'B': 'Option2', 'C': 'Option3', 'D': 'Option4'}
+
+            for option_letter, column_name in option_map.items():
+                option_text = row.get(column_name, '')
+                is_correct = row['Correct Answer'].strip().upper() == option_letter
+                question["options"].append({
+                    "option": option_letter,
+                    "text": option_text,
+                    "correct": is_correct,
+                    "marks": row['Marks'] if is_correct else 0
+                })
+
+            questions.append(question)
+        
+        return questions
+    
 
     def action_add_question(self):
         print("Chapter "+ str(self.chapter.id))
@@ -42,12 +75,10 @@ class SurveySectionQuestionWizard(models.TransientModel):
             question_ids = self.chapter.question_ids.ids
             print(question_ids)        
             self.chapter.sudo().write({'question_ids':[(6,0,question_id.id)]})
+        
         elif self.upload_type == 'bulk':            
-            excel_data = base64.b64decode(self.file)
-
-            # Read the Excel data into a pandas DataFrame
-            df = pd.read_excel(BytesIO(excel_data))
-            grouped = df.groupby('Question',sort=False)
+            questions_data = self.excel_to_mcq_json(self.file)
+            # grouped = df.groupby('Question',sort=False)
             # import wdb;wdb.set_trace()
             sequence = self.chapter.sequence
             sequence = sequence + 1
@@ -68,32 +99,25 @@ class SurveySectionQuestionWizard(models.TransientModel):
             
             
             
-            for question, group in grouped:
-                
-                # import wdb;wdb.set_trace()
-                question_text = group['Question'].iloc[0]
-                sr_no = group['Sr.No'].iloc[0]
+            for q in questions_data:
                 question_id = self.env['survey.question'].sudo().create({
-                    'q_no':sr_no,
-                    'survey_id':self.qb.id ,
-                    'is_scored_question':True,
-                    'question_type':'simple_choice', 
-                    'title': question_text , 
-                    'page_id':self.chapter.id ,
-                    'sequence': int(sequence) })
-                # question_id.write({ })
+                    'q_no': q['question_number'],
+                    'survey_id': self.qb.id,
+                    'is_scored_question': True,
+                    'question_type': 'simple_choice',
+                    'title': q['title'],
+                    'page_id': self.chapter.id,
+                    'sequence': sequence,
+                })
+                # sequence += 1
 
-                choices = group['Choices'].dropna().tolist()
-                correct_answer = group[group['CorrectAnswer'] == 1]['Choices'].iloc[0]
-                for choice in choices:
-                    choice_id = self.env['survey.question.answer'].sudo().create({"question_id":question_id.id,"value":choice})
-                    print(choice)
-                    if correct_answer == choice:
-                        # import wdb;wdb.set_trace()
-                        marks = group[group['CorrectAnswer'] == 1]['Marks'].iloc[0]
-                        choice_id.write({"is_correct":True,"answer_score":marks})
-                        
-                        print(marks)
+                for option in q['options']:
+                    self.env['survey.question.answer'].sudo().create({
+                        'question_id': question_id.id,
+                        'value': option['text'],
+                        'is_correct': option['correct'],
+                        'answer_score': option['marks']
+                    })
           
 
             
@@ -429,6 +453,36 @@ class InheritedSurveyQuestions(models.Model):
         ('moderate','Moderate'),
         ('hard','Hard')
     ], string="Difficulty Level",default='easy')
+    # chapter_question_sequence = fields.Integer(
+    #         string="Question No. in Chapter",
+    #         compute="_compute_question_number_in_chapter",
+    #         store=True
+    #     )
+
+    # q_no = fields.Char(
+    #         string="Q. No",
+    #         compute="_compute_q_no",
+    #         store=True
+    #     )
+
+    # @api.depends('page_id', 'page_id.question_ids')
+    # def _compute_question_number_in_chapter(self):
+    #     for record in self:
+    #         if record.page_id:
+    #             # Only questions of this chapter, ordered by ID
+    #             questions = record.page_id.question_ids.sorted('id')
+    #             for idx, ques in enumerate(questions, start=1):
+    #                 if ques.id == record.id:
+    #                     record.chapter_question_sequence = idx
+    #                     break
+
+    # @api.depends('chapter_question_sequence')
+    # def _compute_q_no(self):
+    #     for record in self:
+    #         if record.chapter_question_sequence:
+    #             record.q_no = f"Q.{record.chapter_question_sequence}"
+    #         else:
+    #             record.q_no = ""
 
     
     @api.depends('suggested_answer_ids')
@@ -442,7 +496,6 @@ class InheritedSurveyQuestions(models.Model):
         for question in self:
             correct_answers = question.suggested_answer_ids.filtered(lambda ans: ans.is_correct)
             question.q_score = sum(answer.answer_score for answer in correct_answers)
-    
     def action_confirm_delete(self):
         """ Opens a confirmation popup before deleting the question. """
         self.ensure_one()

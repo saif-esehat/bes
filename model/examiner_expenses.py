@@ -214,6 +214,24 @@ class ExaminerExpenses(models.Model):
     ], string='Payment State', default='pending')
     
     utr_no = fields.Char("UTR No.")
+
+    approval_status = fields.Selection([
+        ('na', 'Not Applicable'),
+        ('pending', 'Pending'),
+        ('ceo_approved', 'CEO Approved')
+    ], string='Approval Status', default='pending', compute='_compute_is_approved')
+
+
+    @api.depends('state')
+    def _compute_is_approved(self):
+        for record in self:
+            if not record.misc_expense_ids.timesheet_report:
+                record.approval_status = 'na'
+            elif record.state == 'ceo_approval':
+                record.approval_status = 'ceo_approved'
+            else:
+                record.approval_status = 'pending'
+
     
     @api.depends('assignment_expense_ids.total','online_assignment_expense.price','team_lead_expense.price','misc_expense_ids.price')
     def _compute_total(self):

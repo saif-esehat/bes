@@ -221,6 +221,7 @@
                 <field name="misc_total" string="Local Travels"/>
                 <field name="total" sum="Total"/>
                 <field name="payment_state"/>
+                <field name="approval_status"/>
                 <field name="utr_no"/>                
                 
             </tree>
