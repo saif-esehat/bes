@@ -6464,7 +6464,6 @@ class ExaminerAttendanceWizard(models.TransientModel):
                     elif marksheet.attempting_mek_online and not marksheet.attempting_gsk_online:
                         mek_candidates.add(marksheet.id)
 
-
             gsk_candidates = list(gsk_candidates)
             mek_candidates = list(mek_candidates)
             gsk_mek_candidates = list(gsk_mek_candidates)
@@ -6508,10 +6507,11 @@ class AttendanceSheetReport(models.AbstractModel):
         # data['context']['active_id']
 
         
+        gsk_candidates = self.env['gp.exam.schedule'].sudo().search([('id', 'in', data['gsk_candidates'])], order='exam_id')
+        mek_candidates = self.env['gp.exam.schedule'].sudo().search([('id', 'in', data['mek_candidates'])], order='exam_id')
+        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().search([('id', 'in', data['gsk_mek_candidates'])], order='exam_id')
+
         # import wdb;wdb.set_trace()
-        gsk_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_candidates'])
-        mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['mek_candidates'])
-        gsk_mek_candidates = self.env['gp.exam.schedule'].sudo().browse(data['gsk_mek_candidates'])
         
         print("MEK Candidate")
         print(mek_candidates)
@@ -6552,7 +6552,7 @@ class CCMCAttendanceSheetReport(models.AbstractModel):
         # import wdb;wdb.set_trace()
         docs = self.env['exam.type.oral.practical.examiners'].browse(docids)
 
-        ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().browse(data['ccmc_candidates'])
+        ccmc_candidates = self.env['ccmc.exam.schedule'].sudo().search([('id', 'in', data['ccmc_candidates'])], order='exam_id')
 
         examiner_name = data['examiner_name']
         # Example string date
