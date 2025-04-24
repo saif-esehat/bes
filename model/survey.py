@@ -453,38 +453,8 @@ class InheritedSurveyQuestions(models.Model):
         ('moderate','Moderate'),
         ('hard','Hard')
     ], string="Difficulty Level",default='easy')
-    # chapter_question_sequence = fields.Integer(
-    #         string="Question No. in Chapter",
-    #         compute="_compute_question_number_in_chapter",
-    #         store=True
-    #     )
 
-    # q_no = fields.Char(
-    #         string="Q. No",
-    #         compute="_compute_q_no",
-    #         store=True
-    #     )
 
-    # @api.depends('page_id', 'page_id.question_ids')
-    # def _compute_question_number_in_chapter(self):
-    #     for record in self:
-    #         if record.page_id:
-    #             # Only questions of this chapter, ordered by ID
-    #             questions = record.page_id.question_ids.sorted('id')
-    #             for idx, ques in enumerate(questions, start=1):
-    #                 if ques.id == record.id:
-    #                     record.chapter_question_sequence = idx
-    #                     break
-
-    # @api.depends('chapter_question_sequence')
-    # def _compute_q_no(self):
-    #     for record in self:
-    #         if record.chapter_question_sequence:
-    #             record.q_no = f"Q.{record.chapter_question_sequence}"
-    #         else:
-    #             record.q_no = ""
-
-    
     @api.depends('suggested_answer_ids')
     def _answer_count(self):
         for record in self:
