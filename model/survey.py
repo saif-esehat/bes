@@ -453,6 +453,12 @@ class InheritedSurveyQuestions(models.Model):
         ('moderate','Moderate'),
         ('hard','Hard')
     ], string="Difficulty Level",default='easy')
+    
+    
+    
+    def unlink(self):
+        
+        return super(InheritedSurveyQuestions, self).unlink()
 
 
     @api.depends('suggested_answer_ids')
