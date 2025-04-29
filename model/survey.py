@@ -65,50 +65,61 @@ class SurveySectionQuestionWizard(models.TransientModel):
     
 
     def action_add_question(self):
-        print("Chapter "+ str(self.chapter.id))
-        print("QB "+ str(self.qb.id))
-        if self.upload_type == 'single':
-            sequence = self.chapter.sequence
-            question_id = self.env['survey.question'].sudo().create({'survey_id':self.qb.id ,'is_scored_question':True,'question_type':'simple_choice', 'title': self.description })
-            question_id.sudo().write({'page_id':self.chapter.id ,'sequence': sequence + 1})
-            print("QB "+ str(question_id))
-            question_ids = self.chapter.question_ids.ids
-            print(question_ids)        
-            self.chapter.sudo().write({'question_ids':[(6,0,question_id.id)]})
-        
-        elif self.upload_type == 'bulk':            
-            questions_data = self.excel_to_mcq_json(self.file)
-            # grouped = df.groupby('Question',sort=False)
-            # import wdb;wdb.set_trace()
-            sequence = self.chapter.sequence
-            sequence = sequence + 1
-                # Step 1: Find all questions related to the chapter
-            questions = self.chapter.sudo().question_ids
-
-            if self.delete_prev_ques == 'yes':
-                if questions:
-                    # Step 2: Find and delete all answers related to the questions
-                    answers = self.env['survey.question.answer'].sudo().search([('question_id', 'in', questions.ids)])
-                    if answers:
-                        answers.unlink()  # Delete all answers
-
-                    # Step 3: Delete all questions
-                    questions.unlink()
-            else:
-                pass
-            
-            
-            
-            for q in questions_data:
+            print("Chapter "+ str(self.chapter.id))
+            print("QB "+ str(self.qb.id))
+            if self.upload_type == 'single':
+                # Get last question in chapter to determine sequence
+                last_question = self.env['survey.question'].search([
+                    ('page_id', '=', self.chapter.id)
+                ], order='sequence desc', limit=1)
+                # sequence = last_question.sequence + 1 if last_question else self.chapter.sequence + 1
+                sequence = last_question.sequence
+                # Count existing questions in this chapter to determine next number
+                question_count = self.env['survey.question'].search_count([
+                    ('page_id', '=', self.chapter.id)
+                ])
                 question_id = self.env['survey.question'].sudo().create({
-                    'q_no': q['question_number'],
                     'survey_id': self.qb.id,
                     'is_scored_question': True,
                     'question_type': 'simple_choice',
-                    'title': q['title'],
-                    'page_id': self.chapter.id,
-                    'sequence': sequence,
+                    'title': self.description,
+                    'q_no': f"Q.{question_count + 1}",
+                    'sequence': sequence
                 })
+                question_id.sudo().write({'page_id': self.chapter.id})
+                print("QB "+ str(question_id))
+                question_ids = self.chapter.question_ids.ids
+                print(question_ids)
+                self.chapter.sudo().write({'question_ids':[(6,0,question_id.id)]})
+            
+            elif self.upload_type == 'bulk':
+                questions_data = self.excel_to_mcq_json(self.file)
+                sequence = self.chapter.sequence
+                sequence = sequence + 1
+                questions = self.chapter.sudo().question_ids
+    
+                if self.delete_prev_ques == 'yes':
+                    if questions:
+                        answers = self.env['survey.question.answer'].sudo().search([('question_id', 'in', questions.ids)])
+                        if answers:
+                            answers.unlink()
+                        questions.unlink()
+                
+                # Count existing questions in this chapter to determine starting number
+                question_count = self.env['survey.question'].search_count([
+                    ('page_id', '=', self.chapter.id)
+                ])
+                
+                for i, q in enumerate(questions_data, start=1):
+                    question_id = self.env['survey.question'].sudo().create({
+                        'q_no': f"Q.{question_count + i}",
+                        'survey_id': self.qb.id,
+                        'is_scored_question': True,
+                        'question_type': 'simple_choice',
+                        'title': q['title'],
+                        'page_id': self.chapter.id,
+                        'sequence': sequence,
+                    })
                 # sequence += 1
 
                 for option in q['options']:
@@ -454,24 +465,55 @@ class InheritedSurveyQuestions(models.Model):
         ('hard','Hard')
     ], string="Difficulty Level",default='easy')
     
-    
+    # def create(self, vals):
+    #     # First create the record
+    #     record = super(InheritedSurveyQuestions, self).create(vals)
+        
+    #     print('vals')
+    #     print(vals)
+    #     print('page_id')
+    #     print(record.page_id.id)
+    #     # Count existing questions on same page
+    #     question_count = self.search_count([('page_id','=',record.page_id.id)])
+        
+    #     # Update the sequence number of the new record
+    #     record.write({'q_no': "Q." + str(question_count)})
+        
+    #     return record
+
+        
     
     def unlink(self):
+        above_records = self.search([('id', '>', self.id),('page_id','=',self.page_id.id)], order='id asc')
         
+        for record in above_records:
+            if record.q_no and record.q_no.startswith('Q.'):
+                try:
+                    q_num = int(record.q_no.split('.')[1])
+                    record.q_no = f"Q.{q_num - 1}"
+                except (ValueError, IndexError):
+                    pass
+            
+        
+
         return super(InheritedSurveyQuestions, self).unlink()
 
 
     @api.depends('suggested_answer_ids')
     def _answer_count(self):
         for record in self:
+            print("Computing count")
             record.answers_count = len(record.suggested_answer_ids)
 
     # @api.depends('suggested_answer_ids')
     @api.depends('suggested_answer_ids.answer_score', 'suggested_answer_ids.is_correct')
     def _compute_score(self):
         for question in self:
+            print("Computing score")
             correct_answers = question.suggested_answer_ids.filtered(lambda ans: ans.is_correct)
             question.q_score = sum(answer.answer_score for answer in correct_answers)
+            
+            
     def action_confirm_delete(self):
         """ Opens a confirmation popup before deleting the question. """
         self.ensure_one()
