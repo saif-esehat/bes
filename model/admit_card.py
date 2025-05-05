@@ -20,6 +20,11 @@ class CandidateAdmitCardGp(models.AbstractModel):
             docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
             
             print("doc_idsss",docids)
+            user_id = self.env.user
+            # import wdb; wdb.set_trace()
+            if user_id.has_group('bes.download_not_allowed'):
+                # User is in the group
+                raise ValidationError("Please Contact Administrator")
             
 
             
@@ -30,10 +35,10 @@ class CandidateAdmitCardGp(models.AbstractModel):
                 if docs.ship_visit_criteria == 'pending' :
                     raise UserError("Admit Card Not Generated Ship Visit  Criteria not Complied")
                 
-                if not docs.institute_id.code == "M05":
+                # if not docs.institute_id.code == "M05":
                 
-                    if docs.stcw_criterias == 'pending':
-                        raise UserError("Admit Card Not Generated STCW  Criteria not Complied")
+                #     if docs.stcw_criterias == 'pending':
+                #         raise UserError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # candidate_image = base64.b64encode(docs1.candidate_image).decode()
             
@@ -64,7 +69,11 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
         # docs1 = self.env['gp.exam.schedule'].sudo().search([('id','=',docids)])
         # print("doc_idsss")
-        
+        user_id = self.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
         
         for docs in docs1:
             if docs.attendance_criteria == 'pending' :
@@ -74,10 +83,10 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
             if docs.ship_visit_criteria == 'pending' :
                 raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
             
-            if not docs.institute_id.code == "M05":
+            # if not docs.institute_id.code == "M05":
                 
-                if docs.stcw_criteria == 'pending':
-                    raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
+            #     if docs.stcw_criteria == 'pending':
+            #         raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
 
         # import wdb; wdb.set_trace();
         

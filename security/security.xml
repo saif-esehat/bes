@@ -104,6 +104,11 @@
         <field name="category_id" ref="bes_access_category"/>
     </record>
 
+    <record id="download_not_allowed" model="res.groups">
+        <field name="name">Download Not Allowed</field>
+        <field name="category_id" ref="bes_access_category"/>
+    </record>
+
     <!-- <record id="group_online_exam" model="res.groups">
         <field name="name">Online Exam Access</field>
         <field name="category_id" ref="bes_access_category"/>
