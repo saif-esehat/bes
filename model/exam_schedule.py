@@ -4933,6 +4933,13 @@ class GPCertificate(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['gp.exam.schedule'].sudo().browse(docids)
         
+        user_id = self.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
+        
         if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
             return {
                 'docids': docids,
@@ -6177,6 +6184,11 @@ class CcmcCertificate(models.AbstractModel):
         #If causing error uncomment this line 
         # Check if all records meet the certificate criteria
         # if all(doc.certificate_criteria == 'passed' for doc in docs):
+        user_id = self.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
         if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,

@@ -492,7 +492,7 @@
                                         <span t-esc="visit.imo_no"/> <br/>
                                     </t>
                                 </td>
-                                <td style="white-space: nowrap; max-width: 400px; text-align: center; border: 1px solid black; padding:5px; ">
+                                <td style="white-space: normal; max-width: 400px; text-align: center; border: 1px solid black; padding:5px; ">
                                     <t t-foreach="ship_visits.filtered(lambda v: v.institute_id.id == exam.institute_id.id)" t-as="visit" t-index="visit_index">
                                         <span t-esc="visit.port_name"/> <br/>
                                     </t>

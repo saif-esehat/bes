@@ -2907,7 +2907,13 @@ class InstitutePortal(CustomerPortal):
         website=True,
     )
     def DownloadsAdmitCard(self, candidate_id, **kw):
+        
+        user_id = request.env.user
         # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         try:
             exam_id = (
                 request.env["gp.exam.schedule"]
@@ -2933,6 +2939,13 @@ class InstitutePortal(CustomerPortal):
     )
     def DownloadGPCertificate(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         try:
             exam_id = (
                 request.env["gp.exam.schedule"]
@@ -2961,6 +2974,13 @@ class InstitutePortal(CustomerPortal):
         website=True,
     )
     def download_admit_card_from_url(self, rec_id, **kw):
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         # Retrieve the record
         report_action = request.env.ref("bes.candidate_gp_admit_card_action")
 
@@ -2984,6 +3004,13 @@ class InstitutePortal(CustomerPortal):
     )
     def DownloadCcmcAdmitCard(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         try:
             exam_id = (
                 request.env["ccmc.exam.schedule"]
@@ -3011,6 +3038,13 @@ class InstitutePortal(CustomerPortal):
     )
     def DownloadCCMCCertificate(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         try:
             exam_id = (
                 request.env["ccmc.exam.schedule"]

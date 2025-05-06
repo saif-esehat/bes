@@ -350,6 +350,13 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/list/download_admit_card/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadAdmitCard(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         print("INSIDE DOWNLOAD ADMITCARD")
         report_action = request.env.ref('bes.candidate_gp_admit_card_action')
@@ -362,6 +369,13 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/ccmcexam/list/download_admit_card/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadAdmitCardCCMC(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
+                        
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         print("INSIDE DOWNLOAD ADMITCARD")
         report_action = request.env.ref('bes.candidate_ccmc_admit_card_action')
@@ -375,6 +389,13 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/gpexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCertificateGP(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',int(exam_id))])
         
         if exam_id.stcw_criterias == 'pending' or exam_id.attendance_criteria == 'pending' or exam_id.ship_visit_criteria == 'pending':
@@ -395,6 +416,13 @@ class GPCandidatePortal(CustomerPortal):
     @http.route(['/my/ccmcexam/list/download_certificate/<int:exam_id>'], method=["POST", "GET"], type="http", auth="user", website=True)
     def DownloadCertificateCCMC(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
+                
+        user_id = request.env.user
+        # import wdb; wdb.set_trace()
+        if user_id.has_group('bes.download_not_allowed'):
+            # User is in the group
+            raise ValidationError("Please Contact Administrator")
+
         # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
         print("INSIDE DOWNLOAD Certificate")
 
