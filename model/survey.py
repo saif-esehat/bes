@@ -10,7 +10,8 @@ import base64
 from io import BytesIO
 import pytz
 from pytz import timezone, UTC
-
+import os
+from docx import Document
 
 
 class SurveySectionQuestionWizard(models.TransientModel):
@@ -25,6 +26,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('bulk', 'Bulk')       
     ], string='Upload Type', default='single')
     file = fields.Binary(string="File", required=False)
+    filename = fields.Char(string="Filename", invisible=True)
     delete_prev_ques = fields.Selection([
         ('yes', 'Yes'),
         ('no', 'No')
@@ -62,17 +64,67 @@ class SurveySectionQuestionWizard(models.TransientModel):
         
         return questions
     
+    
+    def extract_questions_from_docx(self,file_path):
+        document = Document(file_path)
+        questions = []
+
+        current_question = None
+        current_choices = []
+
+        def add_question():
+            if current_question and current_choices:
+                questions.append({
+                    "title": current_question.strip(),
+                    "options": current_choices
+                })
+
+        for para in document.paragraphs:
+            text = para.text.strip()
+            if not text:
+                # Blank line → save current question block
+                add_question()
+                current_question = None
+                current_choices = []
+                continue
+
+            # If no current question → this is a question
+            if current_question is None:
+                current_question = text
+            else:
+                # This is a choice
+                is_bold = False
+                for run in para.runs:
+                    if run.bold:
+                        is_bold = True
+                        break
+                choice = {
+                    "text": text,
+                    "correct": is_bold
+                }
+                current_choices.append(choice)
+
+        # Add last question block (in case no blank line at end)
+        add_question()
+
+        return { "questions": questions }
 
     def action_add_question(self):
             print("Chapter "+ str(self.chapter.id))
             print("QB "+ str(self.qb.id))
-            if self.upload_type == 'single':
-                # Get last question in chapter to determine sequence
-                last_question = self.env['survey.question'].search([
+                            # Get last question in chapter to determine sequence
+            last_question = self.env['survey.question'].search([
                     ('page_id', '=', self.chapter.id)
                 ], order='sequence desc', limit=1)
                 # sequence = last_question.sequence + 1 if last_question else self.chapter.sequence + 1
-                sequence = last_question.sequence
+            sequence = last_question.sequence
+            if self.upload_type == 'single':
+                # Get last question in chapter to determine sequence
+                # last_question = self.env['survey.question'].search([
+                #     ('page_id', '=', self.chapter.id)
+                # ], order='sequence desc', limit=1)
+                # # sequence = last_question.sequence + 1 if last_question else self.chapter.sequence + 1
+                # sequence = last_question.sequence
                 # Count existing questions in this chapter to determine next number
                 question_count = self.env['survey.question'].search_count([
                     ('page_id', '=', self.chapter.id)
@@ -92,9 +144,39 @@ class SurveySectionQuestionWizard(models.TransientModel):
                 self.chapter.sudo().write({'question_ids':[(6,0,question_id.id)]})
             
             elif self.upload_type == 'bulk':
-                questions_data = self.excel_to_mcq_json(self.file)
+                
+                # import wdb;wdb.set_trace()
+                file_extension = self.filename.split('.')[-1].lower()
+                if file_extension in ['xlsx', 'xls']:
+                    questions_data = self.excel_to_mcq_json(self.file)
+                elif file_extension in ['docx','docx']:
+                    # Save uploaded file to temp location
+                    temp_path = '/tmp/uploaded_questions.docx'
+                    with open(temp_path, 'wb') as f:
+                        f.write(base64.b64decode(self.file))
+                    
+                    # Extract questions and transform to expected format
+                    docx_data = self.extract_questions_from_docx(temp_path)
+                    questions_data = []
+                    for q in docx_data['questions']:
+                        question = {
+                            'title': q['title'],
+                            'options': []
+                        }
+                        for i, choice in enumerate(q['options'], start=1):
+                            question['options'].append({
+                                'text': choice['text'],
+                                'correct': choice['correct'],
+                                'marks': 0
+                            })
+                        questions_data.append(question)
+                    # Clean up temp file
+                    os.remove(temp_path)
+                
+                # print('questions_data')
+                print(questions_data)
                 sequence = self.chapter.sequence
-                sequence = sequence + 1
+                sequence = last_question.sequence
                 questions = self.chapter.sudo().question_ids
     
                 if self.delete_prev_ques == 'yes':
@@ -110,6 +192,8 @@ class SurveySectionQuestionWizard(models.TransientModel):
                 ])
                 
                 for i, q in enumerate(questions_data, start=1):
+                    
+                    
                     question_id = self.env['survey.question'].sudo().create({
                         'q_no': f"Q.{question_count + i}",
                         'survey_id': self.qb.id,
@@ -119,7 +203,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
                         'page_id': self.chapter.id,
                         'sequence': sequence,
                     })
-                # sequence += 1
+                    # sequence += 1
 
                     # import wdb;wdb.set_trace()
                     for option in q['options']:
