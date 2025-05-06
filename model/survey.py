@@ -29,6 +29,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('yes', 'Yes'),
         ('no', 'No')
     ], string='Delete Previous Questions', default='no')
+    marks = fields.Integer(string="Marks", required=True)
 
     def excel_to_mcq_json(self,encoded_file):
         # Decode base64-encoded file
@@ -43,7 +44,6 @@ class SurveySectionQuestionWizard(models.TransientModel):
             question = {
                 "question_number": row['Sr.No'],
                 "title": row['Question'],
-                "marks": row['Marks'],
                 "options": []
             }
 
@@ -56,7 +56,6 @@ class SurveySectionQuestionWizard(models.TransientModel):
                     "option": option_letter,
                     "text": option_text,
                     "correct": is_correct,
-                    "marks": row['Marks'] if is_correct else 0
                 })
 
             questions.append(question)
@@ -122,13 +121,14 @@ class SurveySectionQuestionWizard(models.TransientModel):
                     })
                 # sequence += 1
 
-                for option in q['options']:
-                    self.env['survey.question.answer'].sudo().create({
-                        'question_id': question_id.id,
-                        'value': option['text'],
-                        'is_correct': option['correct'],
-                        'answer_score': option['marks']
-                    })
+                    # import wdb;wdb.set_trace()
+                    for option in q['options']:
+                        self.env['survey.question.answer'].sudo().create({
+                            'question_id': question_id.id,
+                            'value': option['text'],
+                            'is_correct': option['correct'],
+                            'answer_score': self.marks if option['correct'] else 0
+                        })
           
 
             
