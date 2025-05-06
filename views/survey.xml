@@ -592,7 +592,8 @@
                                 domain="[('survey_id', '=', qb), ('is_page', '=', True)]"/>
                             <field name="upload_type"/>
                             <field name="description" attrs="{'invisible': [('upload_type', '=', 'bulk')]}"/>
-                            <field name="file" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
+                            <field name="file" filename="filename" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
+                            <field name="filename" invisible="1"/>
                             <field name="delete_prev_ques" attrs="{'invisible': [('upload_type', '=', 'single')]}"/>
                         </group>
                         <group>
