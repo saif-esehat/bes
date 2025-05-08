@@ -3040,7 +3040,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace()
                 
         user_id = request.env.user
-        # import wdb; wdb.set_trace()
+        # # import wdb; wdb.set_trace()
         if user_id.has_group('bes.download_not_allowed'):
             # User is in the group
             raise ValidationError("Please Contact Administrator")
