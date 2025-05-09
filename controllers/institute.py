@@ -434,7 +434,8 @@ class InstitutePortal(CustomerPortal):
         transaction_amount = kw.get("transaction_amount")
         transaction_slip = request.httprequest.files.get("transaction_slip")
 
-        transaction_slip_file = transaction_slip.read()
+        transaction_slip_file = base64.b64encode(transaction_slip.read())
+ 
         transaction_slip_filename = transaction_slip.filename
 
         # import wdb; wdb.set_trace();
@@ -574,7 +575,7 @@ class InstitutePortal(CustomerPortal):
         transaction_amount = kw.get("transaction_amount")
         transaction_slip = request.httprequest.files.get("transaction_slip")
 
-        transaction_slip_file = transaction_slip.read()
+        transaction_slip_file = base64.b64encode(transaction_slip.read())
         transaction_slip_filename = transaction_slip.filename
 
         ccmc_partner_id = institute_id.user_id.partner_id.id
