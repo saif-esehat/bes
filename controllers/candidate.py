@@ -423,15 +423,17 @@ class GPCandidatePortal(CustomerPortal):
             # User is in the group
             raise ValidationError("Please Contact Administrator")
 
-        # exam_id = request.env['gp.exam.schedule'].sudo().search([('gp_candidate','=',candidate_id)])[-1]
+        exam_id = request.env['ccmc.exam.schedule'].sudo().search([('id','=',int(exam_id))])
+        
+        if exam_id.stcw_criteria == 'pending' or exam_id.attendance_criteria == 'pending' or exam_id.ship_visit_criteria == 'pending':
+            raise ValidationError("Elligiblity Criteria Not Satisfied")
         print("INSIDE DOWNLOAD Certificate")
 
         report_action = request.env.ref('bes.report_ccmc_certificate')
-        # certificate_available = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)]).certificate_criteria == 'passed'
 
         pdf, _ = report_action.sudo()._render_qweb_pdf(int(exam_id))
         # print(pdf ,"Tbis is PDF")
-        pdfhttpheaders = [('Content-Type', 'application/pdf'),('Content-Disposition', 'attachment; filename="Certificate.pdf"'), ('Content-Length', u'%s' % len(pdf))]
+        pdfhttpheaders = [('Content-Type', 'application/pdf'),('Content-Length', u'%s' % len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     @http.route(['/check_candidate_group'], method=["GET"], type="json", auth="user")

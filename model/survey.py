@@ -31,9 +31,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('yes', 'Yes'),
         ('no', 'No')
     ], string='Delete Previous Questions', default='no')
-    
-    
-
+    marks = fields.Integer(string="Marks", required=True)
 
     def excel_to_mcq_json(self,encoded_file):
         # Decode base64-encoded file
@@ -48,7 +46,6 @@ class SurveySectionQuestionWizard(models.TransientModel):
             question = {
                 "question_number": row['Sr.No'],
                 "title": row['Question'],
-                "marks": row['Marks'],
                 "options": []
             }
 
@@ -61,7 +58,6 @@ class SurveySectionQuestionWizard(models.TransientModel):
                     "option": option_letter,
                     "text": option_text,
                     "correct": is_correct,
-                    "marks": row['Marks'] if is_correct else 0
                 })
 
             questions.append(question)
@@ -116,13 +112,19 @@ class SurveySectionQuestionWizard(models.TransientModel):
     def action_add_question(self):
             print("Chapter "+ str(self.chapter.id))
             print("QB "+ str(self.qb.id))
-            if self.upload_type == 'single':
-                # Get last question in chapter to determine sequence
-                last_question = self.env['survey.question'].search([
+                            # Get last question in chapter to determine sequence
+            last_question = self.env['survey.question'].search([
                     ('page_id', '=', self.chapter.id)
                 ], order='sequence desc', limit=1)
                 # sequence = last_question.sequence + 1 if last_question else self.chapter.sequence + 1
-                sequence = last_question.sequence
+            sequence = last_question.sequence
+            if self.upload_type == 'single':
+                # Get last question in chapter to determine sequence
+                # last_question = self.env['survey.question'].search([
+                #     ('page_id', '=', self.chapter.id)
+                # ], order='sequence desc', limit=1)
+                # # sequence = last_question.sequence + 1 if last_question else self.chapter.sequence + 1
+                # sequence = last_question.sequence
                 # Count existing questions in this chapter to determine next number
                 question_count = self.env['survey.question'].search_count([
                     ('page_id', '=', self.chapter.id)
@@ -143,7 +145,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
             
             elif self.upload_type == 'bulk':
                 
-                
+                # import wdb;wdb.set_trace()
                 file_extension = self.filename.split('.')[-1].lower()
                 if file_extension in ['xlsx', 'xls']:
                     questions_data = self.excel_to_mcq_json(self.file)
@@ -172,9 +174,9 @@ class SurveySectionQuestionWizard(models.TransientModel):
                     os.remove(temp_path)
                 
                 # print('questions_data')
-                # print(questions_data)
+                print(questions_data)
                 sequence = self.chapter.sequence
-                sequence = sequence + 1
+                sequence = last_question.sequence
                 questions = self.chapter.sudo().question_ids
     
                 if self.delete_prev_ques == 'yes':
@@ -201,14 +203,15 @@ class SurveySectionQuestionWizard(models.TransientModel):
                         'page_id': self.chapter.id,
                         'sequence': sequence,
                     })
-                    sequence += 1
+                    # sequence += 1
 
+                    # import wdb;wdb.set_trace()
                     for option in q['options']:
                         self.env['survey.question.answer'].sudo().create({
                             'question_id': question_id.id,
                             'value': option['text'],
                             'is_correct': option['correct'],
-                            'answer_score': option['marks']
+                            'answer_score': self.marks if option['correct'] else 0
                         })
           
 
