@@ -568,18 +568,17 @@ class InheritedSurveyQuestions(models.Model):
         
     
     def unlink(self):
-        above_records = self.search([('id', '>', self.id),('page_id','=',self.page_id.id)], order='id asc')
-        
-        for record in above_records:
-            if record.q_no and record.q_no.startswith('Q.'):
-                try:
-                    q_num = int(record.q_no.split('.')[1])
-                    record.q_no = f"Q.{q_num - 1}"
-                except (ValueError, IndexError):
-                    pass
+        for rec in self:
+            above_records = rec.search([('id', '>', rec.id), ('page_id', '=', rec.page_id.id)], order='id asc')
             
+            for record in above_records:
+                if record.q_no and record.q_no.startswith('Q.'):
+                    try:
+                        q_num = int(record.q_no.split('.')[1])
+                        record.q_no = f"Q.{q_num - 1}"
+                    except (ValueError, IndexError):
+                        pass
         
-
         return super(InheritedSurveyQuestions, self).unlink()
 
 
