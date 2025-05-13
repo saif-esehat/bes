@@ -4429,16 +4429,16 @@ class GPExam(models.Model):
     
     def mark_failed_absent(self):
         
-        if self.mek_online_attendance = 'absent':
+        if self.mek_online_attendance == 'absent':
             self.mek_online_status = 'failed'
             
-        if self.gsk_online_attendance = 'absent':
+        if self.gsk_online_attendance == 'absent':
             self.gsk_online_status = 'failed'
         
-        if self.mek_oral_prac_attendance = 'absent':
+        if self.mek_oral_prac_attendance == 'absent':
             self.mek_oral_prac_status = 'failed'
         
-        if self.gsk_oral_prac_attendance = 'absent':
+        if self.gsk_oral_prac_attendance == 'absent':
             self.gsk_oral_prac_status = 'failed'
             
         
