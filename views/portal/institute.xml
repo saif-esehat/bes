@@ -1681,11 +1681,22 @@
                                                                 </td>
                                                                 <!--   -->
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_start_date.strftime('%d-%m-%Y')" />
+                                                                    <t t-if="stcw_certificate.course_start_date">
+                                                                        <t t-out="stcw_certificate.course_start_date.strftime('%d-%m-%Y')" />
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <t t-out="stcw_certificate.course_start_date" />
+                                                                    </t>
                                                                 </td>
                                                                 <td>
-                                                                    <t t-out="stcw_certificate.course_end_date.strftime('%d-%m-%Y')" />
+                                                                    <t t-if="stcw_certificate.course_start_date">
+                                                                        <t t-out="stcw_certificate.course_end_date.strftime('%d-%m-%Y')" />
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <t t-out="stcw_certificate.course_end_date" />
+                                                                    </t>
                                                                 </td>
+
                                                             </tr>
                                                         </t>
 

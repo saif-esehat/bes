@@ -5310,7 +5310,7 @@ class InstitutePortal(CustomerPortal):
                 [
                     ("institute_batch_id", "=", batch.id),
                     ("withdrawn_state", "!=", "yes"),
-                    ("stcw_criteria","=", "passed"),
+                    ("stcw_criteria","=", "pending"),
                 ]
             )
         )
@@ -5658,20 +5658,23 @@ class InstitutePortal(CustomerPortal):
                     limit=1,
                 )
             )
+
+            # Only proceed if all required fields are present
             # Create a new candidate STCW record
-            request.env["gp.candidate.stcw.certificate"].sudo().create(
-                {
-                    "candidate_id": candidate.id,
-                    "course_name": course_name,
-                    "other_institute": institute_name,
-                    "marine_training_inst_number": mti_no,
-                    "mti_indos_no": indos_no,
-                    "candidate_cert_no": certificate_no,
-                    "course_start_date": course_start_date,
-                    "course_end_date": course_end_date,
-                }
-            )
-            candidate._check_stcw_certificate()
+            if certificate_no and course_start_date and course_end_date:
+                request.env["gp.candidate.stcw.certificate"].sudo().create(
+                    {
+                        "candidate_id": candidate.id,
+                        "course_name": course_name,
+                        "other_institute": institute_name,
+                        "marine_training_inst_number": mti_no,
+                        "mti_indos_no": indos_no,
+                        "candidate_cert_no": certificate_no,
+                        "course_start_date": course_start_date,
+                        "course_end_date": course_end_date,
+                    }
+                )
+                candidate._check_stcw_certificate()
 
         return request.redirect("/my/gpbatch/candidates/" + str(batch_id))
 
@@ -5747,7 +5750,7 @@ class InstitutePortal(CustomerPortal):
                 [
                     ("institute_batch_id", "=", batch.id),
                     ("withdrawn_state", "!=", "yes"),
-                    ("stcw_criteria","=", "passed"),
+                    ("stcw_criteria","=", "pending"),
                 ]
             )
         )
@@ -6087,20 +6090,21 @@ class InstitutePortal(CustomerPortal):
                     limit=1,
                 )
             )
-            # Create a new candidate STCW record
-            request.env["ccmc.candidate.stcw.certificate"].sudo().create(
-                {
-                    "candidate_id": candidate.id,
-                    "course_name": course_name,
-                    "other_institute": institute_name,
-                    "marine_training_inst_number": mti_no,
-                    "mti_indos_no": indos_no,
-                    "candidate_cert_no": certificate_no,
-                    "course_start_date": course_start_date,
-                    "course_end_date": course_end_date,
-                }
-            )
-            candidate._check_stcw_certificate()
+            # Only proceed if all required fields are present
+            if certificate_no and course_start_date and course_end_date:
+                request.env["ccmc.candidate.stcw.certificate"].sudo().create(
+                    {
+                        "candidate_id": candidate.id,
+                        "course_name": course_name,
+                        "other_institute": institute_name,
+                        "marine_training_inst_number": mti_no,
+                        "mti_indos_no": indos_no,
+                        "candidate_cert_no": certificate_no,
+                        "course_start_date": course_start_date,
+                        "course_end_date": course_end_date,
+                    }
+                )
+                candidate._check_stcw_certificate()
 
         return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
