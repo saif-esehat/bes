@@ -5310,6 +5310,7 @@ class InstitutePortal(CustomerPortal):
                 [
                     ("institute_batch_id", "=", batch.id),
                     ("withdrawn_state", "!=", "yes"),
+                    ("stcw_criteria","=", "passed"),
                 ]
             )
         )
@@ -5746,6 +5747,7 @@ class InstitutePortal(CustomerPortal):
                 [
                     ("institute_batch_id", "=", batch.id),
                     ("withdrawn_state", "!=", "yes"),
+                    ("stcw_criteria","=", "passed"),
                 ]
             )
         )
