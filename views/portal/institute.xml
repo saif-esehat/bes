@@ -2906,7 +2906,7 @@
                 </div>
 
             </t>
-            <t t-if="batches.state != '5-exam_scheduled'">
+            <t t-if="batches.state != '6-done'">
                 <div class="">
                     <t t-if="ins_batch.all_candidates_have_indos">
                         <a t-attf-href="/my/gpbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
@@ -3952,7 +3952,7 @@
                     </div>
                 </div>
             </t>
-            <t t-if="batches.ccmc_state != '5-exam_scheduled'">
+            <t t-if="batches.ccmc_state != '6-done'">
                 <div class="d-flex justify-content-between">
                     <t t-if="ins_batch.all_candidates_have_indos">
                         <a t-attf-href="/my/ccmcbatch/candidates/stcw_format_download/{{batch_id}}" style="margin-top: 10px; margin-bottom: 20px;" class="btn btn-primary btn_cta">Download Candidate STCW Format</a>
