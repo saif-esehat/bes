@@ -2561,7 +2561,7 @@ class CandidateRegisterExamWizard(models.TransientModel):
         if not self.exam_id or not self.candidate:
             raise UserError("Missing required fields: Exam ID or Candidate.")
 
-        import wdb; wdb.set_trace()
+        # import wdb; wdb.set_trace()
         # Create Exam
         gp_exam = self.env['gp.exam.schedule'].create({
             'gp_candidate': self.candidate.id,
