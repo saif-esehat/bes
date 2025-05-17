@@ -229,3 +229,4 @@ bes.group_bes_accounts_examiner_outstation_expense,access_examiner_outstation_ex
 bes.group_bes_accounts_exam_misc_expense,access_exam_misc_expense,bes.model_exam_misc_expense,bes.group_bes_accounts,1,1,1,1
 
 bes.group_bes_admin_create_gp_last_exam,access_create_gp_last_exam,bes.model_create_gp_last_exam,bes.group_bes_admin,1,1,1,1
+bes.group_bes_admin_create_ccmc_last_exam,access_create_ccmc_last_exam,bes.model_create_ccmc_last_exam,bes.group_bes_admin,1,1,1,1

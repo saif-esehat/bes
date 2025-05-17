@@ -1043,7 +1043,22 @@ class CCMCCandidate(models.Model):
                     'default_ccmc_candidate': self.id    
                 }
                 }
-    
+    def open_last_exam(self):
+        view_id = self.env.ref('bes.ccmc_create_last_exam_wizard').id
+
+        return {
+            'name': 'Last Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'create.ccmc.last.exam',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_candidate': self.id
+            }
+
+        }
     
     # def open_add_marksheet(self):
         
@@ -2537,7 +2552,7 @@ class BatchCeoOverrideWizard(models.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
     
-class CandidateRegisterExamWizard(models.TransientModel):
+class CreateGPLastExam(models.TransientModel):
     _name = 'create.gp.last.exam'
     _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Create GP Last Exam'
@@ -2547,67 +2562,234 @@ class CandidateRegisterExamWizard(models.TransientModel):
     exam_id = fields.Char("Roll No",tracking=True)
     dgs_batch = fields.Many2one("dgs.batches","DGS Batch",tracking=True)
     attempt_number = fields.Integer("Attempt Number",tracking=True)
-    gsk_oral_marks = fields.Float("GSK Oral/Journal",tracking=True)
-    mek_oral_marks = fields.Float("MEK Oral/Journal",tracking=True)
-    gsk_practical_marks = fields.Float("GSK Practical",tracking=True)
-    mek_practical_marks = fields.Float("MEK Practical",tracking=True)
+    gsk_total_marks = fields.Float("GSK Oral/Practical Marks",tracking=True)
+    mek_total_marks = fields.Float("MEK Oral/Practical Marks",tracking=True)
     mek_online_marks = fields.Float("MEK Online", digits=(16,2),tracking=True)
     gsk_online_marks = fields.Float("GSK Online",digits=(16,2),tracking=True)
     
     def create_gp_last_exam(self):
         self.ensure_one()
 
-        # Optional validation
         if not self.exam_id or not self.candidate:
             raise UserError("Missing required fields: Exam ID or Candidate.")
 
-        # import wdb; wdb.set_trace()
-        # Create Exam
-        gp_exam = self.env['gp.exam.schedule'].create({
+        user_created = False
+
+        # Create portal user if not already set
+        if not self.candidate.user_id:
+            group_xml_ids = [
+                'bes.group_gp_candidates',
+                'base.group_portal'
+            ]
+            group_ids = []
+            for xml_id in group_xml_ids:
+                group = self.env.ref(xml_id, raise_if_not_found=False)
+                if group:
+                    group_ids.append(group.id)
+
+            # Prevent duplicate login error
+            existing_user = self.env['res.users'].sudo().search([('login', '=', self.candidate.indos_no.strip())], limit=1)
+            if existing_user:
+                raise UserError(f"A user with login '{self.candidate.indos_no.strip()}' already exists.")
+
+            user_values = {
+                'name': self.candidate.name,
+                'login': self.candidate.indos_no.strip(),
+                'password': self.candidate.indos_no.strip() + "1",
+                'sel_groups_1_9_10': 9,  # Ensure this matches your selection field structure
+                'groups_id': [(6, 0, group_ids)],
+            }
+
+            portal_user = self.env['res.users'].sudo().create(user_values)
+            self.candidate.write({'user_id': portal_user.id})
+            user_created = True
+
+            # Update partner details
+            candidate_tag = self.env.ref('bes.candidates_tags', raise_if_not_found=False)
+            portal_user.partner_id.write({
+                'email': self.candidate.email,
+                'phone': self.candidate.phone,
+                'mobile': self.candidate.mobile,
+                'street': self.candidate.street,
+                'street2': self.candidate.street2,
+                'city': self.candidate.city,
+                'zip': self.candidate.zip,
+                'state_id': self.candidate.state_id.id,
+                'category_id': [(4, candidate_tag.id)] if candidate_tag else False,
+            })
+
+        # Calculations
+        gsk_percentage = (self.gsk_total_marks / 175) * 100
+        mek_percentage = (self.mek_total_marks / 175) * 100
+        gsk_online_percentage = (self.gsk_online_marks / 75) * 100
+        mek_online_percentage = (self.mek_online_marks / 75) * 100
+        overall = self.gsk_total_marks + self.mek_total_marks + self.gsk_online_marks + self.mek_online_marks
+        overall_percentage = (overall / 500) * 100
+
+        # Create GP Exam
+        self.env['gp.exam.schedule'].create({
             'gp_candidate': self.candidate.id,
             'exam_id': self.exam_id,
             'dgs_batch': self.dgs_batch.id if self.dgs_batch else False,
             'attempt_number': self.attempt_number,
-            'gsk_oral_marks': self.gsk_oral_marks,
-            'mek_oral_marks': self.mek_oral_marks,
-            'gsk_practical_marks': self.gsk_practical_marks,
-            'mek_practical_marks': self.mek_practical_marks,
+            'gsk_total': self.gsk_total_marks,
+            'mek_total': self.mek_total_marks,
+            'gsk_oral_marks': self.gsk_total_marks / 2,
+            'mek_oral_marks': self.mek_total_marks / 2 ,
+            'gsk_practical_marks': self.gsk_total_marks / 2,
+            'mek_practical_marks': self.mek_total_marks / 2,
             'mek_online_marks': self.mek_online_marks,
             'gsk_online_marks': self.gsk_online_marks,
-        })
-
-        # Calculations
-        gsk_total = self.gsk_oral_marks + self.gsk_practical_marks
-        mek_total = self.mek_oral_marks + self.mek_practical_marks
-        gsk_percentage = (gsk_total / 175) * 100
-        mek_percentage = (mek_total / 175) * 100
-        gsk_online_percentage = (self.gsk_online_marks / 75) * 100
-        mek_online_percentage = (self.mek_online_marks / 75) * 100
-        overall = gsk_total + mek_total + self.gsk_online_marks + self.mek_online_marks
-        overall_percentage = (overall / 500) * 100
-
-        # Update Exam with results
-        gp_exam.write({
-            'gsk_total': gsk_total,
             'gsk_percentage': gsk_percentage,
             'gsk_online_percentage': gsk_online_percentage,
-            'mek_total': mek_total,
             'mek_percentage': mek_percentage,
-            'mek_online_percentage':mek_online_percentage,
+            'mek_online_percentage': mek_online_percentage,
             'overall_marks': overall,
             'overall_percentage': overall_percentage,
             'gsk_oral_prac_status': 'passed' if gsk_percentage >= 60 else 'failed',
             'mek_oral_prac_status': 'passed' if mek_percentage >= 60 else 'failed',
             'gsk_online_status': 'passed' if gsk_online_percentage >= 60 else 'failed',
             'mek_online_status': 'passed' if mek_online_percentage >= 60 else 'failed',
+            'state':'4-pending',
         })
+        # Final Message
+        message = "GP Exam record created successfully."
+        if user_created:
+            message += f"\nUser login: {self.candidate.indos_no.strip()}\nPassword: {self.candidate.indos_no.strip()}1"
 
         return {
-            'name': 'CEO Override Status',
+            'name': 'Exam Create Wizard',
             'type': 'ir.actions.act_window',
             'res_model': 'batch.pop.up.wizard',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_message': 'GP Exam record created successfully.'},
+            'context': {'default_message': message},
+        }
+
+    
+class CreateCCMCLastExam(models.TransientModel):
+    _name = 'create.ccmc.last.exam'
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = 'Create ccmc Last Exam'
+
+
+    candidate = fields.Many2one("ccmc.candidate","Candidate",tracking=True)
+    exam_id = fields.Char("Roll No",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches","DGS Batch",tracking=True)
+    attempt_number = fields.Integer("Attempt Number",tracking=True)
+
+    cookery_practical = fields.Float("Cookery Practical",tracking=True)
+    cookery_oral = fields.Float("Catering",tracking=True)
+    cookery_gsk_online = fields.Float("Cookery/GSK Online",digits=(16,2),tracking=True)
+    
+    def create_ccmc_last_exam(self):
+        self.ensure_one()
+
+        # Optional validation
+        if not self.exam_id or not self.candidate:
+            raise UserError("Missing required fields: Exam ID or Candidate.")
+        
+        user_created = False
+        
+        # import wdb; wdb.set_trace();
+        if not self.candidate.user_id:
+            group_xml_ids = [
+                'bes.group_ccmc_candidates',
+                'base.group_portal'
+            ]
+            group_ids = []
+            for xml_id in group_xml_ids:
+                group = self.env.ref(xml_id, raise_if_not_found=False)
+                if group:
+                    group_ids.append(group.id)
+
+            # Prevent duplicate login error
+            existing_user = self.env['res.users'].sudo().search([('login', '=', self.candidate.indos_no.strip())], limit=1)
+            if existing_user:
+                raise UserError(f"A user with login '{self.candidate.indos_no.strip()}' already exists.")
+
+            user_values = {
+                'name': self.candidate.name,
+                'login': self.candidate.indos_no.strip(),
+                'password': self.candidate.indos_no.strip() + "1",
+                'sel_groups_1_9_10': 9,  # Ensure this matches your selection field structure
+                'groups_id': [(6, 0, group_ids)],
+            }
+
+            portal_user = self.env['res.users'].sudo().create(user_values)
+            self.candidate.write({'user_id': portal_user.id})
+            user_created = True
+
+            # Update partner details
+            candidate_tag = self.env.ref('bes.candidates_tags', raise_if_not_found=False)
+            portal_user.partner_id.write({
+                'email': self.candidate.email,
+                'phone': self.candidate.phone,
+                'mobile': self.candidate.mobile,
+                'street': self.candidate.street,
+                'street2': self.candidate.street2,
+                'city': self.candidate.city,
+                'zip': self.candidate.zip,
+                'state_id': self.candidate.state_id.id,
+                'category_id': [(4, candidate_tag.id)] if candidate_tag else False,
+            })
+        # Calculations
+        # Get raw inputs
+        cookery_practical = self.cookery_practical
+        total_oral_score = self.cookery_oral  # Assuming out of 100
+        cookery_gsk_online = self.cookery_gsk_online
+
+        # Split oral into catering and gsk
+        catering_oral = (total_oral_score / 100) * 80
+        ccmc_gsk_oral = (total_oral_score / 100) * 20
+
+        # Calculate percentages
+        cookery_bakery_percentage = (cookery_practical / 100) * 100
+        ccmc_oral_percentage = (catering_oral / 80) * 100
+        ccmc_gsk_oral_percentage = (ccmc_gsk_oral / 20) * 100
+        cookery_gsk_online_percentage = (cookery_gsk_online / 100) * 100
+
+        # Total marks (out of 300: 100+100+100 assumed)
+        overall_marks = cookery_practical + catering_oral + cookery_gsk_online
+        overall_percentage = (overall_marks / 300) * 100
+
+
+        self.env['ccmc.exam.schedule'].create({
+            'ccmc_candidate': self.candidate.id,
+            'exam_id': self.exam_id,
+            'dgs_batch': self.dgs_batch.id if self.dgs_batch else False,
+            'attempt_number': self.attempt_number,
+
+            'cookery_practical': cookery_practical,
+            'cookery_oral': catering_oral,
+            'ccmc_gsk_oral_marks': ccmc_gsk_oral,
+            'cookery_gsk_online': cookery_gsk_online,
+
+            'cookery_bakery_percentage': cookery_bakery_percentage,
+            'ccmc_oral_percentage': ccmc_oral_percentage,
+            'ccmc_gsk_oral_percentage': ccmc_gsk_oral_percentage,
+            'cookery_gsk_online_percentage': cookery_gsk_online_percentage,
+
+            'overall_marks': overall_marks,
+            'overall_percentage': overall_percentage,
+
+            'cookery_bakery_prac_status': 'passed' if cookery_bakery_percentage >= 60 else 'failed',
+            'ccmc_catering_status': 'passed' if ccmc_oral_percentage >= 60 else 'failed',
+            'ccmc_gsk_status': 'passed' if ccmc_gsk_oral_percentage >= 60 else 'failed',
+            'ccmc_online_status': 'passed' if cookery_gsk_online_percentage >= 60 else 'failed',
+        })
+
+        # Final Message
+        message = "CCMC Exam record created successfully."
+        if user_created:
+            message += f"\nUser login: {self.candidate.indos_no.strip()}\nPassword: {self.candidate.indos_no.strip()}1"
+
+        return {
+            'name': 'Exam Create Wizard',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_message': message},
         }
     
