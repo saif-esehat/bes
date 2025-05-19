@@ -1680,7 +1680,7 @@
                     <div class="form-group row">
                         <div class="col-md-3">
                             <label for="upi_utr_no">UPI ID/ UTR No. <strong class="text-danger">*</strong></label>
-                            <input type="text" maxlength="12" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required="True" class="form-control" />
+                            <input type="text" maxlength="12" name="upi_utr_no" id="upi_utr_no" oninput="this.value = this.value.replace(/[^09]/g, '');" required="True" class="form-control" />
                         </div>
                         <div class="col-md-3">
                             <label for="amount">Amount <strong class="text-danger">*</strong></label>
