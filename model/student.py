@@ -434,6 +434,25 @@ class GPCandidate(models.Model):
             "default_institute_ids" : institute_ids
             }
         }
+    
+    def open_last_exam(self):
+        view_id = self.env.ref('bes.gp_create_last_exam_wizard').id
+
+        return {
+            'name': 'Last Exam',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'res_model': 'create.gp.last.exam',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {
+                'default_candidate': self.id
+            }
+
+        }
+
+
         
     @api.depends('dob')
     def _compute_age(self):
@@ -2517,3 +2536,78 @@ class BatchCeoOverrideWizard(models.TransientModel):
             }
 
         return {'type': 'ir.actions.act_window_close'}
+    
+class CandidateRegisterExamWizard(models.TransientModel):
+    _name = 'create.gp.last.exam'
+    _inherit = ['mail.thread','mail.activity.mixin']
+    _description = 'Create GP Last Exam'
+
+
+    candidate = fields.Many2one("gp.candidate","Candidate",tracking=True)
+    exam_id = fields.Char("Roll No",tracking=True)
+    dgs_batch = fields.Many2one("dgs.batches","DGS Batch",tracking=True)
+    attempt_number = fields.Integer("Attempt Number",tracking=True)
+    gsk_oral_marks = fields.Float("GSK Oral/Journal",tracking=True)
+    mek_oral_marks = fields.Float("MEK Oral/Journal",tracking=True)
+    gsk_practical_marks = fields.Float("GSK Practical",tracking=True)
+    mek_practical_marks = fields.Float("MEK Practical",tracking=True)
+    mek_online_marks = fields.Float("MEK Online", digits=(16,2),tracking=True)
+    gsk_online_marks = fields.Float("GSK Online",digits=(16,2),tracking=True)
+    
+    def create_gp_last_exam(self):
+        self.ensure_one()
+
+        # Optional validation
+        if not self.exam_id or not self.candidate:
+            raise UserError("Missing required fields: Exam ID or Candidate.")
+
+        # import wdb; wdb.set_trace()
+        # Create Exam
+        gp_exam = self.env['gp.exam.schedule'].create({
+            'gp_candidate': self.candidate.id,
+            'exam_id': self.exam_id,
+            'dgs_batch': self.dgs_batch.id if self.dgs_batch else False,
+            'attempt_number': self.attempt_number,
+            'gsk_oral_marks': self.gsk_oral_marks,
+            'mek_oral_marks': self.mek_oral_marks,
+            'gsk_practical_marks': self.gsk_practical_marks,
+            'mek_practical_marks': self.mek_practical_marks,
+            'mek_online_marks': self.mek_online_marks,
+            'gsk_online_marks': self.gsk_online_marks,
+        })
+
+        # Calculations
+        gsk_total = self.gsk_oral_marks + self.gsk_practical_marks
+        mek_total = self.mek_oral_marks + self.mek_practical_marks
+        gsk_percentage = (gsk_total / 175) * 100
+        mek_percentage = (mek_total / 175) * 100
+        gsk_online_percentage = (self.gsk_online_marks / 75) * 100
+        mek_online_percentage = (self.mek_online_marks / 75) * 100
+        overall = gsk_total + mek_total + self.gsk_online_marks + self.mek_online_marks
+        overall_percentage = (overall / 500) * 100
+
+        # Update Exam with results
+        gp_exam.write({
+            'gsk_total': gsk_total,
+            'gsk_percentage': gsk_percentage,
+            'gsk_online_percentage': gsk_online_percentage,
+            'mek_total': mek_total,
+            'mek_percentage': mek_percentage,
+            'mek_online_percentage':mek_online_percentage,
+            'overall_marks': overall,
+            'overall_percentage': overall_percentage,
+            'gsk_oral_prac_status': 'passed' if gsk_percentage >= 60 else 'failed',
+            'mek_oral_prac_status': 'passed' if mek_percentage >= 60 else 'failed',
+            'gsk_online_status': 'passed' if gsk_online_percentage >= 60 else 'failed',
+            'mek_online_status': 'passed' if mek_online_percentage >= 60 else 'failed',
+        })
+
+        return {
+            'name': 'CEO Override Status',
+            'type': 'ir.actions.act_window',
+            'res_model': 'batch.pop.up.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_message': 'GP Exam record created successfully.'},
+        }
+    

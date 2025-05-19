@@ -3567,8 +3567,7 @@ class GPExam(models.Model):
     gsk_total = fields.Float("GSK Oral/Practical Marks",readonly=True,tracking=True)
     gsk_percentage = fields.Float("GSK Oral/Practical Precentage",readonly=True,tracking=True)
     
-    # mek_total = fields.Float("MEK Total",readonly=True,tracking=True)
-    # mek_percentage = fields.Float("MEK Percentage",readonly=True,tracking=True)
+
     mek_online_marks = fields.Float("MEK Online",readonly=True, digits=(16,2),tracking=True)
     gsk_online_marks = fields.Float("GSK Online",readonly=True,digits=(16,2),tracking=True)
     mek_online_percentage = fields.Float("MEK Online (%)",readonly=True,digits=(16,2),tracking=True)
@@ -4425,6 +4424,25 @@ class GPExam(models.Model):
                 raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
                                       f"You cannot schedule more than {max_exams} exams for a candidate.")
     
+    
+    
+    def mark_failed_absent(self):
+        
+        if self.mek_online_attendance == 'absent':
+            self.mek_online_status = 'failed'
+            
+        if self.gsk_online_attendance == 'absent':
+            self.gsk_online_status = 'failed'
+        
+        if self.mek_oral_prac_attendance == 'absent':
+            self.mek_oral_prac_status = 'failed'
+        
+        if self.gsk_oral_prac_attendance == 'absent':
+            self.gsk_oral_prac_status = 'failed'
+            
+        
+    
+    
         
     def process_marks(self):
         
@@ -4540,6 +4558,8 @@ class GPExam(models.Model):
                 overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
                 self.overall_marks = overall_marks
                 self.overall_percentage = (overall_marks/500) * 100
+            
+                self.mark_failed_absent()
 
             else:
                 
@@ -4606,6 +4626,7 @@ class GPExam(models.Model):
                         self.mek_online_status = 'failed'
                     
                     
+                    self.mark_failed_absent()
                     
                     
                     all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
@@ -4748,10 +4769,10 @@ class GPExam(models.Model):
                         self.mek_online_status = 'passed'
                     else:
                         self.mek_online_status = 'failed'
+                
+                
+                self.mark_failed_absent()
 
-            
-                    
-                    
                     
                 
                 # print("Doing Nothing")
@@ -4825,7 +4846,7 @@ class GPExam(models.Model):
                         self.mek_online_status = 'failed'
                     
                     
-                    
+                    self.mark_failed_absent()
                     
                     all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
 
