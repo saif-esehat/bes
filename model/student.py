@@ -534,7 +534,13 @@ class GPCandidate(models.Model):
         
         return result
 
+    can_create_last_exam = fields.Boolean(string="Can Create Last Exam", compute="_compute_can_create_last_exam")
 
+    @api.depends('previous_repeater')
+    def _compute_can_create_last_exam(self):
+        for rec in self:
+            exam_count = self.env['gp.exam.schedule'].search_count([('gp_candidate', '=', rec.id)])
+            rec.can_create_last_exam = rec.previous_repeater and exam_count == 0
 
     
     
@@ -559,6 +565,11 @@ class GPCandidate(models.Model):
                 values['age'] = delta.days // 365
             else:
                 values['age'] = 0
+        
+            # Check user group and set previous_repeater
+            if self.env.user.has_group('bes.group_bes_admin'):
+                values['previous_repeater'] = True
+
             gp_candidate = super(GPCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
@@ -1169,7 +1180,13 @@ class CCMCCandidate(models.Model):
             else:
                 candidate.invoice_no = ''
 
+    can_create_last_exam = fields.Boolean(string="Can Create Last Exam", compute="_compute_can_create_last_exam")
 
+    @api.depends('previous_repeater')
+    def _compute_can_create_last_exam(self):
+        for rec in self:
+            exam_count = self.env['ccmc.exam.schedule'].search_count([('ccmc_candidate', '=', rec.id)])
+            rec.can_create_last_exam = rec.previous_repeater and exam_count == 0
 
 
     @api.model
@@ -2632,7 +2649,7 @@ class CreateGPLastExam(models.TransientModel):
         overall_percentage = (overall / 500) * 100
 
         # Create GP Exam
-        self.env['gp.exam.schedule'].create({
+        gp_exam = self.env['gp.exam.schedule'].create({
             'gp_candidate': self.candidate.id,
             'exam_id': self.exam_id,
             'dgs_batch': self.dgs_batch.id if self.dgs_batch else False,
@@ -2655,8 +2672,12 @@ class CreateGPLastExam(models.TransientModel):
             'mek_oral_prac_status': 'passed' if mek_percentage >= 60 else 'failed',
             'gsk_online_status': 'passed' if gsk_online_percentage >= 60 else 'failed',
             'mek_online_status': 'passed' if mek_online_percentage >= 60 else 'failed',
-            'state':'4-pending',
+            'state':'2-done',
         })
+        gp_exam.compute_dgs_visible()
+        gp_exam.dgs_approval()
+        gp_exam.compute_certificate_criteria()
+        gp_exam.compute_pending_certificate_criteria()
         # Final Message
         message = "GP Exam record created successfully."
         if user_created:
@@ -2759,7 +2780,7 @@ class CreateCCMCLastExam(models.TransientModel):
         overall_percentage = (overall_marks / 300) * 100
 
 
-        self.env['ccmc.exam.schedule'].create({
+        ccmc_exam = self.env['ccmc.exam.schedule'].create({
             'ccmc_candidate': self.candidate.id,
             'exam_id': self.exam_id,
             'dgs_batch': self.dgs_batch.id if self.dgs_batch else False,
@@ -2782,7 +2803,13 @@ class CreateCCMCLastExam(models.TransientModel):
             'ccmc_catering_status': 'passed' if ccmc_oral_percentage >= 60 else 'failed',
             'ccmc_gsk_status': 'passed' if ccmc_gsk_oral_percentage >= 60 else 'failed',
             'ccmc_online_status': 'passed' if cookery_gsk_online_percentage >= 60 else 'failed',
+            'state':'2-done',
         })
+
+        ccmc_exam.compute_dgs_visible()
+        ccmc_exam.dgs_approval()
+        ccmc_exam.compute_certificate_criteria()
+        ccmc_exam.compute_pending_certificate_criteria()
 
         # Final Message
         message = "CCMC Exam record created successfully."

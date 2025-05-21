@@ -252,7 +252,7 @@
                 <form>
                    <header>
                         <!-- <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/> -->
-                        <!-- <button name="open_last_exam" string="Create Last Exam" type="object" class="btn-primary" attrs="{'invisible': [('can_create_last_exam', '!=', True)]}" groups="bes.group_bes_ceo"/> -->
+                        <button name="open_last_exam" string="Create Last Exam" type="object" class="btn-primary" attrs="{'invisible': [('can_create_last_exam', '!=', True)]}" groups="bes.group_bes_ceo"/>
                         <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
                         <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
                    </header>
@@ -313,6 +313,7 @@
                             <field name="age"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="result_status"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
+                            <field name="can_create_last_exam" invisible="1"/>
 
                             
 
