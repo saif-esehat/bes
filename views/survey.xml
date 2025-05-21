@@ -107,6 +107,15 @@
             </field>
         </record>
 
+        <template id="survey_fill_form_inherited" inherit_id="survey.survey_fill_form"> 
+            <xpath expr="//div[@class='o_survey_error alert alert-danger d-none']" position="replace">
+                <div class="o_survey_error alert alert-danger d-none" role="alert">
+                    <p>There was an error during the validation of the Examination. Please Refresh the Page</p>
+                </div>
+            </xpath>
+        </template>
+
+
         <template id="survey_fill_form_start_inherited" inherit_id="survey.survey_fill_form_start">
             <xpath expr="//button[contains(., 'Start Survey')]" position="replace">
                 <button type="submit" value="start" class="btn btn-primary btn-lg">
