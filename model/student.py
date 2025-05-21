@@ -1190,6 +1190,11 @@ class CCMCCandidate(models.Model):
                 values['age'] = delta.days // 365
             else:
                 values['age'] = 0
+            
+                # Check user group and set previous_repeater
+            if self.env.user.has_group('bes.group_bes_admin'):
+                values['previous_repeater'] = True
+
             ccmc_candidate = super(CCMCCandidate, self).create(values)
         else:
             raise ValidationError("DGS approved Capacity Exceeded")
