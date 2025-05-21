@@ -3550,7 +3550,7 @@ class GPExam(models.Model):
         ('approved', 'Approved'),
     ], string='Exam Violation', default='na',tracking=True)
     
-    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
+    attempt_number = fields.Integer("Attempt Number",tracking=True)
     
     institute_name = fields.Many2one("bes.institute","Institute Name",tracking=True)
     mek_oral = fields.Many2one("gp.mek.oral.line","MEK Oral",tracking=True)
@@ -4352,8 +4352,8 @@ class GPExam(models.Model):
     def create(self, vals):
         if vals.get('gp_candidate'):
             candidate_id = vals['gp_candidate']
-            last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
-            vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
+            # last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
+            # vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
 
             a = super(GPExam, self).create(vals)   
 
@@ -4423,25 +4423,6 @@ class GPExam(models.Model):
             if exams_count > max_exams:
                 raise ValidationError(f"The candidate {candidate.name} already has 7 exams scheduled. "
                                       f"You cannot schedule more than {max_exams} exams for a candidate.")
-    
-    
-    
-    def mark_failed_absent(self):
-        
-        if self.mek_online_attendance == 'absent':
-            self.mek_online_status = 'failed'
-            
-        if self.gsk_online_attendance == 'absent':
-            self.gsk_online_status = 'failed'
-        
-        if self.mek_oral_prac_attendance == 'absent':
-            self.mek_oral_prac_status = 'failed'
-        
-        if self.gsk_oral_prac_attendance == 'absent':
-            self.gsk_oral_prac_status = 'failed'
-            
-        
-    
     
         
     def process_marks(self):
@@ -4558,8 +4539,6 @@ class GPExam(models.Model):
                 overall_marks = self.gsk_total + self.mek_total + self.mek_online_marks + self.gsk_online_marks
                 self.overall_marks = overall_marks
                 self.overall_percentage = (overall_marks/500) * 100
-            
-                self.mark_failed_absent()
 
             else:
                 
@@ -4626,7 +4605,6 @@ class GPExam(models.Model):
                         self.mek_online_status = 'failed'
                     
                     
-                    self.mark_failed_absent()
                     
                     
                     all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
@@ -4769,10 +4747,10 @@ class GPExam(models.Model):
                         self.mek_online_status = 'passed'
                     else:
                         self.mek_online_status = 'failed'
-                
-                
-                self.mark_failed_absent()
 
+            
+                    
+                    
                     
                 
                 # print("Doing Nothing")
@@ -4846,7 +4824,7 @@ class GPExam(models.Model):
                         self.mek_online_status = 'failed'
                     
                     
-                    self.mark_failed_absent()
+                    
                     
                     all_passed = all(field == 'passed' for field in [self.mek_oral_prac_status, self.gsk_oral_prac_status, self.gsk_online_status , self.mek_online_status , self.exam_criteria , self.stcw_criterias , self.ship_visit_criteria , self.attendance_criteria ])
 
@@ -5109,7 +5087,7 @@ class CCMCExam(models.Model):
     
     ccmc_online_assignment = fields.Boolean('ccmc_online_assignment',tracking=True)
 
-    attempt_number = fields.Integer("Attempt Number", default=1, copy=False,readonly=True,tracking=True)
+    attempt_number = fields.Integer("Attempt Number",tracking=True)
     
     reissued = fields.Boolean("Reissued",tracking=True)
     reissued_date = fields.Date("Reissued Date",tracking=True)
@@ -5765,8 +5743,8 @@ class CCMCExam(models.Model):
     def create(self, vals):
         if vals.get('ccmc_candidate'):
             candidate_id = vals['ccmc_candidate']
-            last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
-            vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
+            # last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
+            # vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
         
         return super(CCMCExam, self).create(vals)
 

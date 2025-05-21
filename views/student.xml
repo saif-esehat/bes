@@ -252,7 +252,7 @@
                 <form>
                    <header>
                         <!-- <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/> -->
-                        <!-- <button name="open_last_exam" string="Create Last Exam" type="object" class="btn-primary"/> -->
+                        <button name="open_last_exam" string="Create Last Exam" type="object" class="btn-primary" attrs="{'invisible': [('can_create_last_exam', '!=', True)]}" groups="bes.group_bes_ceo"/>
                         <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'active')]}"/>
                         <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('user_state', '=', 'inactive')]}"/>
                    </header>
@@ -313,6 +313,7 @@
                             <field name="age"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="result_status"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
+                            <field name="can_create_last_exam" invisible="1"/>
 
                             
 
@@ -746,7 +747,7 @@
                 <form>
                     <header>
                         <!-- <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary"/> -->
-                        <!-- <button name="open_last_exam" string="Create Last Exam" type="object" class="btn-primary"/> -->
+                        <button name="open_last_exam" string="Create Last Exam" type="object" class="btn-primary" attrs="{'invisible': [('can_create_last_exam', '!=', True)]}" groups="bes.group_bes_ceo"/>
                         <button name="user_active" string="Active" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_user_state', '=', 'active')]}"/>
                         <button name="user_inactive" string="Inactive" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_user_state', '=', 'inactive')]}"/>
                         <!-- <button name="open_add_marksheet" string="Add Marksheet" type="object" class="btn-primary"/> -->
@@ -821,6 +822,7 @@
                             <field name="dgs_batch"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="institute_batch_id" domain="[('institute_id','=',institute_id)]" attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
                             <field name="edit_profile_status" invisible="1"/>
+                            <field name="can_create_last_exam" invisible="1"/>
                             <field name="candidate_user_invoice_criteria" invisible="1"/>
 
                             <!-- <field name="institute_batch_id"/> -->
@@ -2008,7 +2010,7 @@
 
 
     </record>
-            <record id="gp_create_last_exam_wizard" model="ir.ui.view">
+        <record id="gp_create_last_exam_wizard" model="ir.ui.view">
             <field name="name">create.gp.last.exam.form</field>
             <field name="model">create.gp.last.exam</field>
             <field name="arch" type="xml">
@@ -2018,15 +2020,41 @@
                         <field name="exam_id"/>
                         <field name="dgs_batch"/>
                         <field name="attempt_number"/>
-                        <field name="gsk_oral_marks"/>
-                        <field name="mek_oral_marks"/>
-                        <field name="gsk_practical_marks"/>
-                        <field name="mek_practical_marks"/>
-                        <field name="mek_online_marks"/>
+                    </group>
+                     <group style="width:50%">
+                        <field name="gsk_total_marks"/>
                         <field name="gsk_online_marks"/>
                     </group>
+                     <group style="width:50%">
+                        <field name="mek_total_marks"/>
+                        <field name="mek_online_marks"/>
+                    </group>
                     <footer>
-                        <button string="Register" type="object" class="oe_highlight" name="create_gp_last_exam"/>
+                        <button string="Create" type="object" class="oe_highlight" name="create_gp_last_exam"/>
+                    
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="ccmc_create_last_exam_wizard" model="ir.ui.view">
+            <field name="name">create.ccmc.last.exam.form</field>
+            <field name="model">create.ccmc.last.exam</field>
+            <field name="arch" type="xml">
+                <form>
+                     <group>
+                        <field name="candidate"/>
+                        <field name="exam_id"/>
+                        <field name="dgs_batch"/>
+                        <field name="attempt_number"/>
+                    </group>
+                     <group style="width:50%">
+                        <field name="cookery_practical"/>
+                        <field name="cookery_oral"/>
+                        <field name="cookery_gsk_online"/>
+                    </group>
+                    <footer>
+                        <button string="Create" type="object" class="oe_highlight" name="create_ccmc_last_exam"/>
                     
                     </footer>
                 </form>

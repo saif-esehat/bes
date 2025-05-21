@@ -120,7 +120,7 @@
                             </group>
                             <group style="width:50%;">
                                 <field name="mti" />
-                                <field name="exam_center" />
+                                <field name="exam_center" required="1"/>
                             </group>
 
                             <group style="width:50%;">
