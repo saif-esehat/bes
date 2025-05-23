@@ -3467,21 +3467,24 @@ class GpAdmitCardRelease(models.TransientModel):
 
             # Check if the candidate meets the criteria for releasing the admit card
             if (candidate.stcw_criterias == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
-                # Determine the region-specific institute
-                registered_institute = None
-                if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                    registered_institute = mumbai_region.id
-                elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
-                    registered_institute = kolkata_region.id
-                elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
-                    registered_institute = chennai_region.id
-                elif candidate.exam_region.name == 'DELHI' and delhi_region:
-                    registered_institute = delhi_region.id
-                elif candidate.exam_region.name == 'KOCHI' and kochi_region:
-                    registered_institute = kochi_region.id
-                elif candidate.exam_region.name == 'GOA' and goa_region:
-                    registered_institute = goa_region.id
-
+                # Determine the region-specific institute\
+                if is_march_september:
+                    # import wdb; wdb.set_trace()
+                    registered_institute = None
+                    if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                        registered_institute = mumbai_region.id
+                    elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                        registered_institute = kolkata_region.id
+                    elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                        registered_institute = chennai_region.id
+                    elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                        registered_institute = delhi_region.id
+                    elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                        registered_institute = kochi_region.id
+                    elif candidate.exam_region.name == 'GOA' and goa_region:
+                        registered_institute = goa_region.id
+                else:
+                    registered_institute = candidate.institute_id.id
                 # Only update if hold_admit_card is being set to False
                 if candidate.hold_admit_card:
                     candidate.write({
@@ -4357,8 +4360,8 @@ class GPExam(models.Model):
     def create(self, vals):
         if vals.get('gp_candidate'):
             candidate_id = vals['gp_candidate']
-            # last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
-            # vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
+            last_attempt = self.search([('gp_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
+            vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
 
             a = super(GPExam, self).create(vals)   
 
@@ -5005,20 +5008,22 @@ class CcmcAdmitCardRelease(models.TransientModel):
             # Check if the candidate meets the criteria for releasing the admit card
             if (candidate.stcw_criteria == 'passed' and candidate.attendance_criteria == 'passed' and candidate.ship_visit_criteria == 'passed') or candidate.ceo_override:
                 # Determine the region-specific institute
-                registered_institute = None
-                if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
-                    registered_institute = mumbai_region.id
-                elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
-                    registered_institute = kolkata_region.id
-                elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
-                    registered_institute = chennai_region.id
-                elif candidate.exam_region.name == 'DELHI' and delhi_region:
-                    registered_institute = delhi_region.id
-                elif candidate.exam_region.name == 'KOCHI' and kochi_region:
-                    registered_institute = kochi_region.id
-                elif candidate.exam_region.name == 'GOA' and goa_region:
-                    registered_institute = goa_region.id
-
+                if is_march_september:
+                    registered_institute = None
+                    if candidate.exam_region.name == 'MUMBAI' and mumbai_region:
+                        registered_institute = mumbai_region.id
+                    elif candidate.exam_region.name == 'KOLKATA' and kolkata_region:
+                        registered_institute = kolkata_region.id
+                    elif candidate.exam_region.name == 'CHENNAI' and chennai_region:
+                        registered_institute = chennai_region.id
+                    elif candidate.exam_region.name == 'DELHI' and delhi_region:
+                        registered_institute = delhi_region.id
+                    elif candidate.exam_region.name == 'KOCHI' and kochi_region:
+                        registered_institute = kochi_region.id
+                    elif candidate.exam_region.name == 'GOA' and goa_region:
+                        registered_institute = goa_region.id
+                else:
+                    registered_institute = candidate.institute_id.id
                 # Only update if hold_admit_card is being set to False
                 if candidate.hold_admit_card:
                     candidate.write({
@@ -5753,8 +5758,8 @@ class CCMCExam(models.Model):
     def create(self, vals):
         if vals.get('ccmc_candidate'):
             candidate_id = vals['ccmc_candidate']
-            # last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
-            # vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
+            last_attempt = self.search([('ccmc_candidate', '=', candidate_id)], order='attempt_number desc', limit=1)
+            vals['attempt_number'] = last_attempt.attempt_number + 1 if last_attempt else 1
         
         return super(CCMCExam, self).create(vals)
 
@@ -6359,15 +6364,15 @@ class OnlineExamWizard(models.TransientModel):
     def save_ip_address(self):
         """Save IP addresses (comma-separated) to examiner's record, institute's record, and external API."""
         # Make POST requests to external API for each IP
-        api_url = "http://178.18.255.245:5000/api/ip/add"
-        ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]
+        # api_url = "http://178.18.255.245:5000/api/ip/add"
+        # ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]
         
-        for ip in ip_list:
-            data = {
-                "ip": ip,
-                "location": "survey"
-            }
-            response = requests.post(api_url, json=data, timeout=5)
+        # for ip in ip_list:
+        #     data = {
+        #         "ip": ip,
+        #         "location": "survey"
+        #     }
+        #     response = requests.post(api_url, json=data, timeout=5)
             
         # Original functionality - Fetch the related examiner and set the IP address
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([

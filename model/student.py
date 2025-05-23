@@ -2784,7 +2784,6 @@ class CreateCCMCLastExam(models.TransientModel):
             'ccmc_candidate': self.candidate.id,
             'exam_id': self.exam_id,
             'dgs_batch': self.dgs_batch.id if self.dgs_batch else False,
-            'attempt_number': self.attempt_number,
 
             'cookery_practical': cookery_practical,
             'cookery_oral': catering_oral,
@@ -2805,6 +2804,8 @@ class CreateCCMCLastExam(models.TransientModel):
             'ccmc_online_status': 'passed' if cookery_gsk_online_percentage >= 60 else 'failed',
             'state':'2-done',
         })
+
+        ccmc_exam.write({'attempt_number': self.attempt_number,})
 
         ccmc_exam.compute_dgs_visible()
         ccmc_exam.dgs_approval()
