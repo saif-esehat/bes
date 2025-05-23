@@ -4171,28 +4171,33 @@ class GPExam(models.Model):
             #                                                  order='overall_percentage desc , institute_code asc , gp_candidate asc')
             sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1)],
                                                              order='overall_percentage desc , institute_code asc , gp_candidate asc')
-        # import wdb; wdb.set_trace();
+            # import wdb; wdb.set_trace();
         total_records = len(sorted_records)
         top_25_percent = int(total_records * 0.25)
 
         for record in self:
+            
+            if record.overall_percentage > 0:
             # print(record.id)
-            try:
-                index = sorted_records.ids.index(record.id)
-                numeric_rank = index + 1 if index < top_25_percent else 0
+                try:
+                    index = sorted_records.ids.index(record.id)
+                    numeric_rank = index + 1 if index < top_25_percent else 0
 
-                # Convert numeric rank to character format
-                if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
-                    suffix = 'st'
-                elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
-                    suffix = 'nd'
-                elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
-                    suffix = 'rd'
-                else:
-                    suffix = 'th'
+                    # Convert numeric rank to character format
+                    if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+                        suffix = 'st'
+                    elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+                        suffix = 'nd'
+                    elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+                        suffix = 'rd'
+                    else:
+                        suffix = 'th'
 
-                record.rank = f'{numeric_rank}{suffix}'
-            except:
+                    record.rank = f'{numeric_rank}{suffix}'
+                except:
+                    record.rank = "0th"
+            
+            else:
                 record.rank = "0th"
     
     
@@ -5693,22 +5698,27 @@ class CCMCExam(models.Model):
 
         for record in self:
             print(record.id)
-            try:
-                index = sorted_records.ids.index(record.id)
-                numeric_rank = index + 1 if index < top_25_percent else 0
+            
+            if record.overall_percentage > 0:
+                try:
+                    index = sorted_records.ids.index(record.id)
+                    numeric_rank = index + 1 if index < top_25_percent else 0
 
-                # Convert numeric rank to character format
-                if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
-                    suffix = 'st'
-                elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
-                    suffix = 'nd'
-                elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
-                    suffix = 'rd'
-                else:
-                    suffix = 'th'
+                    # Convert numeric rank to character format
+                    if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+                        suffix = 'st'
+                    elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+                        suffix = 'nd'
+                    elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+                        suffix = 'rd'
+                    else:
+                        suffix = 'th'
 
-                record.ccmc_rank = f'{numeric_rank}{suffix}'
-            except:
+                    record.ccmc_rank = f'{numeric_rank}{suffix}'
+                except:
+                    record.ccmc_rank = "0th"
+                
+            else:
                 record.ccmc_rank = "0th"
     
 
