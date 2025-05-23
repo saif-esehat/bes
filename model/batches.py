@@ -1275,7 +1275,9 @@ class BatchesRegisterExamWizard(models.TransientModel):
                 'institute_name':batch.institute_id.id ,
                 'hold_admit_card':True,
                 'registered_institute':batch.institute_id.id,
-                'exam_region':batch.institute_id.exam_center.id,})
+                'exam_region':batch.institute_id.exam_center.id,
+                'attempt_number':1,
+                })
             mek_practical = self.env["gp.mek.practical.line"].create({"exam_id":gp_exam_schedule.id,'mek_parent':candidate.id,'institute_id': batch.institute_id.id})
             mek_oral = self.env["gp.mek.oral.line"].create({"exam_id":gp_exam_schedule.id,'mek_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
             gsk_practical = self.env["gp.gsk.practical.line"].create({"exam_id":gp_exam_schedule.id,'gsk_practical_parent':candidate.id,'institute_id': batch.institute_id.id})
@@ -1351,7 +1353,9 @@ class CCMCBatchesRegisterExamWizard(models.TransientModel):
                 'hold_admit_card':True , 
                 'institute_name':batch.institute_id.id ,
                 'registered_institute':batch.institute_id.id,
-                'exam_region':batch.institute_id.exam_center.id,})
+                'exam_region':batch.institute_id.exam_center.id,
+                'attempt_number':1,
+                })
 
             cookery_bakery = self.env["ccmc.cookery.bakery.line"].create({"exam_id":ccmc_exam_schedule.id,'cookery_parent':candidate.id,'institute_id': batch.institute_id.id})
             ccmc_oral = self.env["ccmc.oral.line"].create({"exam_id":ccmc_exam_schedule.id,'ccmc_oral_parent':candidate.id,'institute_id': batch.institute_id.id})
