@@ -216,6 +216,8 @@ bes.group_exam_coordinator_examiner_overall_expenses,access_examiner_overall_exp
 bes.group_exam_coordinator_exam_misc_expense,access_exam_misc_expense,bes.model_exam_misc_expense,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_exam_assignment_expense,access_exam_assignment_expense,bes.model_exam_assignment_expense,bes.group_exam_coordinator,1,1,1,1
 bes.group_exam_coordinator_exam_assignment_online_expense,access_exam_assignment_online_expense,bes.model_exam_assignment_online_expense,bes.group_exam_coordinator,1,1,1,1
+bes.group_exam_coordinator_acces_batch_pop_up,exam_coordinator_acces_batch_pop_up,bes.model_batch_pop_up_wizard,bes.group_exam_coordinator,1,1,1,1
+
 
 
 bes.access_order_books,access_order_books,bes.model_order_books,base.group_user,1,1,1,1
