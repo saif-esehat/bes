@@ -59,6 +59,7 @@ class PublicPortal(http.Controller):
     @http.route(['/verification/gpadmitcard/<int:exam_id>'], type="http", auth='none')
     def VerifyGpAdmitCard(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
+        raise ValidationError("Not allowed")
         try:
             exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',exam_id)]).id
         except:
