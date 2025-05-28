@@ -130,12 +130,12 @@
                                     <tr>
                                         <th scope="col" class="table-secondary" style="border: 1px solid black;">Attempting Exam(s)</th>
                                         <t t-if="o.dgs_batch.is_march_september">
-                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_cookery or o.attempting_oral">Exam Date P&amp;O</th>
-                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_online">Exam Date Online</th>
+                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_cookery or o.attempting_oral">Exam Date</th>
+                                            <!-- <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_online">Exam Date Online</th> -->
                                         </t>
                                         <t t-elif="o.dgs_batch.repeater_batch and not o.dgs_batch.is_march_september">
-                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_cookery or o.attempting_oral">Exam Date P&amp;O</th>
-                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_online">Exam Date Online</th>
+                                            <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_cookery or o.attempting_oral">Exam Date</th>
+                                            <!-- <th scope="col" class="table-secondary" style="border: 1px solid black;" t-if="o.attempting_online">Exam Date Online</th> -->
                                         </t>
                                     </tr>
                                 </thead>
