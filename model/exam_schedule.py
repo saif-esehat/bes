@@ -616,7 +616,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     
                     for marksheet in record.ccmc_marksheet_ids:
                         # import wdb;wdb.set_trace()
-                        marksheet.write({ 'ccmc_oral_prac_assignment': True })
+                        marksheet.write({ 'ccmc_oral_prac_assignment': True ,'ccmc_practical_assignment_id':assignment.id })
                         ccmc_marksheet = marksheet
                         cookery_bakery = marksheet.cookery_bakery
                         # ccmc_oral = marksheet.ccmc_oral
@@ -686,7 +686,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                                                                                             })
                         
                     for marksheet in record.ccmc_marksheet_ids:
-                            marksheet.write({'ccmc_gsk_oral_assignment':True})
+                            marksheet.write({'ccmc_gsk_oral_assignment':True ,'ccmc_oral_assignment_id':assignment.id })
                             ccmc_marksheet = marksheet
                             candidate = marksheet.ccmc_candidate.id
                             ccmc_oral = marksheet.ccmc_oral                            
@@ -722,7 +722,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                                                                                             })
                         
                     for marksheet in record.ccmc_marksheet_ids:
-                            marksheet.write({'ccmc_gsk_oral_assignment':True})
+                            marksheet.write({'ccmc_gsk_oral_assignment':True,'ccmc_gsk_oral_assignment_id':assignment.id })
                             ccmc_marksheet = marksheet
                             candidate = marksheet.ccmc_candidate.id
                             ccmc_gsk_oral = marksheet.ccmc_gsk_oral
@@ -1170,7 +1170,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                                                                                         })
                     
                     for marksheet in record.gp_marksheet_ids:
-                        marksheet.write({'gsk_oral_prac_assignment':True})
+                        marksheet.write({'gsk_oral_prac_assignment':True,'gsk_oral_prac_assignment_id':assignment.id})
                         gp_marksheet = marksheet
                         gsk_oral = marksheet.gsk_oral.id
                         gsk_prac = marksheet.gsk_prac.id
@@ -1244,7 +1244,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                                                                                         'exam_type':exam_type      
                                                                                         })
                     for marksheet in record.gp_marksheet_ids:
-                        marksheet.write({'mek_oral_prac_assignment':True})
+                        marksheet.write({'mek_oral_prac_assignment':True,'mek_oral_prac_assignment_id':assignment.id})
                         # import wdb;wdb.set_trace()
                         gp_marksheet = marksheet
                         mek_oral = marksheet.mek_oral.id
@@ -3910,6 +3910,8 @@ class GPExam(models.Model):
 
     gsk_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="GSK Online Assignment",tracking=True)
     mek_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="MEK Online Assignment",tracking=True)
+    gsk_oral_prac_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="GSK Practical & Oral Assignment",tracking=True)
+    mek_oral_prac_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="MEK Practical & Oral Assignment",tracking=True)
 
     @api.depends('gp_candidate.candidate_image')
     def _check_image(self):
@@ -5420,6 +5422,9 @@ class CCMCExam(models.Model):
 
     ceo_override = fields.Boolean("CEO Override", related='ccmc_candidate.ceo_override',store=True,tracking=True)
     ccmc_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC Online Assignment",tracking=True)
+    ccmc_practical_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC Practical Assignment",tracking=True)
+    ccmc_oral_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC Oral Assignment",tracking=True)
+    ccmc_gsk_oral_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC GSK Oral Assignment",tracking=True)
     
     def open_reset_online_exam_wizard(self):
         view_id = self.env.ref('bes.reset_online_exam_wizard').id
@@ -6253,6 +6258,8 @@ class ReallocateCandidatesWizard(models.TransientModel):
                         # Check if both oral and practical drafts are confirmed
                         if candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'draft' or candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'draft':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate 
+                            candidate.gp_marksheet.gsk_oral_prac_assignment_id = self.examiner_id.id
+
                         elif candidate.gp_marksheet.gsk_oral.gsk_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.gsk_prac.gsk_practical_draft_confirm == 'confirm':
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()
@@ -6260,6 +6267,7 @@ class ReallocateCandidatesWizard(models.TransientModel):
                     elif candidate.examiners_id.subject.name == 'MEK':
                         if candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'draft' or candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'draft':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            candidate.gp_marksheet.mek_oral_prac_assignment_id = self.examiner_id.id
                         elif candidate.gp_marksheet.mek_oral.mek_oral_draft_confirm == 'confirm' and candidate.gp_marksheet.mek_prac.mek_practical_draft_confirm == 'confirm':
                             confirmed_candidates.append(candidate.gp_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()
@@ -6268,12 +6276,18 @@ class ReallocateCandidatesWizard(models.TransientModel):
                     if candidate.examiners_id.subject.name == 'CCMC':
                         if candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'draft' or candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'draft':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            if candidate.ccmc_marksheet.attempting_cookery and self.examiner_id.subject.name == 'practical_oral_cookery_bakery':
+                                candidate.ccmc_marksheet.ccmc_practical_assignment_id = self.examiner_id.id
+                            if candidate.ccmc_marksheet.attempting_oral and self.examiner_id.subject.name == 'ccmc_oral':
+                                candidate.ccmc_marksheet.ccmc_oral_assignment_id = self.examiner_id.id
                         elif candidate.ccmc_marksheet.cookery_bakery.cookery_draft_confirm == 'confirm' and candidate.ccmc_marksheet.ccmc_oral.ccmc_oral_draft_confirm == 'confirm':
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()
 
                         if candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'draft':
                             candidate.examiners_id = self.examiner_id.id  # Update the examiner for the candidate
+                            if candidate.ccmc_marksheet.attempting_oral and self.examiner_id.subject.name == 'gsk_oral':
+                                candidate.ccmc_marksheet.ccmc_gsk_oral_assignment_id = self.examiner_id.id
                         elif candidate.ccmc_marksheet.ccmc_gsk_oral.ccmc_oral_draft_confirm == 'confirm':
                             confirmed_candidates.append(candidate.ccmc_candidate.name)  # Add to confirmed list
                             candidate.examiners_id.compute_candidates_done()

@@ -140,7 +140,6 @@ class CustomPaymentRegister(models.TransientModel):
         return [item for item in array1 if item not in array2]
 
     def action_create_payments(self):
-        # import wdb;wdb.set_trace()
         # Your custom code here before or after calling the super method
         # import wdb;wdb.set_trace()
         
@@ -156,6 +155,15 @@ class CustomPaymentRegister(models.TransientModel):
                 
         account_move_id = self.env.context['active_ids']
         invoices = self.env['account.move'].sudo().search([('id','in',account_move_id)])
+        # import wdb;wdb.set_trace()
+                # Check if any invoice was created by a user in the 'group_institute'
+        for inv in invoices:
+            if inv.create_uid.has_group('bes.group_institute'):
+                if len(invoices) > 1:
+                    raise ValidationError(
+                        "For Institute Invoices you have to select one invoice at a time."
+                    )
+                break  # Only need to check one to enforce the restriction
         # if invoice.id == 392:
         #     import wdb;wdb.set_trace();
         # if invoice.id == 391:
