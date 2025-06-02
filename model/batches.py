@@ -152,6 +152,16 @@ class InstituteGPBatches(models.Model):
     #             rec.dgs_approved_capacity = rec.institute_id.courses[0].intake_capacity
 
     # @api.depends("dgs_approved_capacity")
+
+
+    def close_batch(self):
+        for rec in self:
+            rec.state = '6-done'
+    
+    def open_batch(self):
+        for rec in self:
+            rec.state = '5-exam_scheduled'
+
     def update_dgs_capacity(self):
         """
         Enforces capacity rules for DGS batches based on the associated course's batcher_per_year.
@@ -791,6 +801,14 @@ class InstituteCcmcBatches(models.Model):
 
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
     candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
+
+    def close_batch(self):
+        for rec in self:
+            rec.ccmc_state = '6-done'
+    
+    def open_batch(self):
+        for rec in self:
+            rec.ccmc_state = '5-exam_scheduled'
 
     def _compute_all_candidates_have_indos(self):
         for record in self:

@@ -48,6 +48,8 @@
                         <button name="open_register_for_exam_wizard" string="Register for Exam" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '4-invoiced')]}"/>
                         <button name="create_invoice" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('create_invoice_button_invisible', '=', False)]}"/>
                         <button name="issue_admit_card" string="Issue Admit Card" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', '5-exam_scheduled'), ('admit_card_status', '=', 'issued')]}"/>
+                        <button name="close_batch" string="Close Batch" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '5-exam_scheduled')]}"/>
+                        <button name="open_batch" string="Open Batch" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', '6-done')]}"/>
 
                         <field name="state" widget="statusbar" statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
@@ -325,6 +327,9 @@
                         <button name="issue_admit_card" string="Issue Admit Card" type="object" class="btn-primary" attrs="{'invisible': ['|', ('ccmc_state', '!=', '5-exam_scheduled'), ('admit_card_status', '=', 'issued')]}"/>
 
                         <button name="create_invoice_ccmc" string="Create Invoice" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_create_invoice_button_invisible', '=', False)]}"/>
+                        <button name="close_batch" string="Close Batch" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '5-exam_scheduled')]}"/>
+                        <button name="open_batch" string="Open Batch" type="object" class="btn-primary" attrs="{'invisible': [('ccmc_state', '!=', '6-done')]}"/>
+                        
                         <field name="ccmc_state" widget="statusbar"  statusbar_visible="1-ongoing,3-pending_invoice,4-invoiced,5-exam_scheduled,6-done"/>
                     </header>
                     <sheet>
