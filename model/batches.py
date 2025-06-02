@@ -94,7 +94,7 @@ class InstituteGPBatches(models.Model):
         ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Generated'),
         ('4-invoiced', 'Paid'),
-        ('5-exam_scheduled', 'Fees Paid'),
+        ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing',tracking=True)
     
@@ -771,7 +771,7 @@ class InstituteCcmcBatches(models.Model):
         ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Pending'),
         ('4-invoiced', 'Invoice Generated'),
-        ('5-exam_scheduled', 'Fees Received'),
+        ('5-exam_scheduled', 'Exam Scheduled'),
         ('6-done', 'Done')        
     ], string='State', default='1-ongoing',tracking=True)
     

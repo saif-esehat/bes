@@ -31,7 +31,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
         ('yes', 'Yes'),
         ('no', 'No')
     ], string='Delete Previous Questions', default='no')
-    marks = fields.Integer(string="Marks", required=True)
+    marks = fields.Float(string="Marks", required=True)
 
     def excel_to_mcq_json(self,encoded_file):
         # Decode base64-encoded file
@@ -167,7 +167,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
                             question['options'].append({
                                 'text': choice['text'],
                                 'correct': choice['correct'],
-                                'marks': 0
+                                'marks': self.marks 
                             })
                         questions_data.append(question)
                     # Clean up temp file
