@@ -94,8 +94,8 @@ class InstituteGPBatches(models.Model):
         ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Generated'),
         ('4-invoiced', 'Paid'),
-        ('5-exam_scheduled', 'Fees Paid'),
-        ('6-done', 'Done')        
+        ('5-exam_scheduled', 'Exam Scheduled'),
+        ('6-done', 'Batch Closed')        
     ], string='State', default='1-ongoing',tracking=True)
     
     active = fields.Boolean(string="Active",default=True,tracking=True)
@@ -152,6 +152,16 @@ class InstituteGPBatches(models.Model):
     #             rec.dgs_approved_capacity = rec.institute_id.courses[0].intake_capacity
 
     # @api.depends("dgs_approved_capacity")
+
+
+    def close_batch(self):
+        for rec in self:
+            rec.state = '6-done'
+    
+    def open_batch(self):
+        for rec in self:
+            rec.state = '5-exam_scheduled'
+
     def update_dgs_capacity(self):
         """
         Enforces capacity rules for DGS batches based on the associated course's batcher_per_year.
@@ -761,8 +771,8 @@ class InstituteCcmcBatches(models.Model):
         ('2-indos_pending', 'Confirmed'),
         ('3-pending_invoice', 'Invoice Pending'),
         ('4-invoiced', 'Invoice Generated'),
-        ('5-exam_scheduled', 'Fees Received'),
-        ('6-done', 'Done')        
+        ('5-exam_scheduled', 'Exam Scheduled'),
+        ('6-done', 'Batch Closed')        
     ], string='State', default='1-ongoing',tracking=True)
     
     payment_state = fields.Selection([
@@ -791,6 +801,14 @@ class InstituteCcmcBatches(models.Model):
 
     all_candidates_have_indos = fields.Boolean(string="All Candidates Have INDOS", compute="_compute_all_candidates_have_indos")
     candidate_ids = fields.Many2many('gp.candidate', string="Candidates")
+
+    def close_batch(self):
+        for rec in self:
+            rec.ccmc_state = '6-done'
+    
+    def open_batch(self):
+        for rec in self:
+            rec.ccmc_state = '5-exam_scheduled'
 
     def _compute_all_candidates_have_indos(self):
         for record in self:

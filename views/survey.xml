@@ -612,11 +612,46 @@
                                 If "Delete Previous Questions" is selected as yes then all previous questions in the selected chapter will be deleted.
                             </p>
                         </group>
-                        <group>   
+                        <group attrs="{'invisible': [('upload_type', '=', 'single')]}">   
                             <span style="font-size: 18px;">
-                                Click <a href="https://bestrust.in//document/share/10/15da4da9-ca46-4c6b-a229-038c4c817e61"
-                                target="_blank"><strong style="color: red;">here</strong></a> 
-                                to download the uploading format for bulk upload.
+                                Click the button below to download the excel or the word upload format
+                                <div style="font-size: 18px; display: flex; gap: 20px; margin: 10px 0;">
+                                    <a href="https://bestrust.in//document/share/13/8b4b7ebc-b553-496d-9ea1-26dcb25db1f0"
+                                    target="_blank"
+                                    style="text-decoration: none;">
+                                        <button style="background-color: #4CAF50; /* Green */
+                                                    border: none;
+                                                    color: white;
+                                                    padding: 10px 20px;
+                                                    text-align: center;
+                                                    text-decoration: none;
+                                                    display: inline-block;
+                                                    font-size: 16px;
+                                                    margin: 4px 2px;
+                                                    cursor: pointer;
+                                                    border-radius: 5px;">
+                                            Download Excel Format
+                                        </button>
+                                    </a>
+                                    
+                                    <a href="https://bestrust.in//document/share/14/4faa695e-507d-4dd3-9a7b-1582ce1bdcfe"
+                                    target="_blank"
+                                    style="text-decoration: none;">
+                                        <button style="background-color: #2196F3; /* Blue */
+                                                    border: none;
+                                                    color: white;
+                                                    padding: 10px 20px;
+                                                    text-align: center;
+                                                    text-decoration: none;
+                                                    display: inline-block;
+                                                    font-size: 16px;
+                                                    margin: 4px 2px;
+                                                    cursor: pointer;
+                                                    border-radius: 5px;">
+                                            Download Word Format
+                                        </button>
+                                    </a>
+                                </div>
                             </span>
                         </group>
 
