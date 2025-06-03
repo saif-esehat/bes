@@ -140,7 +140,9 @@
                         <group>
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code" readonly="1"/>
-                            <field name="registered_institute" readonly="1"/>
+                            <!-- <field name="registered_institute" readonly="1"/> -->
+                            <field name="registered_institute" attrs="{'readonly': [('edit_register_institute', '=', False)]}"/>
+                            <field name="edit_register_institute" invisible="1"/>
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id" readonly="1"/>
                             <field name="exam_violation_state" invisible="1"/>
@@ -491,7 +493,8 @@
                         <group>
                             <field name="exam_id" readonly="1"/>
                             <field name="institute_code"  force_save="1"/>
-                            <field name="registered_institute" readonly="1"/>
+                            <field name="registered_institute" attrs="{'readonly': [('edit_register_institute', '=', False)]}"/>
+                            <field name="edit_register_institute" invisible="1"/>
                             <field name="exam_region" readonly="1"/>
                             <field name="institute_id"/>
                             <field name="exam_violation_state" invisible="1"/>

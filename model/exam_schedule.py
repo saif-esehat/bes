@@ -3810,6 +3810,19 @@ class GPExam(models.Model):
         ('absent', 'Absent'),
     ],string="Absent Status (Repeater) ",compute="_compute_absent_status_repeater",store=True)
     
+    edit_register_institute = fields.Boolean(
+        string="Can Edit Institute",
+        compute="_compute_edit_register_institute",
+        store=False  # Don't store as it's computed on the fly
+    )
+
+    @api.depends_context('uid')  # Depends on current user
+    def _compute_edit_register_institute(self):
+        can_edit = self.env.user.has_group('bes.group_bes_coo')
+        for record in self:
+            record.edit_register_institute = can_edit
+
+
     @api.depends('gsk_oral_prac_attendance','gsk_online_attendance','mek_oral_prac_attendance','mek_online_attendance')
     def _compute_absent_status_repeater(self):
         for record in self:
@@ -5269,6 +5282,17 @@ class CCMCExam(models.Model):
     
     edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
     
+    edit_register_institute = fields.Boolean(
+        string="Can Edit Institute",
+        compute="_compute_edit_register_institute",
+        store=False  # Don't store as it's computed on the fly
+    )
+
+    @api.depends_context('uid')  # Depends on current user
+    def _compute_edit_register_institute(self):
+        can_edit = self.env.user.has_group('bes.group_bes_coo')
+        for record in self:
+            record.edit_register_institute = can_edit
 
     def _compute_is_in_group(self):
         for record in self:
