@@ -3634,7 +3634,7 @@ class GPExam(models.Model):
     
     edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
 
-
+    @api.depends_context('uid')  # Depends on current user
     def _compute_is_in_group(self):
         for record in self:
             user = self.env.user
@@ -5294,6 +5294,7 @@ class CCMCExam(models.Model):
         for record in self:
             record.edit_register_institute = can_edit
 
+    @api.depends_context('uid')  # Depends on current user
     def _compute_is_in_group(self):
         for record in self:
             user = self.env.user
