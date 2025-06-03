@@ -95,7 +95,7 @@ class InstituteGPBatches(models.Model):
         ('3-pending_invoice', 'Invoice Generated'),
         ('4-invoiced', 'Paid'),
         ('5-exam_scheduled', 'Exam Scheduled'),
-        ('6-done', 'Done')        
+        ('6-done', 'Batch Closed')        
     ], string='State', default='1-ongoing',tracking=True)
     
     active = fields.Boolean(string="Active",default=True,tracking=True)
@@ -772,7 +772,7 @@ class InstituteCcmcBatches(models.Model):
         ('3-pending_invoice', 'Invoice Pending'),
         ('4-invoiced', 'Invoice Generated'),
         ('5-exam_scheduled', 'Exam Scheduled'),
-        ('6-done', 'Done')        
+        ('6-done', 'Batch Closed')        
     ], string='State', default='1-ongoing',tracking=True)
     
     payment_state = fields.Selection([

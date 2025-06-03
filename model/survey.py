@@ -167,7 +167,7 @@ class SurveySectionQuestionWizard(models.TransientModel):
                             question['options'].append({
                                 'text': choice['text'],
                                 'correct': choice['correct'],
-                                'marks': self.marks 
+                                'marks': self.marks
                             })
                         questions_data.append(question)
                     # Clean up temp file
