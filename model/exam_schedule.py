@@ -6403,15 +6403,19 @@ class OnlineExamWizard(models.TransientModel):
     def save_ip_address(self):
         """Save IP addresses (comma-separated) to examiner's record, institute's record, and external API."""
         # Make POST requests to external API for each IP
-        # api_url = "http://178.18.255.245:5000/api/ip/add"
-        # ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]
         
-        # for ip in ip_list:
-        #     data = {
-        #         "ip": ip,
-        #         "location": "survey"
-        #     }
-        #     response = requests.post(api_url, json=data, timeout=5)
+        config_param = self.env['ir.config_parameter'].sudo().get_param('bes.server_type')
+        
+        if config_param == 'production':  
+            api_url = "http://178.18.255.245:5000/api/ip/add"
+            ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]
+            
+            for ip in ip_list:
+                data = {
+                    "ip": ip,
+                    "location": "survey"
+                }
+                response = requests.post(api_url, json=data, timeout=5)
             
         # Original functionality - Fetch the related examiner and set the IP address
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
