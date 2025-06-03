@@ -159,9 +159,9 @@
         <menuitem id="institute_menu" parent="bes_menu" name="Institute Master"
             action="institute_action" sequence="2" />
 
-        <menuitem id="exam_menu" parent="bes_menu" name="Examiner Master" sequence="3" />
+        <menuitem id="exam_menu" parent="bes_menu" name="Examiner Master" sequence="3" groups="bes.group_bes_coo"/>
         <menuitem id="exam_center_menu" parent="exam_menu" name="Exam Region"
-            action="exam_center_action" />
+            action="exam_center_action"/>
         <menuitem id="examiner_menu" parent="exam_menu" name="Examiner Master"
             action="bes_examiner_action" sequence="2" />
 
