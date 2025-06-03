@@ -5191,7 +5191,7 @@ class CCMCExam(models.Model):
     attendance_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Attendance Criteria' ,related='ccmc_candidate.attendance_criteria',tracking=True)
+    ], string='Attendance Criteria' ,related='ccmc_candidate.attendance_criteria')
 
     
     
@@ -5221,7 +5221,7 @@ class CCMCExam(models.Model):
     ship_visit_criteria = fields.Selection([
         ('pending', 'Pending'),
         ('passed', 'Passed'),
-    ], string='Ship Visit Criteria',related='ccmc_candidate.ship_visit_criteria',tracking=True)
+    ], string='Ship Visit Criteria',related='ccmc_candidate.ship_visit_criteria')
     
     exam_violation_state = fields.Selection([
         ('na', 'N/A'),
