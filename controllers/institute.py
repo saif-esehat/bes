@@ -806,7 +806,7 @@ class InstitutePortal(CustomerPortal):
         if request.httprequest.method == "POST":
             name = kw.get("name")
             gender = "male" if kw.get("gender") == "Male" else "female"
-            indos_no = kw.get("indos_no")
+            indos_no = kw.get("indos_no").strip()
             date_str = kw.get("dob")
             try:
                 dob = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -997,7 +997,7 @@ class InstitutePortal(CustomerPortal):
         if request.httprequest.method == "POST":
             name = kw.get("name")
             dob = kw.get("dob")
-            indos_no = kw.get("indos_no")
+            indos_no = kw.get("indos_no").strip()
             candidate_code = kw.get("candidate_code")
             roll_no = kw.get("roll_no")
             street = kw.get("street")

@@ -555,6 +555,10 @@ class GPCandidate(models.Model):
         capacity = gp_batches.dgs_approved_capacity - 1
         # capacity = gp_batches.dgs_approved_capacity 
         
+        if indos_no:
+            indos_no = values['indos_no'].strip()
+            values['indos_no'] = indos_no
+        
         candidate_count = self.env["gp.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])  
        
         if candidate_count <= capacity:
@@ -1199,6 +1203,11 @@ class CCMCCandidate(models.Model):
         
         candidate_count = self.env["ccmc.candidate"].sudo().search_count([('institute_batch_id','=',institute_batch_id)])
         
+        if indos_no:
+            indos_no = values['indos_no'].strip()
+            values['indos_no'] = indos_no
+
+    
         if candidate_count <= capacity:
             if values["dob"]:
                 birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
