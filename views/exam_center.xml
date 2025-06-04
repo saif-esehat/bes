@@ -32,6 +32,7 @@
                         </group>
 
                         <group style="width:50%;">
+                            <field name="ec_name"/>
                             <field name="exam_co_ordinator"/>
                             <field name="mobile"/>
                             <field name="email" />

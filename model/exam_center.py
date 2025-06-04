@@ -10,6 +10,7 @@ class ExamCenter(models.Model):
     _description = "Exam Region"
     
     name = fields.Char("Exam Region",required=True,tracking=True)
+    ec_name = fields.Char("EC Name",required=True,tracking=True)
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True,tracking=True)
     exam_co_ordinator = fields.Many2one("res.users","Exam Co-ordinator",tracking=True)
     mobile = fields.Char("Mobile",related='exam_co_ordinator.partner_id.mobile')
