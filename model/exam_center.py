@@ -10,7 +10,7 @@ class ExamCenter(models.Model):
     _description = "Exam Region"
     
     name = fields.Char("Exam Region",required=True,tracking=True)
-    ec_name = fields.Char("EC Name",required=True,tracking=True)
+    ec_name = fields.Many2one("bes.examiner","EC Name",domain=[('exam_coordinator','=','True')],required=True,tracking=True)
     state_id = fields.Many2one("res.country.state","State",domain=[('country_id.code','=','IN')],required=True,tracking=True)
     exam_co_ordinator = fields.Many2one("res.users","Exam Co-ordinator",tracking=True)
     mobile = fields.Char("Mobile",related='exam_co_ordinator.partner_id.mobile')
@@ -18,10 +18,10 @@ class ExamCenter(models.Model):
     gp_candidate = fields.Many2one('gp.exam.schedule')
     repeater_region = fields.Boolean("Repeater Region")
     
-    pan_no = fields.Char("Pan No .",tracking=True)
-    acc_no = fields.Char(string="Account Number",tracking=True)
-    ifsc_code = fields.Char(string="IFSC Code",tracking=True)
-    bank_name = fields.Char(string="Bank Name",tracking=True)
+    pan_no = fields.Char("Pan No .",related="ec_name.pan_no",tracking=True)
+    acc_no = fields.Char(string="Account Number",related="ec_name.acc_no",tracking=True)
+    ifsc_code = fields.Char(string="IFSC Code",related="ec_name.ifsc_code",tracking=True)
+    bank_name = fields.Char(string="Bank Name",related="ec_name.bank_name",tracking=True)
 
     def examiners(self):
         
