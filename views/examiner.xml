@@ -86,7 +86,7 @@
                         </group>
 
                         <group style="width:50%;">
-                            <field name="exam_coordinator" />
+                            <field name="exam_coordinator" invisible="1" />
                         </group>
                         <notebook>
                             <!-- <page string="Assignment of Examinations">
