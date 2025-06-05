@@ -3,6 +3,7 @@ from odoo.exceptions import UserError,ValidationError
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
 import datetime 
+import re
 
 
 class CandidateUserInactiveWizard(models.TransientModel):
@@ -559,8 +560,13 @@ class GPCandidate(models.Model):
        
         if candidate_count <= capacity:
             if values['indos_no']:
-                indos_no = values['indos_no'].strip()
-                values['indos_no'] = indos_no
+                indos_no = values['indos_no'].strip()  # Removes leading/trailing spaces
+                if re.fullmatch(r'^[0-9]{2}[a-zA-Z]{2}[0-9]{4}$', indos_no):
+                    values['indos_no'] = indos_no
+                else:
+                    raise ValueError(
+                        "indos_no must be 8 characters: 2 digits, 2 letters, 4 digits (no spaces allowed)"
+                    )
 
             if values["dob"]:
                 birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
@@ -1207,8 +1213,14 @@ class CCMCCandidate(models.Model):
     
         if candidate_count <= capacity:
             if values['indos_no']:
-                indos_no = values['indos_no'].strip()
-                values['indos_no'] = indos_no
+                indos_no = values['indos_no'].strip()  # Removes leading/trailing spaces
+                if re.fullmatch(r'^[0-9]{2}[a-zA-Z]{2}[0-9]{4}$', indos_no):
+                    values['indos_no'] = indos_no
+                else:
+                    raise ValueError(
+                        "indos_no must be 8 characters: 2 digits, 2 letters, 4 digits (no spaces allowed)"
+                    )
+
             if values["dob"]:
                 birthdate = datetime.datetime.strptime(str(values["dob"]), '%Y-%m-%d').date()
                 today = datetime.datetime.now().date()

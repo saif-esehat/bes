@@ -2637,19 +2637,20 @@ class ExamOralPracticalExaminers(models.Model):
     
     def end_online_exam(self):
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',self.id)])
+
+        config_param = self.env['ir.config_parameter'].sudo().get_param('bes.server_type')
         
-        api_url = "http://178.18.255.245:5000/api/ip/remove"
-
-
         for examiner in online_assignment:
-            ip_list = [ip.strip() for ip in examiner.ipaddr.split(',') if ip.strip()]
-        
-            for ip in ip_list:
-                data = {
-                    "ip": ip,
-                    "location": "survey"
-                }
-                response = requests.post(api_url, json=data, timeout=5)
+            if config_param == 'production':  
+                api_url = "http://178.18.255.245:5000/api/ip/remove"
+                ip_list = [ip.strip() for ip in examiner.ipaddr.split(',') if ip.strip()]
+            
+                for ip in ip_list:
+                    data = {
+                        "ip": ip,
+                        "location": "survey"
+                    }
+                    response = requests.post(api_url, json=data, timeout=5)
             examiner.commence_exam = False
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":

@@ -12,6 +12,7 @@ from odoo.exceptions import UserError, ValidationError
 import json
 from io import BytesIO
 import xlrd
+import re
 
 
 class InstitutePortal(CustomerPortal):
@@ -4132,6 +4133,14 @@ class InstitutePortal(CustomerPortal):
                         f"Missing Indos No in row {row_num + 1}, Please use the given format and check for unwanted spaces"
                     )
 
+                # Validate the format
+                if not re.fullmatch(r'^[0-9]{2}[a-zA-Z]{2}[0-9]{4}$', indos_no):
+                    raise ValidationError(
+                        f"Invalid Indos No format in row {row_num + 1}: '{indos_no}'. "
+                        "Must be exactly 8 characters: 2 digits, 2 letters, 4 digits (no spaces). "
+                        "Example: '12AB3456'"
+                    )
+
                 # Search for duplicates in three different models
                 gp_candidate = (
                     request.env["gp.candidate"]
@@ -4471,6 +4480,13 @@ class InstitutePortal(CustomerPortal):
                 if not indos_no:
                     raise ValidationError(
                         f"Missing Indos No in row {row_num + 1}, Please use the given format and check for unwanted spaces"
+                    )
+                # Validate the format
+                if not re.fullmatch(r'^[0-9]{2}[a-zA-Z]{2}[0-9]{4}$', indos_no):
+                    raise ValidationError(
+                        f"Invalid Indos No format in row {row_num + 1}: '{indos_no}'. "
+                        "Must be exactly 8 characters: 2 digits, 2 letters, 4 digits (no spaces). "
+                        "Example: '12AB3456'"
                     )
 
                 # Search for duplicates in three different models
