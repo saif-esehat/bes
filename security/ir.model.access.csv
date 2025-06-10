@@ -42,7 +42,8 @@ bes.admin_access_lod_institute,access_lod_institute,bes.model_lod_institute,bes.
 bes.admin_access_institute_payment_slip_line,access_institute_payment_slip_line,bes.model_institute_payment_slip_line,bes.group_bes_admin,1,1,1,1
 bes.admin_access_ccmc_oral_line,access_ccmc_oral_line,bes.model_ccmc_oral_line,bes.group_bes_admin,1,1,1,1
 bes.admin_access_institute_gp_batches,access_institute_gp_batches,bes.model_institute_gp_batches,bes.group_bes_admin,1,1,1,1
-bes.admin_access_exam_center,access_exam_center,bes.model_exam_center,bes.group_bes_admin,1,1,1,1
+bes.admin_access_exam_center,access_exam_center,bes.model_exam_center,bes.group_bes_admin,1,1,1,0
+bes.coo_access_exam_center,coo_access_exam_center,bes.model_exam_center,bes.group_bes_coo,1,1,1,0
 bes.admin_access_institute_ccmc_batches,access_institute_ccmc_batches,bes.model_institute_ccmc_batches,bes.group_bes_admin,1,1,1,1
 bes.admin_access_batches_gp_register_exam_wizard,access_batches_gp_register_exam_wizard,bes.model_batches_gp_register_exam_wizard,bes.group_bes_admin,1,1,1,1
 bes.admin_access_gp_exam_schedule,access_gp_exam_schedule,bes.model_gp_exam_schedule,bes.group_bes_admin,1,1,1,1
