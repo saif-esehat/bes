@@ -361,6 +361,7 @@ class SurveyUserInputInherited(models.Model):
     exam_center = fields.Many2one("exam.center","Exam Region", compute="compute_details",store=True)
     examiner_token = fields.Char(string="Examiner Token",compute="compute_details", store=True)
     institute_id = fields.Many2one("bes.institute",string="Institute")
+    institute_code = fields.Char(string="Institute Code", related="institute_id.code", store=True)
     gp_candidate = fields.Many2one('gp.candidate', string='GP Candidate', readonly=True)
     ccmc_candidate = fields.Many2one('ccmc.candidate', string='CCMC Candidate', readonly=True)
     dgs_batch = fields.Many2one("dgs.batches",string="Exam Batch",required=False)

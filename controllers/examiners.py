@@ -1708,13 +1708,6 @@ class ExaminerPortal(CustomerPortal):
 
         # For GSK Oral Marksheet
         mek_oral_sheet.set_column("A:XDF", None, unlocked)
-        # mek_oral_sheet.set_column('A2:A2',35, unlocked)
-        # mek_oral_sheet.set_column('B2:B2',10, unlocked)
-        # mek_oral_sheet.set_column('C2:C2',20, unlocked)
-        # mek_oral_sheet.set_column('D2:F2',20, unlocked)
-        # mek_oral_sheet.set_column('G2:G2',20, unlocked)
-        # mek_oral_sheet.set_column('H2:H2',15, unlocked)
-
         mek_oral_sheet.set_column("A2:A2", 5, unlocked)
         mek_oral_sheet.set_column("B2:B2", 35, unlocked)
         mek_oral_sheet.set_column("C2:C2", 10, unlocked)
