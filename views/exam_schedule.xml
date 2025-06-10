@@ -817,6 +817,7 @@
                 <group>
                     <field name="dgs_batch" string="Batch" required="1" />
                     <field name="institute_id" string="Institute" required="1" />
+                    <field name="exam_date" string="Exam Date" required="1" />
                     <field name="ip_address" string="IP Address" required="1" />
                 </group>
                 <group>
