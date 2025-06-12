@@ -6535,6 +6535,8 @@ class OnlineExamWizard(models.TransientModel):
         
         config_param = self.env['ir.config_parameter'].sudo().get_param('bes.server_type')
         
+        print(config_param)
+        
         if config_param == 'production':  
             api_url = "http://178.18.255.245:5000/api/ip/add"
             ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]

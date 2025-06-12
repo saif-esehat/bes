@@ -4,7 +4,7 @@ import werkzeug
 import secrets
 import random
 import string
-from datetime import datetime
+from datetime import datetime,timedelta
 import pandas as pd
 import base64
 from io import BytesIO
@@ -412,6 +412,46 @@ class SurveyUserInputInherited(models.Model):
     #         record.online_start_time = self.convert_to_ist(record.online_start_time)
     #         record.online_end_time = self.convert_to_ist(record.online_end_time)
     
+    
+    @api.model
+    def cron_mark_abandoned_surveys_done(self):
+            # Get UTC time
+            utc_now = fields.Datetime.now()
+            
+            # Convert UTC to IST
+            ist_tz = timezone('Asia/Kolkata')
+            ist_now = utc_now.astimezone(ist_tz)
+            
+            # Calculate stale time in IST
+            stale_time = ist_now - timedelta(minutes=30)
+
+            stale_inputs = self.search([
+                ('state', '=', 'in_progress'),
+            ])
+
+            for input in stale_inputs:
+                # Get the last answered question for this survey attempt
+                last_answer = self.env['survey.user_input.line'].search(
+                    [('user_input_id', '=', input.id)],
+                    order='create_date desc',
+                    limit=1
+                )
+
+                # Use the last answer's time or fallback to survey input's creation time
+                reference_time = last_answer.create_date or input.create_date
+                
+                if reference_time:
+                    # Convert reference_time to IST for comparison
+                    reference_time_ist = reference_time.astimezone(ist_tz)
+                    
+                    print('stale_time (IST)')
+                    print(stale_time)
+
+                    print('reference_time (IST)')
+                    print(reference_time_ist)
+
+                    if reference_time_ist < stale_time:
+                        input.state = 'done'
 
     @api.depends('user_input_line_ids')
     def _compute_correct_answers(self):
