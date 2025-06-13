@@ -202,33 +202,27 @@
                                Log Out
                         </a>
                     </t>
-
-
-                    <t t-if="survey.subject.name == 'MEK'">
-
-                        <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
-                            <i role="img"/>
-                               Log Out
-                        </a>
-                 
-
-                    </t>
-
-
-                    <t t-if="survey.subject.name == 'CCMC'">
-
-                        <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
-                            <i role="img"/>
-                               Log Out
-                        </a>
-                 
-
-                    </t>
-
-
-                    
-
                 </div>
+                 <t t-if="survey.subject.name == 'MEK'">
+
+                        <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
+                            <i role="img"/>
+                               Log Out
+                        </a>
+                 
+
+                </t>
+
+
+                <t t-if="survey.subject.name == 'CCMC'">
+
+                    <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
+                        <i role="img"/>
+                            Log Out
+                    </a>
+                
+
+                </t>
             </xpath>
         </template>
 
