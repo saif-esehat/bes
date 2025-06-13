@@ -168,4 +168,37 @@ odoo.define('bes.OpenStartExam', function (require) {
             }
         }
     );
+
+    publicWidget.registry.ClearStorageLogout = publicWidget.Widget.extend(
+        {
+            selector: ".logout-clear-storage",
+            events: {
+                'click': "clearStorageAndLogout"
+            },
+
+            clearStorageAndLogout: function (e) {
+                // Clear all storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Clear all cookies
+                document.cookie.split(';').forEach(cookie => {
+                    const [name] = cookie.split('=');
+                    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                });
+
+                // Clear service worker caches if they exist
+                if ('caches' in window) {
+                    caches.keys().then(cacheNames => {
+                        cacheNames.forEach(cacheName => {
+                            caches.delete(cacheName);
+                        });
+                    });
+                }
+
+                // Redirect to logout URL with cache-busting parameter
+                window.location.href = '/web/session/logout?cache_bust=' + Date.now();
+            }
+        }
+    );
 });
