@@ -34,11 +34,11 @@ class CandidateAdmitCardGp(models.AbstractModel):
             
                 if docs.ship_visit_criteria == 'pending' :
                     raise UserError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+            
+                if docs.stcw_criterias == 'pending':
+                    raise UserError("Admit Card Not Generated STCW  Criteria not Complied")
                 
                 # if not docs.institute_id.code == "M05":
-                
-                #     if docs.stcw_criterias == 'pending':
-                #         raise UserError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # candidate_image = base64.b64encode(docs1.candidate_image).decode()
             
@@ -78,15 +78,15 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
         for docs in docs1:
             if docs.attendance_criteria == 'pending' :
                 raise ValidationError("Admit Card Not Generated Attendance Criteria not Complied")
-            
-            
+                        
             if docs.ship_visit_criteria == 'pending' :
                 raise ValidationError("Admit Card Not Generated Ship Visit  Criteria not Complied")
+
+            if docs.stcw_criteria == 'pending':
+                raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # if not docs.institute_id.code == "M05":
                 
-            #     if docs.stcw_criteria == 'pending':
-            #         raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
 
         # import wdb; wdb.set_trace();
         

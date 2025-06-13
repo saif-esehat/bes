@@ -12,7 +12,7 @@ from odoo.http import content_disposition, request , Response
 from odoo.tools import date_utils
 import xlsxwriter
 import random
-from pytz import timezone
+from pytz import timezone, UTC
 import requests
 
 
@@ -2637,19 +2637,20 @@ class ExamOralPracticalExaminers(models.Model):
     
     def end_online_exam(self):
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',self.id)])
+
+        config_param = self.env['ir.config_parameter'].sudo().get_param('bes.server_type')
         
-        api_url = "http://178.18.255.245:5000/api/ip/remove"
-
-
         for examiner in online_assignment:
-            ip_list = [ip.strip() for ip in examiner.ipaddr.split(',') if ip.strip()]
-        
-            for ip in ip_list:
-                data = {
-                    "ip": ip,
-                    "location": "survey"
-                }
-                response = requests.post(api_url, json=data, timeout=5)
+            if config_param == 'production':  
+                api_url = "http://178.18.255.245:5000/api/ip/remove"
+                ip_list = [ip.strip() for ip in examiner.ipaddr.split(',') if ip.strip()]
+            
+                for ip in ip_list:
+                    data = {
+                        "ip": ip,
+                        "location": "survey"
+                    }
+                    response = requests.post(api_url, json=data, timeout=5)
             examiner.commence_exam = False
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":
@@ -3266,7 +3267,6 @@ class ResetOnlineExamWizard(models.TransientModel):
     
         parent_record = self.env[active_model].browse(record_id)
         message = f"Reason for Reset of Online Exam: {self.reset_reason}"
-        parent_record.message_post(body=message)
 
         # import wdb;wdb.set_trace()
 
@@ -3276,9 +3276,53 @@ class ResetOnlineExamWizard(models.TransientModel):
                 
                 active_id = self.env.context.get('active_id')
                 gp_exam = self.env[self.model].browse(active_id)
+                
                 if not gp_exam.attempting_gsk_online:
                     raise ValidationError("Candidate is Not Appearing for GSK online")
                 
+                # Default values in case data is missing
+                start_time = "00:00:00"
+                end_time = "00:00:00"
+                total_time = "00:00:00"
+                question_count = 0
+
+                if gp_exam.attempting_gsk_online:
+                    if gp_exam.gsk_online.user_input_line_ids:
+                        start_time_utc = gp_exam.gsk_online.user_input_line_ids[0].create_date
+                        question_count = len(gp_exam.gsk_online.user_input_line_ids)
+                        end_time_utc = gp_exam.gsk_online.user_input_line_ids[-1].create_date
+                    else:
+                        start_time_utc = None
+                        end_time_utc = None
+                        
+                    if start_time_utc and end_time_utc:
+                        # Convert UTC to IST
+                        start_time_ist = start_time_utc.astimezone(ist_timezone)
+                        end_time_ist = end_time_utc.astimezone(ist_timezone)
+
+                        total_time_delta = end_time_ist - start_time_ist
+
+                        # Format the times
+                        start_time = start_time_ist.strftime('%H:%M:%S')
+                        end_time = end_time_ist.strftime('%H:%M:%S')
+
+                        # Calculate total time in HH:MM:SS
+                        total_seconds = int(total_time_delta.total_seconds())
+                        hours, remainder = divmod(total_seconds, 3600)
+                        minutes, seconds = divmod(remainder, 60)
+                        total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+
+                # Final message format
+                message = f"""
+                <b>Previous Exam LOG Before Reset</b><br/>
+                <b>First Question Attempted</b>: {start_time}<br/>
+                <b>Last Question No. Attempted</b>: {question_count}<br/>
+                <b>Last Question Attempted</b>: {end_time}<br/>
+                <b>Total Time Taken</b>: {total_time}<br/>
+                <b>Reason for Reset of Online Exam</b>: {self.reset_reason}
+                """
+
+
                     
                 gp_exam.gsk_online.sudo().unlink()
                 # gsk_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','GSK ONLINE EXIT EXAMINATION')])
@@ -3328,8 +3372,50 @@ class ResetOnlineExamWizard(models.TransientModel):
             elif self.gp_subject == "mek":
                 active_id = self.env.context.get('active_id')
                 gp_exam = self.env[self.model].browse(active_id)
+                                # Default values in case data is missing
                 if not gp_exam.attempting_mek_online:
                     raise ValidationError("Candidate is Not Appearing for MEK online")
+
+                start_time = "00:00:00"
+                end_time = "00:00:00"
+                total_time = "00:00:00"
+                question_count = 0
+
+                if gp_exam.attempting_mek_online:
+                    if gp_exam.mek_online.user_input_line_ids:
+                        question_count = len(gp_exam.mek_online.user_input_line_ids)
+                        start_time_utc = gp_exam.mek_online.user_input_line_ids[0].create_date
+                        end_time_utc = gp_exam.mek_online.user_input_line_ids[-1].create_date
+                    else:
+                        start_time_utc = None
+                        end_time_utc = None
+                        
+                    if start_time_utc and end_time_utc:
+                        # Convert UTC to IST
+                        start_time_ist = start_time_utc.astimezone(ist_timezone)
+                        end_time_ist = end_time_utc.astimezone(ist_timezone)
+
+                        total_time_delta = end_time_ist - start_time_ist
+
+                        # Format the times
+                        start_time = start_time_ist.strftime('%H:%M:%S')
+                        end_time = end_time_ist.strftime('%H:%M:%S')
+
+                        # Calculate total time in HH:MM:SS
+                        total_seconds = int(total_time_delta.total_seconds())
+                        hours, remainder = divmod(total_seconds, 3600)
+                        minutes, seconds = divmod(remainder, 60)
+                        total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+
+                # Final message format
+                message = f"""
+                <b>Previous Exam LOG Before Reset</b><br/>
+                <b>First Question Attempted</b>: {start_time}<br/>
+                <b>Last Question No. Attempted</b>: {question_count}<br/>
+                <b>Last Question Attempted</b>: {end_time}<br/>
+                <b>Total Time Taken</b>: {total_time}<br/>
+                <b>Reason for Reset of Online Exam</b>: {self.reset_reason}
+                """
 
                 gp_exam.mek_online.sudo().unlink()
                 # mek_survey_qb_input = self.env["survey.survey"].sudo().search([('title','=','MEK ONLINE EXIT EXAMINATION')])
@@ -3369,9 +3455,51 @@ class ResetOnlineExamWizard(models.TransientModel):
             if self.ccmc_subject == "ccmc":
                 active_id = self.env.context.get('active_id')
                 ccmc_exam = self.env[self.model].browse(active_id)
+                
                 if not ccmc_exam.attempting_online:
                     raise ValidationError("Candidate is Not Appearing for CCMC online")
                 
+                # Default values in case data is missing
+                start_time = "00:00:00"
+                end_time = "00:00:00"
+                total_time = "00:00:00"
+                question_count = 0
+
+                if ccmc_exam.attempting_online:
+                    if ccmc_exam.ccmc_online.user_input_line_ids:
+                        question_count = len(ccmc_exam.ccmc_online.user_input_line_ids)
+                        start_time_utc = ccmc_exam.ccmc_online.user_input_line_ids[0].create_date
+                        end_time_utc = ccmc_exam.ccmc_online.user_input_line_ids[-1].create_date
+                    else:
+                        start_time_utc = None
+                        end_time_utc = None
+
+                    if start_time_utc and end_time_utc:
+                        # Convert UTC to IST
+                        start_time_ist = start_time_utc.astimezone(ist_timezone)
+                        end_time_ist = end_time_utc.astimezone(ist_timezone)
+
+                        total_time_delta = end_time_ist - start_time_ist
+
+                        # Format the times
+                        start_time = start_time_ist.strftime('%H:%M:%S')
+                        end_time = end_time_ist.strftime('%H:%M:%S')
+
+                        # Calculate total time in HH:MM:SS
+                        total_seconds = int(total_time_delta.total_seconds())
+                        hours, remainder = divmod(total_seconds, 3600)
+                        minutes, seconds = divmod(remainder, 60)
+                        total_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+
+                # Final message format
+                message = f"""
+                <b>Previous Exam LOG Before Reset</b><br/>
+                <b>First Question Attempted</b>: {start_time}<br/>
+                <b>Last Question No. Attempted</b>: {question_count}<br/>
+                <b>Last Question Attempted</b>: {end_time}<br/>
+                <b>Total Time Taken</b>: {total_time}<br/>
+                <b>Reason for Reset of Online Exam</b>: {self.reset_reason}
+                """
                 ccmc_exam.ccmc_online.sudo().unlink()
 
                 start_time_ist =  self.convert_to_ist(ccmc_exam.ccmc_online_assignment_id.online_start_time)
@@ -3404,7 +3532,8 @@ class ResetOnlineExamWizard(models.TransientModel):
                 })
                 
 
-                    
+        
+        parent_record.message_post(body=message)    
 
                 
         
@@ -6406,6 +6535,8 @@ class OnlineExamWizard(models.TransientModel):
         
         config_param = self.env['ir.config_parameter'].sudo().get_param('bes.server_type')
         
+        print(config_param)
+        
         if config_param == 'production':  
             api_url = "http://178.18.255.245:5000/api/ip/add"
             ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]
@@ -6421,7 +6552,7 @@ class OnlineExamWizard(models.TransientModel):
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
             ('dgs_batch','=',self.dgs_batch.id),
             ('institute_id','=',self.institute_id.id),
-            # ('exam_date','=',self.exam_date),
+            ('exam_date','=',self.exam_date),
             ('exam_type','=','online')
             ])
 

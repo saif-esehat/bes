@@ -406,6 +406,7 @@
                     <field name="indos"  optional="show"/>
                     <field name="dgs_batch"  optional="show"/>
                     <field name="institute_id"  optional="show"/>
+                    <field name="institute_code"  optional="show"/>
                     <field name="exam_center" />
                     <!-- <field name="examiner_token" /> -->
                     <field name="commence_online_exam" invisible="1"/>
@@ -511,6 +512,9 @@
                 <!-- Correct XPath selector -->
                 <xpath expr="//search" position="inside">
                     <!-- Add Indos field to search -->
+                    <field name="institute_id"/>
+                    <field name="institute_code"/>
+                    <field name="dgs_batch"/>
                     <field name="indos"/>
 
                     <!-- Add Group By filter for Exam Region -->
@@ -533,6 +537,7 @@
                     <field name="ccmc_candidate" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="ccmc_exam" optional="show" attrs="{'invisible': [('is_ccmc', '=', False)]}"/>
                     <field name="institute_id"/>
+                    <field name="institute_code"  optional="show"/>
                     <field name="indos"/>
                     <field name="exam_center"/>
                     <field name="result_status" widget="badge" decoration-success= "result_status == 'passed'"  decoration-danger= "result_status == 'failed'"/>

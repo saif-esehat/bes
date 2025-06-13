@@ -497,8 +497,8 @@ class InstituteGPBatches(models.Model):
         for gp_candidate in gp_candidates:
             user_values = {
             'name': gp_candidate.name,
-            'login': gp_candidate.indos_no,  # You can set the login as the same as the user name
-            'password': str(gp_candidate.indos_no)+"1",  # Generate a random password
+            'login': gp_candidate.indos_no.strip(),  # You can set the login as the same as the user name
+            'password': str(gp_candidate.indos_no.strip())+"1",  # Generate a random password
             'sel_groups_1_9_10':9,
             'groups_id':  [(4, group_id, 0) for group_id in group_ids]
             }
@@ -1144,8 +1144,8 @@ class InstituteCcmcBatches(models.Model):
         for ccmc_candidate in ccmc_candidates:
             user_values = {
                 'name': ccmc_candidate.name,
-                'login': ccmc_candidate.indos_no, # You can set the login as the same as the user name
-                'password': str(ccmc_candidate.indos_no) + "1",  # Generate a random password
+                'login': ccmc_candidate.indos_no.strip(), # You can set the login as the same as the user name
+                'password': str(ccmc_candidate.indos_no.strip()) + "1",  # Generate a random password
                 'sel_groups_1_9_10': 9,
                 'groups_id': [(4, group_id, 0) for group_id in group_ids]
             }

@@ -20,6 +20,17 @@
             <field name="use_date_range">False</field>
         </record>
 
+        <record id="cron_mark_abandoned_surveys_done" model="ir.cron">
+            <field name="name">Mark Abandoned Surveys Done</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_mark_abandoned_surveys_done()</field>
+            <field name="interval_number">80</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+
         
 
     </data>

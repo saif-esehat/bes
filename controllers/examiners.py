@@ -1383,8 +1383,27 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.set_column("H2:I2", 20, wrap_format)
         gsk_oral_sheet.set_column("J2:K2", 20, wrap_format)
 
-        gsk_oral_sheet.protect()
+        # gsk_oral_sheet.protect()
         date_format = workbook.add_format({"num_format": "dd-mmm-yy", "locked": False})
+
+        readonly_format = workbook.add_format({
+            "locked": True,
+            "border": 1,
+            "font_size": 16,
+            "align": "center",
+            "valign": "vcenter",
+            "text_wrap": True,
+        })
+
+        # For editable cells (like marks and remarks)
+        editable_format = workbook.add_format({
+            "locked": False,
+            "border": 1,
+            "font_size": 16,
+            "align": "center",
+            "valign": "vcenter",
+            "text_wrap": True,
+        })
 
         header_format = workbook.add_format(
             {
@@ -1458,53 +1477,45 @@ class ExaminerPortal(CustomerPortal):
             "Practical Record Book and Journal \n 25 Marks",
             "Remarks* \n (Mandatory)",
         ]
-        for col, value in enumerate(header_oral):
-            gsk_oral_sheet.write(2, col, value, header_format)
-
-        marks_values_5 = [0, 1, 2, 3, 4, 5]
-        marks_values_6 = [0, 1, 2, 3, 4, 5, 6]
-        marks_values_8 = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-        marks_values_10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        marks_values_12 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        marks_values_18 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,]
-        marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,]
-        marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,]
-
-        # gsk_oral_sheet.data_validation(
-        #     "D3:D1048576", {"validate": "list", "source": marks_values_25}
-        # )
-        # gsk_oral_sheet.data_validation(
-        #     "E3:E1048576", {"validate": "list", "source": marks_values_25}
-        # )
-        # gsk_oral_sheet.data_validation(
-        #     "F3:F1048576", {"validate": "list", "source": marks_values_25}
-        # )
-
-        # gsk_oral_sheet.data_validation(
-        #     "G3:G1048576", {"validate": "list", "source": remarks}
-        # )
-        remarks = ["Good", "Average", "Weak", "Absent"]
-
         # Example lists for candidates and their codes (replace with actual data)
         candidate_list = [candidate.gp_candidate.name for candidate in marksheets]
         roll_no = [candidate.gp_marksheet.exam_id for candidate in marksheets]
-        candidate_code = [
-            candidate.gp_candidate.candidate_code for candidate in marksheets
-        ]
+        candidate_code = [candidate.gp_candidate.candidate_code for candidate in marksheets]
+
+
+        # For GSK Oral sheet
+        gsk_oral_sheet.set_portrait() # Use landscape orientation for better column fit
+        gsk_oral_sheet.fit_to_pages(1, 1)  # Fit all columns to 1 page width, unlimited pages height
+        gsk_oral_sheet.repeat_rows(0, 2)  # Repeat first 3 rows (headers) on each printed page
+        gsk_oral_sheet.set_paper(9)  # Set paper size to A4
+        gsk_oral_sheet.center_horizontally()
+        gsk_oral_sheet.center_vertically()
+        gsk_oral_sheet.set_margins(left=0.3, right=0.3, top=0.5, bottom=0.5)
+        gsk_oral_sheet.print_area(0, 0, len(candidate_list)+3, len(header_oral)-1)  # Set print area
+
+
+        for col, value in enumerate(header_oral):
+            gsk_oral_sheet.write(2, col, value, header_format)
+
+        marks_values_10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+
+        remarks = ["Good", "Average", "Weak", "Absent"]
 
         sr_no = 0
         # Write candidate data starting from the third row in the oral sheet
         for i, candidate in enumerate(candidate_list):
             sr_no = sr_no + 1
-            gsk_oral_sheet.write(f"A{i + 4}", sr_no, locked)
-            gsk_oral_sheet.write(f"B{i + 4}", candidate, locked)
+            gsk_oral_sheet.write(f"A{i + 4}", sr_no, readonly_format)
+            gsk_oral_sheet.write(f"B{i + 4}", candidate, readonly_format)
             gsk_oral_sheet.set_row(i + 3, 45)  # Set row height for data rows
 
         for i, code in enumerate(roll_no):
-            gsk_oral_sheet.write(f"C{i + 4}", code, locked)
+            gsk_oral_sheet.write(f"C{i + 4}", code, readonly_format)
 
         for i, code in enumerate(candidate_code):
-            gsk_oral_sheet.write(f"D{i + 4}", code, locked)
+            gsk_oral_sheet.write(f"D{i + 4}", code, readonly_format)
 
             # Add data validation for scores in the oral sheet
             row_num = i + 4
@@ -1522,18 +1533,10 @@ class ExaminerPortal(CustomerPortal):
             )
 
             # # Apply the format to the cells with drop-down lists
-            gsk_oral_sheet.write(f"E{row_num}", "", dropdown_format)
-            gsk_oral_sheet.write(f"F{row_num}", "", dropdown_format)
-            gsk_oral_sheet.write(f"G{row_num}", "", dropdown_format)
-            gsk_oral_sheet.write(f"H{row_num}", "", dropdown_format)
-
-        # Set column widths for the practical sheet
-        # gsk_practical_sheet.set_column('A2:A2', 35, unlocked)
-        # gsk_practical_sheet.set_column('B2:B2', 10, unlocked)
-        # gsk_practical_sheet.set_column('C2:C2', 20, unlocked)
-        # gsk_practical_sheet.set_column('D2:G2', 35, unlocked)
-        # gsk_practical_sheet.set_column('F2:F2', 50, unlocked)
-        # gsk_practical_sheet.set_column('H2:H2', 15, unlocked)
+            gsk_oral_sheet.write(f"E{row_num}", "", editable_format)
+            gsk_oral_sheet.write(f"F{row_num}", "", editable_format)
+            gsk_oral_sheet.write(f"G{row_num}", "", editable_format)
+            gsk_oral_sheet.write(f"H{row_num}", "", editable_format)
 
         gsk_practical_sheet.set_column("A2:A2", 5, unlocked)
         gsk_practical_sheet.set_column("B2:B2", 35, unlocked)
@@ -1543,7 +1546,7 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.set_column("G2:G2", 60, unlocked)
         gsk_practical_sheet.set_column("H2:H2", 25, unlocked)
         gsk_practical_sheet.set_column("I2:I2", 15, unlocked)
-        gsk_practical_sheet.protect()
+        # gsk_practical_sheet.protect()
 
         # Merge cells in the first row for the practical sheet
         gsk_practical_sheet.merge_range(
@@ -1570,6 +1573,16 @@ class ExaminerPortal(CustomerPortal):
             "Remarks* \n (Mandatory)",
         ]
 
+        # For GSK Practical sheet
+        gsk_practical_sheet.set_landscape()
+        gsk_practical_sheet.set_paper(9)
+        gsk_practical_sheet.fit_to_pages(1, 1)
+        gsk_practical_sheet.center_horizontally()
+        gsk_practical_sheet.center_vertically()
+        gsk_practical_sheet.set_margins(left=0.3, right=0.3, top=0.5, bottom=0.5)
+        gsk_practical_sheet.repeat_rows(0, 1)  # Repeat first 2 rows (headers)
+        gsk_practical_sheet.print_area(0, 0, len(candidate_list)+2, len(header_prac)-1)
+
         for col, value in enumerate(header_prac):
             gsk_practical_sheet.write(1, col, value, header_format)
 
@@ -1577,15 +1590,15 @@ class ExaminerPortal(CustomerPortal):
         sr_no = 0
         for i, candidate in enumerate(candidate_list):
             sr_no = sr_no + 1
-            gsk_practical_sheet.write("A{}".format(i + 3), sr_no, locked)
-            gsk_practical_sheet.write("B{}".format(i + 3), candidate, locked)
+            gsk_practical_sheet.write("A{}".format(i + 3), sr_no, readonly_format)
+            gsk_practical_sheet.write("B{}".format(i + 3), candidate, readonly_format)
             gsk_practical_sheet.set_row(i + 2, 45)  # Set row height for data rows
 
         for i, code in enumerate(roll_no):
-            gsk_practical_sheet.write("C{}".format(i + 3), code, locked)
+            gsk_practical_sheet.write("C{}".format(i + 3), code, readonly_format)
 
         for i, code in enumerate(candidate_code):
-            gsk_practical_sheet.write("D{}".format(i + 3), code, locked)
+            gsk_practical_sheet.write("D{}".format(i + 3), code, readonly_format)
             # Add data validation for scores in the practical sheet
             row_num = i + 3
             gsk_practical_sheet.data_validation(
@@ -1604,11 +1617,14 @@ class ExaminerPortal(CustomerPortal):
                 f"I{row_num}", {"validate": "list", "source": remarks}
             )
 
-            gsk_practical_sheet.write(f"E{row_num}", "", dropdown_format)
-            gsk_practical_sheet.write(f"F{row_num}", "", dropdown_format)
-            gsk_practical_sheet.write(f"G{row_num}", "", dropdown_format)
-            gsk_practical_sheet.write(f"H{row_num}", "", dropdown_format)
-            gsk_practical_sheet.write(f"I{row_num}", "", dropdown_format)
+            gsk_practical_sheet.write(f"E{row_num}", "", editable_format)
+            gsk_practical_sheet.write(f"F{row_num}", "", editable_format)
+            gsk_practical_sheet.write(f"G{row_num}", "", editable_format)
+            gsk_practical_sheet.write(f"H{row_num}", "", editable_format)
+            gsk_practical_sheet.write(f"I{row_num}", "", editable_format)
+
+        gsk_oral_sheet.protect()
+        gsk_practical_sheet.protect()
 
         workbook.close()
 
@@ -1692,13 +1708,6 @@ class ExaminerPortal(CustomerPortal):
 
         # For GSK Oral Marksheet
         mek_oral_sheet.set_column("A:XDF", None, unlocked)
-        # mek_oral_sheet.set_column('A2:A2',35, unlocked)
-        # mek_oral_sheet.set_column('B2:B2',10, unlocked)
-        # mek_oral_sheet.set_column('C2:C2',20, unlocked)
-        # mek_oral_sheet.set_column('D2:F2',20, unlocked)
-        # mek_oral_sheet.set_column('G2:G2',20, unlocked)
-        # mek_oral_sheet.set_column('H2:H2',15, unlocked)
-
         mek_oral_sheet.set_column("A2:A2", 5, unlocked)
         mek_oral_sheet.set_column("B2:B2", 35, unlocked)
         mek_oral_sheet.set_column("C2:C2", 10, unlocked)
@@ -1765,66 +1774,8 @@ class ExaminerPortal(CustomerPortal):
 
         marks_values_10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-        marks_values_25 = [0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-        ]
-        marks_values_30 = [
-            0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            19,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
-        ]
+        marks_values_25 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
+        marks_values_30 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
 
         remarks = ["Good", "Average", "Weak", "Absent"]
 
@@ -1899,31 +1850,6 @@ class ExaminerPortal(CustomerPortal):
             mek_oral_sheet.write(f"H{row_num}", "", dropdown_format)
             mek_oral_sheet.write(f"I{row_num}", "", dropdown_format)
 
-        # mek_oral_sheet.data_validation(
-        #     "E3:E1048576", {"validate": "list", "source": marks_values_20}
-        # )
-        # mek_oral_sheet.data_validation(
-        #     "F3:F1048576", {"validate": "list", "source": marks_values_20}
-        # )
-        # mek_oral_sheet.data_validation(
-        #     "G3:G1048576", {"validate": "list", "source": marks_values_10}
-        # )
-        # mek_oral_sheet.data_validation(
-        #     "H3:H1048576", {"validate": "list", "source": marks_values_25}
-        # )
-
-        # mek_oral_sheet.data_validation(
-        #     "I3:I1048576", {"validate": "list", "source": remarks}
-        # )
-
-        # For GSK Practical Marksheet
-        # Set column widths for the practical sheet
-        # mek_practical_sheet.set_column('A2:A2', 35, unlocked)
-        # mek_practical_sheet.set_column('B2:B2', 10, unlocked)
-        # mek_practical_sheet.set_column('C2:C2', 20, unlocked)
-        # mek_practical_sheet.set_column('D2:E2', 25, unlocked)
-        # mek_practical_sheet.set_column('F2:G2', 35, unlocked)
-        # mek_practical_sheet.set_column('H2:H2', 15, unlocked)
 
         mek_practical_sheet.set_column("A2:A2", 5, unlocked)
         mek_practical_sheet.set_column("B2:B2", 35, unlocked)
