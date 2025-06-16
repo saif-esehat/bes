@@ -172,6 +172,29 @@
 
         <template id="survey_fill_form_done_inherited" inherit_id="survey.survey_fill_form_done">
             <xpath expr="//div[@class='o_survey_finished mt32 mb32']" position="replace">
+
+            <script>
+
+                function logoutBtn(e) {
+                    e.preventDefault(); // Prevent button default behavior
+
+                    // Clear storage
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    // Clear cookies
+                    document.cookie.split(";").forEach(cookie => {
+                        const eqPos = cookie.indexOf("=");
+                        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                    });
+
+                    // Redirect to logout
+                    window.location.href = '/web/session/logout';
+                }
+
+        
+            </script>
                 <!-- Your custom content here -->
                 <h1>Thank you!</h1>
                 <div t-field="survey.description_done" class="oe_no_empty" />
@@ -197,31 +220,21 @@
                         </a>
                     </t>
                     <t t-else="">
-                        <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
-                            <i role="img"/>
-                               Log Out
-                        </a>
+                        <button class="btn btn-primary btn-lg" onclick="logoutBtn(event)">
+                            Log Out
+                        </button>
                     </t>
                 </div>
                  <t t-if="survey.subject.name == 'MEK'">
-
-                        <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
-                            <i role="img"/>
-                               Log Out
-                        </a>
-                 
-
+                    <button  class="btn btn-primary btn-lg " onclick="logoutBtn(event)">
+                        Log Out
+                    </button>
                 </t>
 
-
                 <t t-if="survey.subject.name == 'CCMC'">
-
-                    <a role="button" class="btn btn-primary btn-lg logout-clear-storage">
-                        <i role="img"/>
-                            Log Out
-                    </a>
-                
-
+                    <button  class="btn btn-primary btn-lg" onclick="logoutBtn(event)">
+                        Log Out
+                    </button>
                 </t>
             </xpath>
         </template>
