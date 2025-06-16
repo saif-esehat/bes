@@ -910,6 +910,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     ('ship_visit_criteria', '=', 'passed'),
                     ('attendance_criteria', '=', 'passed')
             ]).ids
+        
+        
         candidate_with_gsk_online  = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.exam_duty.dgs_batch.id),('state','=','1-in_process'),('registered_institute','=',self.institute_id.id),('attempting_gsk_online','=',True),('attempting_mek_online','=',False),('hold_admit_card','=',False),('gsk_online_assignment','=',False),
                     '|',
                     ('ceo_override', '=', True),
@@ -960,121 +962,127 @@ class GPExaminerAssignmentWizard(models.TransientModel):
 
         
         
-        #Distribute candidates with both GSK and MEK     
-        for idx, candidate in enumerate(candidate_with_gsk_mek):
+        #Distribute candidates with both GSK and MEK
+        if candidate_with_gsk_mek:
+            for idx, candidate in enumerate(candidate_with_gsk_mek):
             
-            try:
+                try:
+                    
+                    gsk_examiner_index = idx % num_examiners_gsk
+                    examiner_gsk = examiners_gsk[gsk_examiner_index]
+                    gsk_assignments[examiner_gsk].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One GSK Examiner")
                 
-                gsk_examiner_index = idx % num_examiners_gsk
-                examiner_gsk = examiners_gsk[gsk_examiner_index]
-                gsk_assignments[examiner_gsk].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One GSK Examiner")
-            
-            try:    
-                mek_examiner_index = idx % num_examiners_mek
-                examiner_mek = examiners_mek[mek_examiner_index]          
-                mek_assignments[examiner_mek].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One MEK Examiner")
+                try:    
+                    mek_examiner_index = idx % num_examiners_mek
+                    examiner_mek = examiners_mek[mek_examiner_index]          
+                    mek_assignments[examiner_mek].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One MEK Examiner")
         
-        print("gsk_assignments")
-        print(gsk_assignments)
-        print("mek_assignments")
-        print(gsk_assignments)
+                print("gsk_assignments")
+                print(gsk_assignments)
+                print("mek_assignments")
+                print(gsk_assignments)
         
         # import wdb;wdb.set_trace();
 
-        #Distribute candidates with both GSK and MEK Online     
-        for idx, candidate in enumerate(candidate_with_gsk_mek_online):
-            try:
+        #Distribute candidates with both GSK and MEK Online
+        if candidate_with_gsk_mek_online:
+            for idx, candidate in enumerate(candidate_with_gsk_mek_online):
+                try:
+                    
+                    online_gsk_examiner_index = idx % num_examiners_gsk_online
+                    examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
+                    online_gsk_assignments[examiner_gsk_online].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One GSK Online Examiner")
+                    
                 
-                online_gsk_examiner_index = idx % num_examiners_gsk_online
-                examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
-                online_gsk_assignments[examiner_gsk_online].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One GSK Online Examiner")
+                try:    
+                    online_mek_examiner_index = idx % num_examiners_mek_online
+                    examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
+                    online_mek_assignments[examiner_mek_online].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One MEK Online Examiner")
                 
+            # import wdb;wdb.set_trace();
             
-            try:    
-                online_mek_examiner_index = idx % num_examiners_mek_online
-                examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
-                online_mek_assignments[examiner_mek_online].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One MEK Online Examiner")
-            
-        # import wdb;wdb.set_trace();
-        
         
         
             
         # Distribute candidates with only GSK
-        for idx, candidate in enumerate(candidate_with_gsk):
-            try:
-                gsk_examiner_index = idx % num_examiners_gsk
-                examiner_gsk = examiners_gsk[gsk_examiner_index]
-                gsk_assignments[examiner_gsk].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One GSK Examiner")
+        if candidate_with_gsk:
+            for idx, candidate in enumerate(candidate_with_gsk):
+                try:
+                    gsk_examiner_index = idx % num_examiners_gsk
+                    examiner_gsk = examiners_gsk[gsk_examiner_index]
+                    gsk_assignments[examiner_gsk].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One GSK Examiner")
             
          # Distribute candidates with only GSK Online
-        for idx, candidate in enumerate(candidate_with_gsk_online):
-            try:
-                
-                online_gsk_examiner_index = idx % num_examiners_gsk_online
-                examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
-                online_gsk_assignments[examiner_gsk_online].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One GSK Online Examiner")
+        if candidate_with_gsk_online:
+            for idx, candidate in enumerate(candidate_with_gsk_online):
+                try:
+                    
+                    online_gsk_examiner_index = idx % num_examiners_gsk_online
+                    examiner_gsk_online = examiners_gsk_online[online_gsk_examiner_index]
+                    online_gsk_assignments[examiner_gsk_online].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One GSK Online Examiner")
         
         
         # Distribute candidates with only MEK
-        for idx, candidate in enumerate(candidate_with_mek):
-            try:
-                mek_examiner_index = idx % num_examiners_mek
-                examiner_mek = examiners_mek[mek_examiner_index]
-                print("Examiners_mek",examiners_mek)
-                print("Examiner_mek",examiner_mek)
-                print("mek_assignments",mek_assignments)
-                print("mek_assignment_examiners_mek",mek_assignments)
-                mek_assignments[examiner_mek].append(candidate)
+        if candidate_with_mek:
+            for idx, candidate in enumerate(candidate_with_mek):
+                try:
+                    mek_examiner_index = idx % num_examiners_mek
+                    examiner_mek = examiners_mek[mek_examiner_index]
+                    print("Examiners_mek",examiners_mek)
+                    print("Examiner_mek",examiner_mek)
+                    print("mek_assignments",mek_assignments)
+                    print("mek_assignment_examiners_mek",mek_assignments)
+                    mek_assignments[examiner_mek].append(candidate)
 
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One MEK Examiner")
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One MEK Examiner")
         
         
         # Distribute candidates with only MEK Online
-        for idx, candidate in enumerate(candidate_with_mek_online):
-            try:    
-                online_mek_examiner_index = idx % num_examiners_mek_online
-                examiner_mek_online = examiners_mek_online[online_mek_examiner_index]          
-                online_mek_assignments[examiner_mek_online].append(candidate)
-            except ZeroDivisionError:
-                if self.exam_duty.dgs_batch.repeater_batch:
-                    pass
-                else:
-                    raise ValidationError("Please Add Atleast One MEK Online Examiner")
+        if candidate_with_mek_online:
+            for idx, candidate in enumerate(candidate_with_mek_online):
+                try:
+                    online_mek_examiner_index = idx % num_examiners_mek_online
+                    examiner_mek_online = examiners_mek_online[online_mek_examiner_index]
+                    online_mek_assignments[examiner_mek_online].append(candidate)
+                except ZeroDivisionError:
+                    if self.exam_duty.dgs_batch.repeater_batch:
+                        pass
+                    else:
+                        raise ValidationError("Please Add Atleast One MEK Online Examiner")
 
             
         ### GSK ASSIGNMENTS    
