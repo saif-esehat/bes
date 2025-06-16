@@ -1,7 +1,21 @@
 {
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.autopep8"
-    },
-    "python.formatting.provider": "none",
-    "python.languageServer": "None"
+    "xml.validation.enabled": true,
+    "xml.fileAssociations": [
+        {
+            "pattern": "**/views/*.xml",
+            "systemId": "https://raw.githubusercontent.com/odoo/odoo/15.0/addons/base/data/ir_ui_view.rng"
+        }
+    ],
+    "xml.validation.excluded": [
+        {
+            "pattern": "**/views/survey.xml",
+            "rules": [
+                {
+                    "id": "external-id-not-found",
+                    "message": "Could not find external id 'survey.survey_fill_form_done'"
+                }
+            ]
+        }
+    ],
+    "xml.validation.resolveExternalEntities": false
 }
