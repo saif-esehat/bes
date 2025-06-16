@@ -59,7 +59,7 @@ class PublicPortal(http.Controller):
     @http.route(['/verification/gpadmitcard/<int:exam_id>'], type="http", auth='none')
     def VerifyGpAdmitCard(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
-        raise ValidationError("Not allowed")
+        # raise ValidationError("Not allowed")
         try:
             exam_id = request.env['gp.exam.schedule'].sudo().search([('id','=',exam_id)]).id
         except:
@@ -74,7 +74,7 @@ class PublicPortal(http.Controller):
     def VerifyCcmcAdmitCard(self,exam_id,**kw ):
         # import wdb; wdb.set_trace()
         # if True:
-        raise ValidationError("Not allowed")
+        # raise ValidationError("Not allowed")
         try:
             exam_id = request.env['ccmc.exam.schedule'].sudo().search([('id','=',exam_id)]).id
         except:
@@ -87,7 +87,7 @@ class PublicPortal(http.Controller):
     @http.route(['/verification/gpcerificate/<int:certificate_id>'], type="http", auth='none')
     def VerifyGPCertificate(self,certificate_id,**kw ):
         # if True:
-        raise ValidationError("Not allowed")
+        # raise ValidationError("Not allowed")
         try:
             certificate = requesth.env['gp.exam.schedule'].sudo().search([('id','=',certificate_id)])
             if certificate.state == "3-certified":
@@ -105,7 +105,7 @@ class PublicPortal(http.Controller):
     @http.route(['/verification/ccmccerificate/<int:certificate_id>'], type="http", auth='none')
     def VerifyCCMCCertificate(self,certificate_id,**kw ):
         # if True:
-        raise ValidationError("Not allowed")
+        # raise ValidationError("Not allowed")
         try:
             certificate = request.env['ccmc.exam.schedule'].sudo().search([('id','=',certificate_id)])
             if certificate.state == "3-certified":
