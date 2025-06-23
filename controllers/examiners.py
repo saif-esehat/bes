@@ -35,148 +35,234 @@ def check_user_groups(group_xml_id):
 
 class ExaminerPortal(CustomerPortal):
 
-    @http.route(
-        ["/confirm/online/marksheet"], method=["POST"], type="json", auth="user"
-    )
+    # @http.route(
+    #     ["/confirm/online/marksheet"], method=["POST"], type="json", auth="user"
+    # )
+    # def OnlineAttendanceConfirm(self, **kw):
+    #     data = request.jsonrequest
+    #     # print(data)
+    #     marksheet_id = data["marksheet_id"]
+    #     subject = data["subject"]
+    #     attendance = data["attendance"]
+    #     if subject == "MEK" and attendance == "present":
+    #         marksheet = (
+    #             request.env["exam.type.oral.practical.examiners.marksheet"]
+    #             .sudo()
+    #             .search([("id", "=", marksheet_id)])
+    #         )
+    #         gp_marksheet = marksheet.gp_marksheet
+    #         if (
+    #             gp_marksheet.attempting_gsk_online
+    #             and gp_marksheet.attempting_mek_online
+    #         ):
+    #             if gp_marksheet.token:
+    #                 token = gp_marksheet.token
+    #                 gp_marksheet.write({"mek_online_attendance": attendance,
+    #                                     "gsk_online_attendance": attendance})
+    #             else:
+    #                 token = gp_marksheet.generate_token()
+    #                 gp_marksheet.write(
+    #                     {"token": token, 
+    #                      "mek_online_attendance": attendance,
+    #                      "gsk_online_attendance": attendance}
+    #                 )
+    #             marksheet.examiners_id.compute_candidates_done()
+    #             marksheet.examiners_id.check_absent()
+    #             return json.dumps({"token": token})
+    #         else:
+    #             if gp_marksheet.token:
+    #                 token = gp_marksheet.token
+    #                 gp_marksheet.write({"mek_online_attendance": attendance})
+    #             else:
+    #                 token = gp_marksheet.generate_token()
+    #                 gp_marksheet.write(
+    #                     {"token": token, "mek_online_attendance": attendance}
+    #                 )
+    #             marksheet.examiners_id.compute_candidates_done()
+    #             marksheet.examiners_id.check_absent()
+    #             return json.dumps({"token": token})
+    #     elif subject == "MEK" and attendance == "absent":
+    #         marksheet = (
+    #             request.env["exam.type.oral.practical.examiners.marksheet"]
+    #             .sudo()
+    #             .search([("id", "=", marksheet_id)])
+    #         )
+    #         gp_marksheet = marksheet.gp_marksheet
+    #         gp_marksheet.write({"mek_online_attendance": attendance})
+    #         marksheet.examiners_id.compute_candidates_done()
+    #         marksheet.examiners_id.check_absent()
+    #         return json.dumps({"token": False})
+
+    #     if subject == "GSK" and attendance == "present":
+    #         marksheet = (
+    #             request.env["exam.type.oral.practical.examiners.marksheet"]
+    #             .sudo()
+    #             .search([("id", "=", marksheet_id)])
+    #         )
+    #         gp_marksheet = marksheet.gp_marksheet
+
+    #         if (
+    #             gp_marksheet.attempting_gsk_online
+    #             and gp_marksheet.attempting_mek_online
+    #         ):
+    #             if gp_marksheet.token:
+    #                 token = gp_marksheet.token
+    #                 gp_marksheet.write(
+    #                     {
+    #                         "gsk_online_attendance": attendance,
+    #                         "mek_online_attendance": attendance,
+    #                     }
+    #                 )
+    #             else:
+    #                 token = gp_marksheet.generate_token()
+    #                 gp_marksheet.write(
+    #                     {
+    #                         "token": token,
+    #                         "gsk_online_attendance": attendance,
+    #                         "mek_online_attendance": attendance,
+    #                     }
+    #                 )
+    #             marksheet.examiners_id.compute_candidates_done()
+    #             marksheet.examiners_id.check_absent()
+    #             return json.dumps({"token": token})
+    #         else:
+    #             if gp_marksheet.token:
+    #                 token = gp_marksheet.token
+    #                 gp_marksheet.write({"gsk_online_attendance": attendance})
+    #             else:
+    #                 token = gp_marksheet.generate_token()
+    #                 gp_marksheet.write(
+    #                     {"token": token, "gsk_online_attendance": attendance}
+    #                 )
+    #             marksheet.examiners_id.compute_candidates_done()
+    #             marksheet.examiners_id.check_absent()
+    #             return json.dumps({"token": token})
+
+    #     elif subject == "GSK" and attendance == "absent":
+    #         marksheet = (
+    #             request.env["exam.type.oral.practical.examiners.marksheet"]
+    #             .sudo()
+    #             .search([("id", "=", marksheet_id)])
+    #         )
+    #         gp_marksheet = marksheet.gp_marksheet
+    #         if (
+    #             gp_marksheet.attempting_gsk_online
+    #             and gp_marksheet.attempting_mek_online
+    #         ):
+    #             gp_marksheet.write(
+    #                 {
+    #                     "gsk_online_attendance": attendance,
+    #                     "mek_online_attendance": attendance,
+    #                 }
+    #             )
+    #             marksheet.examiners_id.compute_candidates_done()
+    #             marksheet.examiners_id.check_absent()
+    #             return json.dumps({"token": False})
+    #         else:
+    #             gp_marksheet.write({"gsk_online_attendance": attendance})
+    #             marksheet.examiners_id.compute_candidates_done()
+    #             marksheet.examiners_id.check_absent()
+    #             return json.dumps({"token": False})
+
+    #     if subject == "CCMC" and attendance == "present":
+    #         marksheet = (
+    #             request.env["exam.type.oral.practical.examiners.marksheet"]
+    #             .sudo()
+    #             .search([("id", "=", marksheet_id)])
+    #         )
+    #         ccmc_marksheet = marksheet.ccmc_marksheet
+    #         if ccmc_marksheet.token:
+    #             token = ccmc_marksheet.token
+    #             ccmc_marksheet.write({"ccmc_online_attendance": attendance})
+    #         else:
+    #             token = ccmc_marksheet.generate_token()
+    #             ccmc_marksheet.write(
+    #                 {"token": token, "ccmc_online_attendance": attendance}
+    #             )
+    #         marksheet.examiners_id.compute_candidates_done()
+    #         marksheet.examiners_id.check_absent()
+    #         return json.dumps({"token": token})
+    #     elif subject == "CCMC" and attendance == "absent":
+    #         marksheet = (
+    #             request.env["exam.type.oral.practical.examiners.marksheet"]
+    #             .sudo()
+    #             .search([("id", "=", marksheet_id)])
+    #         )
+    #         ccmc_marksheet = marksheet.ccmc_marksheet
+    #         ccmc_marksheet.write({"ccmc_online_attendance": attendance})
+    #         marksheet.examiners_id.compute_candidates_done()
+    #         marksheet.examiners_id.check_absent()
+    #         return json.dumps({"token": False})
+
+        # return  json.dumps({"status":"success"})
+    @http.route(["/confirm/online/marksheet"], method=["POST"], type="json", auth="user")
     def OnlineAttendanceConfirm(self, **kw):
         data = request.jsonrequest
         print(data)
-        marksheet_id = data["marksheet_id"]
-        subject = data["subject"]
-        attendance = data["attendance"]
-        if subject == "MEK" and attendance == "present":
-            marksheet = (
-                request.env["exam.type.oral.practical.examiners.marksheet"]
-                .sudo()
-                .search([("id", "=", marksheet_id)])
-            )
+
+        marksheet_id = data.get("marksheet_id")
+        subject = data.get("subject")
+        attendance = data.get("attendance")
+
+        if not (marksheet_id and subject and attendance):
+            return json.dumps({"error": "Invalid input"})
+
+        marksheet = request.env["exam.type.oral.practical.examiners.marksheet"].sudo().search([("id", "=", marksheet_id)], limit=1)
+        if not marksheet:
+            return json.dumps({"error": "Marksheet not found"})
+
+        token = False
+
+        if subject == "MEK":
             gp_marksheet = marksheet.gp_marksheet
-            if (
-                gp_marksheet.attempting_gsk_online
-                and gp_marksheet.attempting_mek_online
-            ):
-                if gp_marksheet.token:
-                    token = gp_marksheet.token
-                    gp_marksheet.write({"mek_online_attendance": attendance,
-                                        "gsk_online_attendance": attendance})
-                else:
-                    token = gp_marksheet.generate_token()
-                    gp_marksheet.write(
-                        {"token": token, 
-                         "mek_online_attendance": attendance,
-                         "gsk_online_attendance": attendance}
-                    )
-                return json.dumps({"token": token})
+            if attendance == "present":
+                values = {"mek_online_attendance": attendance}
+                if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                    values["gsk_online_attendance"] = attendance
+
+                if not gp_marksheet.token:
+                    gp_marksheet.token = gp_marksheet.generate_token()
+                values["token"] = gp_marksheet.token
+                token = gp_marksheet.token
+                gp_marksheet.write(values)
             else:
-                if gp_marksheet.token:
-                    token = gp_marksheet.token
-                    gp_marksheet.write({"mek_online_attendance": attendance})
-                else:
-                    token = gp_marksheet.generate_token()
-                    gp_marksheet.write(
-                        {"token": token, "mek_online_attendance": attendance}
-                    )
-                return json.dumps({"token": token})
-        elif subject == "MEK" and attendance == "absent":
-            marksheet = (
-                request.env["exam.type.oral.practical.examiners.marksheet"]
-                .sudo()
-                .search([("id", "=", marksheet_id)])
-            )
-            gp_marksheet = marksheet.gp_marksheet
-            gp_marksheet.write({"mek_online_attendance": attendance})
-            return json.dumps({"token": False})
+                gp_marksheet.write({"mek_online_attendance": attendance})
 
-        if subject == "GSK" and attendance == "present":
-            marksheet = (
-                request.env["exam.type.oral.practical.examiners.marksheet"]
-                .sudo()
-                .search([("id", "=", marksheet_id)])
-            )
+        elif subject == "GSK":
             gp_marksheet = marksheet.gp_marksheet
+            if attendance == "present":
+                values = {"gsk_online_attendance": attendance}
+                if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                    values["mek_online_attendance"] = attendance
 
-            if (
-                gp_marksheet.attempting_gsk_online
-                and gp_marksheet.attempting_mek_online
-            ):
-                if gp_marksheet.token:
-                    token = gp_marksheet.token
-                    gp_marksheet.write(
-                        {
-                            "gsk_online_attendance": attendance,
-                            "mek_online_attendance": attendance,
-                        }
-                    )
-                else:
-                    token = gp_marksheet.generate_token()
-                    gp_marksheet.write(
-                        {
-                            "token": token,
-                            "gsk_online_attendance": attendance,
-                            "mek_online_attendance": attendance,
-                        }
-                    )
-                return json.dumps({"token": token})
+                if not gp_marksheet.token:
+                    gp_marksheet.token = gp_marksheet.generate_token()
+                values["token"] = gp_marksheet.token
+                token = gp_marksheet.token
+                gp_marksheet.write(values)
             else:
-                if gp_marksheet.token:
-                    token = gp_marksheet.token
-                    gp_marksheet.write({"gsk_online_attendance": attendance})
-                else:
-                    token = gp_marksheet.generate_token()
-                    gp_marksheet.write(
-                        {"token": token, "gsk_online_attendance": attendance}
-                    )
-                return json.dumps({"token": token})
+                values = {"gsk_online_attendance": attendance}
+                if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                    values["mek_online_attendance"] = attendance
+                gp_marksheet.write(values)
 
-        elif subject == "GSK" and attendance == "absent":
-            marksheet = (
-                request.env["exam.type.oral.practical.examiners.marksheet"]
-                .sudo()
-                .search([("id", "=", marksheet_id)])
-            )
-            gp_marksheet = marksheet.gp_marksheet
-            if (
-                gp_marksheet.attempting_gsk_online
-                and gp_marksheet.attempting_mek_online
-            ):
-                gp_marksheet.write(
-                    {
-                        "gsk_online_attendance": attendance,
-                        "mek_online_attendance": attendance,
-                    }
-                )
-                return json.dumps({"token": False})
-            else:
-                gp_marksheet.write({"gsk_online_attendance": attendance})
-                return json.dumps({"token": False})
-
-        if subject == "CCMC" and attendance == "present":
-            marksheet = (
-                request.env["exam.type.oral.practical.examiners.marksheet"]
-                .sudo()
-                .search([("id", "=", marksheet_id)])
-            )
+        elif subject == "CCMC":
             ccmc_marksheet = marksheet.ccmc_marksheet
-            if ccmc_marksheet.token:
+            if attendance == "present":
+                if not ccmc_marksheet.token:
+                    ccmc_marksheet.token = ccmc_marksheet.generate_token()
                 token = ccmc_marksheet.token
-                ccmc_marksheet.write({"ccmc_online_attendance": attendance})
+                ccmc_marksheet.write({
+                    "ccmc_online_attendance": attendance,
+                    "token": token
+                })
             else:
-                token = ccmc_marksheet.generate_token()
-                ccmc_marksheet.write(
-                    {"token": token, "ccmc_online_attendance": attendance}
-                )
-            return json.dumps({"token": token})
-        elif subject == "CCMC" and attendance == "absent":
-            marksheet = (
-                request.env["exam.type.oral.practical.examiners.marksheet"]
-                .sudo()
-                .search([("id", "=", marksheet_id)])
-            )
-            ccmc_marksheet = marksheet.ccmc_marksheet
-            ccmc_marksheet.write({"ccmc_online_attendance": attendance})
-            return json.dumps({"token": False})
+                ccmc_marksheet.write({"ccmc_online_attendance": attendance})
 
-        # return  json.dumps({"status":"success"})
+        marksheet.examiners_id.compute_candidates_done()
+        marksheet.examiners_id.check_absent()
+
+        return json.dumps({"token": token})
 
     @http.route(["/my/examiner/online_exam"], type="http", auth="user", website=True)
     @check_user_groups("bes.group_examiners")
