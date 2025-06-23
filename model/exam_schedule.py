@@ -3909,23 +3909,23 @@ class GPExam(models.Model):
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance")
+    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance",tracking=True)
 
     gsk_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK Online Attendance")
+    ],string="GSK Online Attendance",tracking=True)
     
     mek_oral_prac_attendance = fields.Selection([
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance")
+    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance",tracking=True)
     
     mek_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK Online Attendance")
+    ],string="MEK Online Attendance",tracking=True)
 
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
@@ -5565,22 +5565,22 @@ class CCMCExam(models.Model):
     cookery_prac_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Cookery Prac Attendance")
+    ],string="Cookery Prac Attendance",tracking=True)
     
     ccmc_oral_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Cookery Oral Attendance")
+    ],string="Cookery Oral Attendance",tracking=True)
     
     ccmc_gsk_oral_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="CCMC GSK Oral Attendance")
+    ],string="CCMC GSK Oral Attendance",tracking=True)
     
     ccmc_online_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Cookery Online Attendance")
+    ],string="Cookery Online Attendance",tracking=True)
 
     ceo_override = fields.Boolean("CEO Override", related='ccmc_candidate.ceo_override',store=True,tracking=True)
     ccmc_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC Online Assignment",tracking=True)
