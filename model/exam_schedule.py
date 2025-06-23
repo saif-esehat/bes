@@ -2908,23 +2908,28 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral' and record.dgs_batch.repeater_batch != True:
-                # Check if there are any other records with the same examiner and exam date
-                duplicate_records = self.search([
-                    ('examiner', '=', record.examiner.id),
-                    ('exam_date', '=', record.exam_date),
-                    ('id', '!=', record.id)  # Exclude the current record
-                ])
-                if duplicate_records.exam_type == 'online':
-                     # Get the name of the examiner
-                    pass
-                elif duplicate_records.exam_type == 'practical_oral':
-                    examiner_name = record.examiner.name
-                    # Format the validation error message to include the examiner's name and exam date
-                    error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (examiner_name, record.exam_date,duplicate_records.institute_id.name)
-                    raise ValidationError(error_msg)
-                else:
-                    pass
+            if True:
+                if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral' and record.dgs_batch.repeater_batch != True:
+                    # Check if there are any other records with the same examiner and exam date
+                    duplicate_records = self.search([
+                        ('examiner', '=', record.examiner.id),
+                        ('exam_date', '=', record.exam_date),
+                        ('id', '!=', record.id)  # Exclude the current record
+                    ])
+                    if any(rec.exam_type == 'online' for rec in duplicate_records):
+                        # Get the name of the examiner
+                        pass
+                    elif any(rec.exam_type == 'practical_oral' and rec.institute_id != record.institute_id for rec in duplicate_records):
+                        examiner_name = record.examiner.name
+                        # Format the validation error message to include the examiner's name and exam date
+                        error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (
+                            examiner_name,
+                            record.exam_date,
+                            duplicate_records[0].institute_id.name  # Take first record's institute name
+                        )
+                        raise ValidationError(error_msg)
+                    else:
+                        pass
                     
 
     
