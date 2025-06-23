@@ -373,7 +373,7 @@
                                 <tree editable="bottom"  >
                                     <field name="prac_oral_id" invisible="1"  />
                                     <field name="dgs_batch" required="1" invisible="1"   />
-                                    <field name="subject" invisible="0" />
+                                    <field name="subject" attrs="{'readonly': [('candidates_count', '>', 0)]}"/>
                                     <field name="course" required="1" invisible="1"  />
                                     <field name="exam_type" invisible="0"  />
                                     <field name="exam_region" invisible="1"/>
