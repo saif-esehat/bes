@@ -1168,7 +1168,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     examiner = record.examiner.id
                     exam_date = record.exam_date
                     exam_type = record.exam_type
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    confirm_context = True
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids ,'confirm_context':confirm_context}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -1202,7 +1203,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     exam_type = record.exam_type
                     
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -1243,7 +1244,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     examiner = record.examiner.id
                     exam_type = record.exam_type
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -1273,7 +1274,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     exam_type = record.exam_type
                     
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -2616,6 +2617,9 @@ class ExamOralPracticalExaminers(models.Model):
     online_start_time = fields.Datetime("Start Time",store=True)
     online_end_time = fields.Datetime("End Time",store=True)
 
+    with_context_check = fields.Boolean("With Context Check",default=False)
+
+
     def _compute_outstation(self):
         if self.institute_id.outstation:
             self.outstation = 'yes'
@@ -2908,28 +2912,41 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if True:
-                if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral' and record.dgs_batch.repeater_batch != True:
-                    # Check if there are any other records with the same examiner and exam date
-                    duplicate_records = self.search([
-                        ('examiner', '=', record.examiner.id),
-                        ('exam_date', '=', record.exam_date),
-                        ('id', '!=', record.id)  # Exclude the current record
-                    ])
-                    if any(rec.exam_type == 'online' for rec in duplicate_records):
-                        # Get the name of the examiner
-                        pass
-                    elif any(rec.exam_type == 'practical_oral' and rec.institute_id != record.institute_id for rec in duplicate_records):
-                        examiner_name = record.examiner.name
-                        # Format the validation error message to include the examiner's name and exam date
-                        error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (
-                            examiner_name,
-                            record.exam_date,
-                            duplicate_records[0].institute_id.name  # Take first record's institute name
-                        )
-                        raise ValidationError(error_msg)
-                    else:
-                        pass
+            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral':
+                # Check if there are any other records with the same examiner and exam date
+
+
+                # import wdb;wdb.set_trace()
+                
+                duplicate_records = self.search([
+                    ('examiner', '=', record.examiner.id),
+                    ('exam_date', '=', record.exam_date)
+                ])
+                examiner_name = record.examiner.name
+                candidate_assigned = sum(rec.candidates_count for rec in duplicate_records)
+                # import wdb;wdb.set_trace()
+                if candidate_assigned > 25:
+                    # Format the validation error message to include the examiner's name and exam date
+                    error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                        examiner_name,
+                        record.exam_date,
+                        duplicate_records[0].institute_id.name  # Take first record's institute name
+                    )
+                    raise ValidationError(error_msg)
+                duplicate_records = self.search([
+                    ('examiner', '=', record.examiner.id),
+                    ('exam_date', '=', record.exam_date),
+                    ('id', '!=', record.id)  # Exclude the current record
+                ])
+                
+                if any(rec.exam_type == 'practical_oral' for rec in duplicate_records):
+                    error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (
+                        examiner_name,
+                        record.exam_date,
+                        duplicate_records[0].institute_id.name  # Take first record's institute name
+                    )
+                    raise ValidationError(error_msg)
+                        
                     
 
     

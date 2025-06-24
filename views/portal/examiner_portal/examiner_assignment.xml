@@ -704,10 +704,10 @@
             <!-- <t t-set="today_date" t-value="datetime.datetime(2024, 6, 7).date()"/> -->
 
             <t t-if="extended">
-                <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=7)"/>
+                <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=21)"/>
             </t>
             <t t-else="">
-                <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=7)"/>
+                <t t-set="extended_date" t-value="exam_date + datetime.timedelta(days=21)"/>
             </t>
             
 
