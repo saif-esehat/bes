@@ -2933,7 +2933,7 @@ class ExamOralPracticalExaminers(models.Model):
                     
 
                     
-                    if candidate_assigned + len(self.env.context.get("marksheet_ids")) > 25:
+                    if candidate_assigned + len(marksheet_ids) > 25:
                         # Format the validation error message to include the examiner's name and exam date
                         error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
                             examiner_name,
