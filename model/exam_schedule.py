@@ -2924,15 +2924,35 @@ class ExamOralPracticalExaminers(models.Model):
                 ])
                 examiner_name = record.examiner.name
                 candidate_assigned = sum(rec.candidates_count for rec in duplicate_records)
-                # import wdb;wdb.set_trace()
-                if candidate_assigned > 25:
-                    # Format the validation error message to include the examiner's name and exam date
-                    error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
-                        examiner_name,
-                        record.exam_date,
-                        duplicate_records[0].institute_id.name  # Take first record's institute name
-                    )
-                    raise ValidationError(error_msg)
+                
+                if self.env.context.get("confirm_context"):
+                    
+                    marksheet_ids = self.env.context.get("marksheet_ids")
+                    
+                    import wdb;wdb.set_trace()
+                    
+                    
+                    
+                    if candidate_assigned > 25:
+                        # Format the validation error message to include the examiner's name and exam date
+                        error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                            examiner_name,
+                            record.exam_date,
+                            duplicate_records[0].institute_id.name  # Take first record's institute name
+                        )
+                        raise ValidationError(error_msg)
+                    
+                
+                else:
+                                    
+                    if candidate_assigned > 25:
+                        # Format the validation error message to include the examiner's name and exam date
+                        error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                            examiner_name,
+                            record.exam_date,
+                            duplicate_records[0].institute_id.name  # Take first record's institute name
+                        )
+                        raise ValidationError(error_msg)
                 duplicate_records = self.search([
                     ('examiner', '=', record.examiner.id),
                     ('exam_date', '=', record.exam_date),
