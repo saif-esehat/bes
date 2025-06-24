@@ -2929,11 +2929,11 @@ class ExamOralPracticalExaminers(models.Model):
                     
                     marksheet_ids = self.env.context.get("marksheet_ids")
                     
-                    import wdb;wdb.set_trace()
+                    # import wdb; wdb.set_trace(); 
                     
+
                     
-                    
-                    if candidate_assigned > 25:
+                    if candidate_assigned + len(self.env.context.get("marksheet_ids")) > 25:
                         # Format the validation error message to include the examiner's name and exam date
                         error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
                             examiner_name,
