@@ -6457,11 +6457,6 @@ class ReallocateCandidatesWizard(models.TransientModel):
         for candidate in self.candidate_ids:
             # Check the course for the candidate
             # import wdb; wdb.set_trace();
-            if total_assigned + len(self.candidate_ids) > 25:
-                raise ValidationError(_("Cannot reassign: Examiner '%s' will exceed the 25 candidate limit on %s.") % (
-                    self.examiner_id.examiner.name,
-                    self.examiner_id.exam_date
-                ))
             if candidate.examiners_id.exam_type != "online":
                 if candidate.examiners_id.course.course_code == "GP":
                     if candidate.examiners_id.subject.name == 'GSK':
