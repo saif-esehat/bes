@@ -6448,15 +6448,8 @@ class ReallocateCandidatesWizard(models.TransientModel):
     def action_reallocate(self):
         confirmed_candidates = []  # List to hold names of confirmed candidates
         # import wdb; wdb.set_trace();
-        # Check total candidate count for the examiner on that date
-        total_assigned = sum(r.candidates_count for r in self.env['exam.type.oral.practical.examiners'].search([
-            ('examiner', '=', self.examiner_id.examiner.id),
-            ('exam_date', '=', self.examiner_id.exam_date),
-        ]))
-
         for candidate in self.candidate_ids:
             # Check the course for the candidate
-            # import wdb; wdb.set_trace();
             if candidate.examiners_id.exam_type != "online":
                 if candidate.examiners_id.course.course_code == "GP":
                     if candidate.examiners_id.subject.name == 'GSK':
