@@ -219,14 +219,24 @@ class ExaminerPortal(CustomerPortal):
                 values = {"mek_online_attendance": attendance}
                 if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
                     values["gsk_online_attendance"] = attendance
-
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
+                    mek_online_assignment_id = gp_marksheet.mek_online_assignment_id 
+                else:
+                    mek_online_assignment_id = gp_marksheet.mek_online_assignment_id 
                 if not gp_marksheet.token:
                     gp_marksheet.token = gp_marksheet.generate_token()
                 values["token"] = gp_marksheet.token
                 token = gp_marksheet.token
                 gp_marksheet.write(values)
             else:
-                gp_marksheet.write({"mek_online_attendance": attendance})
+                values = {"mek_online_attendance": attendance}
+                if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                    values["gsk_online_attendance"] = attendance
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
+                    mek_online_assignment_id = gp_marksheet.mek_online_assignment_id 
+                else:
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
+                gp_marksheet.write(values)
 
         elif subject == "GSK":
             gp_marksheet = marksheet.gp_marksheet
@@ -234,7 +244,10 @@ class ExaminerPortal(CustomerPortal):
                 values = {"gsk_online_attendance": attendance}
                 if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
                     values["mek_online_attendance"] = attendance
-
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
+                    mek_online_assignment_id = gp_marksheet.mek_online_assignment_id 
+                else:
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
                 if not gp_marksheet.token:
                     gp_marksheet.token = gp_marksheet.generate_token()
                 values["token"] = gp_marksheet.token
@@ -244,6 +257,11 @@ class ExaminerPortal(CustomerPortal):
                 values = {"gsk_online_attendance": attendance}
                 if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
                     values["mek_online_attendance"] = attendance
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
+                    mek_online_assignment_id = gp_marksheet.mek_online_assignment_id 
+                else:
+                    gsk_online_assignment_id = gp_marksheet.gsk_online_assignment_id 
+                    
                 gp_marksheet.write(values)
 
         elif subject == "CCMC":
@@ -258,6 +276,18 @@ class ExaminerPortal(CustomerPortal):
                 })
             else:
                 ccmc_marksheet.write({"ccmc_online_attendance": attendance})
+        if subject == "GSK" or subject == "MEK":
+            if gp_marksheet.attempting_gsk_online and gp_marksheet.attempting_mek_online:
+                gsk_online_assignment_id.compute_candidates_done()
+                gsk_online_assignment_id.check_absent()
+                mek_online_assignment_id.compute_candidates_done()
+                mek_online_assignment_id.check_absent()
+            elif gp_marksheet.attempting_gsk_online:
+                gsk_online_assignment_id.compute_candidates_done()
+                gsk_online_assignment_id.check_absent()
+            elif gp_marksheet.attempting_mek_online:
+                mek_online_assignment_id.compute_candidates_done()
+                mek_online_assignment_id.check_absent()
 
         marksheet.examiners_id.compute_candidates_done()
         marksheet.examiners_id.check_absent()
