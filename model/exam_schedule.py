@@ -604,8 +604,8 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner = record.examiner.id
                     exam_date = record.exam_date
                     exam_type = record.exam_type
-                    
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    confirm_context = True
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.ccmc_marksheet_ids ,'confirm_context':confirm_context}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -636,7 +636,6 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner = record.examiner.id
                     exam_date = record.exam_date
                     exam_type = record.exam_type
-                    
                     assignment = self.env["exam.type.oral.practical.examiners"].create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
@@ -675,8 +674,8 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner = record.examiner.id
                     exam_date = record.exam_date
                     exam_type = record.exam_type
-                    
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    confirm_context = True
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.ccmc_marksheet_ids ,'confirm_context':confirm_context}).create({
                                                                                             'prac_oral_id':prac_oral_id,
                                                                                             'institute_id':institute_id,
                                                                                             'subject':subject,
@@ -712,7 +711,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     exam_type = record.exam_type
                     
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.ccmc_marksheet_ids ,'confirm_context':confirm_context}).create({
                                                                                             'prac_oral_id':prac_oral_id,
                                                                                             'institute_id':institute_id,
                                                                                             'subject':subject,
@@ -1168,7 +1167,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     examiner = record.examiner.id
                     exam_date = record.exam_date
                     exam_type = record.exam_type
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    confirm_context = True
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids ,'confirm_context':confirm_context}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -1202,7 +1202,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     exam_type = record.exam_type
                     
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -1243,7 +1243,8 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     examiner = record.examiner.id
                     exam_type = record.exam_type
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    confirm_context = True
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids,'confirm_context':confirm_context}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -1273,7 +1274,7 @@ class GPExaminerAssignmentWizard(models.TransientModel):
                     exam_date = record.exam_date
                     exam_type = record.exam_type
                     
-                    assignment = self.env["exam.type.oral.practical.examiners"].create({
+                    assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.gp_marksheet_ids}).create({
                                                                                         'prac_oral_id':prac_oral_id,
                                                                                         'institute_id':institute_id,
                                                                                         'subject':subject,
@@ -2616,6 +2617,9 @@ class ExamOralPracticalExaminers(models.Model):
     online_start_time = fields.Datetime("Start Time",store=True)
     online_end_time = fields.Datetime("End Time",store=True)
 
+    with_context_check = fields.Boolean("With Context Check",default=False)
+
+
     def _compute_outstation(self):
         if self.institute_id.outstation:
             self.outstation = 'yes'
@@ -2908,25 +2912,58 @@ class ExamOralPracticalExaminers(models.Model):
     @api.constrains('examiner', 'exam_date')
     def _check_duplicate_examiner_on_date(self):
         for record in self:
-            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral' and record.dgs_batch.repeater_batch != True:
-                # Check if there are any other records with the same examiner and exam date
+            if record.examiner and record.exam_date and record.exam_type != 'online' and record.subject.name != 'CCMC GSK Oral':
+                # import wdb;wdb.set_trace()
+                examiner_name = record.examiner.name
+                is_confirming = self.env.context.get("confirm_context")
+                marksheet_ids = self.env.context.get("marksheet_ids") or []
+                # All exam records for the same examiner & date (including current)
+                all_records = self.search([
+                    ('examiner', '=', record.examiner.id),
+                    ('exam_date', '=', record.exam_date)
+                ])
+                base_count = sum(r.candidates_count for r in all_records)
+                total_candidates = base_count + (len(marksheet_ids) if is_confirming else 0)
+
+                if record.subject.name == 'CCMC':
+                    if any(rec.exam_type != 'online' for rec in all_records):
+                        if is_confirming:
+                            marksheet_ids = self.env.context.get("marksheet_ids")               
+                            if total_candidates > 50:
+                                error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                                    examiner_name,record.exam_date,all_records[0].institute_id.name)
+                                raise ValidationError(error_msg)
+                        else:
+                            if total_candidates > 50:
+                                error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                                            examiner_name,record.exam_date,all_records[0].institute_id.name)
+                                raise ValidationError(error_msg)
+                else:
+                    if any(rec.exam_type != 'online' for rec in all_records):
+                        if is_confirming:
+                            if total_candidates > 25:
+                                error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                                    examiner_name,record.exam_date,all_records[0].institute_id.name)
+                                raise ValidationError(error_msg)
+                        else:
+                            if total_candidates > 25:
+                                error_msg = _("Examiner '%s' is exceeding 25 candidates on %s! for '%s' ") % (
+                                            examiner_name,record.exam_date,all_records[0].institute_id.name)
+                                raise ValidationError(error_msg)
+                        
                 duplicate_records = self.search([
                     ('examiner', '=', record.examiner.id),
                     ('exam_date', '=', record.exam_date),
                     ('id', '!=', record.id)  # Exclude the current record
                 ])
-                if duplicate_records.exam_type == 'online':
-                     # Get the name of the examiner
-                    pass
-                elif duplicate_records.exam_type == 'practical_oral':
-                    examiner_name = record.examiner.name
-                    # Format the validation error message to include the examiner's name and exam date
-                    error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (examiner_name, record.exam_date,duplicate_records.institute_id.name)
-                    raise ValidationError(error_msg)
-                else:
-                    pass
-                    
 
+                if record.exam_type != 'gsk_oral' and any(rec.exam_type == 'practical_oral' for rec in duplicate_records):
+                    if total_candidates > 25:
+                        error_msg = _("Examiner '%s' is already assigned on %s! for '%s' ") % (
+                            examiner_name,record.exam_date,duplicate_records[0].institute_id.name)
+                        raise ValidationError(error_msg)
+                        
+                    
     
     def download_attendance_sheet(self):
         # import wdb;wdb.set_trace()
@@ -3909,23 +3946,23 @@ class GPExam(models.Model):
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance")
+    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance",tracking=True)
 
     gsk_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK Online Attendance")
+    ],string="GSK Online Attendance",tracking=True)
     
     mek_oral_prac_attendance = fields.Selection([
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance")
+    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance",tracking=True)
     
     mek_online_attendance = fields.Selection([
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK Online Attendance")
+    ],string="MEK Online Attendance",tracking=True)
 
     candidate_image_status = fields.Selection([
         ('pending', 'Pending'),
@@ -5562,22 +5599,22 @@ class CCMCExam(models.Model):
     cookery_prac_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Cookery Prac Attendance")
+    ],string="Cookery Prac Attendance",tracking=True)
     
     ccmc_oral_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Cookery Oral Attendance")
+    ],string="Cookery Oral Attendance",tracking=True)
     
     ccmc_gsk_oral_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="CCMC GSK Oral Attendance")
+    ],string="CCMC GSK Oral Attendance",tracking=True)
     
     ccmc_online_attendance = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-    ],string="Cookery Online Attendance")
+    ],string="Cookery Online Attendance",tracking=True)
 
     ceo_override = fields.Boolean("CEO Override", related='ccmc_candidate.ceo_override',store=True,tracking=True)
     ccmc_online_assignment_id = fields.Many2one("exam.type.oral.practical.examiners",string="CCMC Online Assignment",tracking=True)
@@ -6408,7 +6445,6 @@ class ReallocateCandidatesWizard(models.TransientModel):
     def action_reallocate(self):
         confirmed_candidates = []  # List to hold names of confirmed candidates
         # import wdb; wdb.set_trace();
-
         for candidate in self.candidate_ids:
             # Check the course for the candidate
             if candidate.examiners_id.exam_type != "online":

@@ -17,5 +17,6 @@
             ]
         }
     ],
-    "xml.validation.resolveExternalEntities": false
+    "xml.validation.resolveExternalEntities": false,
+    "python.languageServer": "None"
 }
