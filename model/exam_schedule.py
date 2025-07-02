@@ -4356,21 +4356,19 @@ class GPExam(models.Model):
     
 
     
-    @api.depends('overall_percentage','gp_candidate')
+    @api.depends('overall_percentage','gp_candidate','state')
     def _compute_rank(self):
-        for rec in self:
-            # sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
-            #                                                  order='overall_percentage desc , institute_code asc , gp_candidate asc')
-            sorted_records = self.env['gp.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1)],
-                                                             order='overall_percentage desc , institute_code asc , gp_candidate asc')
-            # import wdb; wdb.set_trace();
-        total_records = len(sorted_records)
-        top_25_percent = int(total_records * 0.25)
-
         for record in self:
-            
             if record.overall_percentage > 0:
-            # print(record.id)
+                sorted_records = self.env['gp.exam.schedule'].search([
+                    ('dgs_batch','=',record.dgs_batch.id),
+                    ('attempt_number','=',1),
+                    ('state','=','3-certified')
+                ], order='overall_percentage desc, institute_code asc, gp_candidate asc')
+                
+                total_records = len(sorted_records)
+                top_25_percent = int(total_records * 0.25)
+
                 try:
                     index = sorted_records.ids.index(record.id)
                     numeric_rank = index + 1 if index < top_25_percent else 0
@@ -4388,7 +4386,6 @@ class GPExam(models.Model):
                     record.rank = f'{numeric_rank}{suffix}'
                 except:
                     record.rank = "0th"
-            
             else:
                 record.rank = "0th"
     
@@ -5891,24 +5888,19 @@ class CCMCExam(models.Model):
             self.state = '4-pending'
             # self.certificate_issue_date = fields.date.today() 
     
-    @api.depends('overall_percentage')
+    @api.depends('overall_percentage','state')
     def _compute_rank(self):
-        
-        for rec in self:
-            # sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1),('state','=','3-certified')],
-            #                                                  order='overall_percentage desc , institute_code asc, ccmc_candidate asc')
-            
-            sorted_records = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',rec.dgs_batch.id),('attempt_number','=',1)],
-                                                             order='overall_percentage desc , institute_code asc, ccmc_candidate asc')
-        
-        # import wdb; wdb.set_trace();
-        total_records = len(sorted_records)
-        top_25_percent = int(total_records * 0.25)
-
         for record in self:
-            print(record.id)
-            
             if record.overall_percentage > 0:
+                sorted_records = self.env['ccmc.exam.schedule'].search([
+                    ('dgs_batch','=',record.dgs_batch.id),
+                    ('attempt_number','=',1),
+                    ('state','=','3-certified')
+                ], order='overall_percentage desc, institute_code asc, ccmc_candidate asc')
+                
+                total_records = len(sorted_records)
+                top_25_percent = int(total_records * 0.25)
+
                 try:
                     index = sorted_records.ids.index(record.id)
                     numeric_rank = index + 1 if index < top_25_percent else 0
@@ -5926,7 +5918,6 @@ class CCMCExam(models.Model):
                     record.ccmc_rank = f'{numeric_rank}{suffix}'
                 except:
                     record.ccmc_rank = "0th"
-                
             else:
                 record.ccmc_rank = "0th"
     
