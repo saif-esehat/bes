@@ -891,9 +891,21 @@
                                                     <td><span t-esc="round((region_online_passs/region_online_pass_appeared)*100,2)"/>%</td>
                                                 </t>
 
+
                                                 
-                                                <td><span t-esc="region_overall_pass"/></td>
-                                                <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                                <t t-if="region_candidate_appeared == 0">
+                                                    <td>0</td>
+                                                    <td>0.0%</td>
+                                                </t>
+                                                <t t-else="">
+                                                    <td><span t-esc="region_overall_pass"/></td>
+                                                    <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td>
+                                                </t>
+                                                
+                                                <!-- <td><span t-esc="region_overall_pass"/></td>
+                                                <td><span t-esc="round((region_overall_pass/region_candidate_appeared)*100,2)"/>%</td> -->
+
+
                                                 <!-- <td><span t-esc="institute.oral_pass_appeared"/></td>
                                                 <td><span t-esc="institute.oral_pass"/></td>
                                                 <td><span t-esc="round(institute.oral_pass_per,2)"/>%</td>
