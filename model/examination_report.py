@@ -308,18 +308,22 @@ class ExaminationReport(models.Model):
                 appeared = self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('absent_status','=','present')])
                 
                 #GSK Prac/Oral
+                gsk_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_oral_prac_attendance','=','present')])   
                 gsk_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_oral_prac_status','=','passed')])
                 gsk_passed_percentage = (gsk_passed_count/appeared) * 100
                 
                 #MEK Prac/Oral
+                mek_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_oral_prac_attendance','=','present')])                
                 mek_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_oral_prac_status','=','passed')])
                 mek_passed_percentage = (mek_passed_count/appeared) * 100
                 
                 #GSK Online
+                gsk_online_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_attendance','=','present')])
                 gsk_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('gsk_online_status','=','passed')])
                 gsk_online_passed_percentage = (gsk_online_passed_count/appeared) * 100
                 
                 #MEK Online
+                mek_online_appeared =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_online_attendance','=','present')])                
                 mek_online_passed_count =  self.env['gp.exam.schedule'].sudo().search_count([('dgs_batch','=',batch_id),('institute_id','=',institute_id),('mek_online_status','=','passed')])
                 mek_online_passed_percentage = (mek_online_passed_count/appeared) * 100
                 
@@ -1395,16 +1399,20 @@ class GPSummarisedReport(models.Model):
     applied = fields.Integer("Applied",tracking=True)
     candidate_appeared = fields.Integer("Candidate Appeared",tracking=True)
     
-    gsk_prac_oral_pass = fields.Integer("GSK (P.O.J)  - Applied",tracking=True)
+    gsk_prac_oral_appeared = fields.Integer("GSK (P.O.J)  - Appeared",tracking=True)
+    gsk_prac_oral_pass = fields.Integer("GSK (P.O.J)  - Pass",tracking=True)
     gsk_prac_oral_pass_per = fields.Float("GSK (P.O.J) - % Passed",tracking=True)
     
-    mek_prac_oral_pass = fields.Integer("MEK (P.O.J)  - Applied",tracking=True)
+    mek_prac_oral_appeared = fields.Integer("MEK (P.O.J)  - Appeared",tracking=True)
+    mek_prac_oral_pass = fields.Integer("MEK (P.O.J)  - Pass",tracking=True)
     mek_prac_oral_pass_per = fields.Float("MEK (P.O.J) - % Passed",tracking=True)
     
-    gsk_online_pass = fields.Integer("GSK Online  - Applied",tracking=True)
+    gsk_online_appeared = fields.Integer("GSK Online  - Appeared",tracking=True)
+    gsk_online_pass = fields.Integer("GSK Online  - Pass",tracking=True)
     gsk_online_pass_per = fields.Float("GSK Online - % Passed",tracking=True)
     
-    mek_online_pass = fields.Integer("MEK Online  - Applied",tracking=True)
+    mek_online_appeared = fields.Integer("MEK Online  - Appeared",tracking=True)
+    mek_online_pass = fields.Integer("MEK Online  - Pass",tracking=True)
     mek_online_pass_per = fields.Float("MEK Online - % Passed",tracking=True)
     
     overall_pass = fields.Integer("Overall Passed",tracking=True)

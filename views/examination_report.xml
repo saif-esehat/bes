@@ -180,14 +180,22 @@
                 <field name="institute" optional="show"/>
                 <field name="applied" optional="show"/>
                 <field name="candidate_appeared" optional="show"/>
+                <field name="gsk_prac_oral_appeared" optional="show"/>
                 <field name="gsk_prac_oral_pass" optional="show"/>
                 <field name="gsk_prac_oral_pass_per" optional="show"/>
+
+                <field name="mek_prac_oral_appeared" optional="show"/>
                 <field name="mek_prac_oral_pass" optional="show"/>
                 <field name="mek_prac_oral_pass_per" optional="show"/>
+                
+                <field name="gsk_online_appeared" optional="show"/>
                 <field name="gsk_online_pass" optional="show"/>
                 <field name="gsk_online_pass_per" optional="show"/>
+                
+                <field name="mek_online_appeared" optional="show"/>
                 <field name="mek_online_pass" optional="show"/>
                 <field name="mek_online_pass_per" optional="show"/>
+                
                 <field name="overall_pass" optional="show"/>
                 <field name="overall_pass_per" optional="show"/>
             </tree>
