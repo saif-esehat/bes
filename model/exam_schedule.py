@@ -5890,36 +5890,36 @@ class CCMCExam(models.Model):
     
     @api.depends('overall_percentage','state')
     def _compute_rank(self):
-        for record in self:
-            if record.overall_percentage > 0:
-                sorted_records = self.env['ccmc.exam.schedule'].search([
-                    ('dgs_batch','=',record.dgs_batch.id),
-                    ('attempt_number','=',1),
-                    ('state','=','3-certified')
-                ], order='overall_percentage desc, institute_code asc, ccmc_candidate asc')
-                
-                total_records = len(sorted_records)
-                top_25_percent = int(total_records * 0.25)
-
-                try:
-                    index = sorted_records.ids.index(record.id)
-                    numeric_rank = index + 1 if index < top_25_percent else 0
-
-                    # Convert numeric rank to character format
-                    if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
-                        suffix = 'st'
-                    elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
-                        suffix = 'nd'
-                    elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
-                        suffix = 'rd'
-                    else:
-                        suffix = 'th'
-
-                    record.ccmc_rank = f'{numeric_rank}{suffix}'
-                except:
-                    record.ccmc_rank = "0th"
-            else:
-                record.ccmc_rank = "0th"
+           for record in self:
+               if record.overall_percentage > 0:
+                   sorted_records = self.env['ccmc.exam.schedule'].search([
+                       ('dgs_batch','=',record.dgs_batch.id),
+                       ('attempt_number','=',1),
+                       ('state','=','3-certified')
+                   ], order='overall_percentage desc, institute_code asc, ccmc_candidate asc')
+                   
+                   total_records = len(sorted_records)
+                   top_25_percent = int(total_records * 0.25)
+   
+                   try:
+                       index = sorted_records.ids.index(record.id)
+                       numeric_rank = index + 1 if index < top_25_percent else 0
+   
+                       # Convert numeric rank to character format
+                       if numeric_rank % 10 == 1 and numeric_rank % 100 != 11:
+                           suffix = 'st'
+                       elif numeric_rank % 10 == 2 and numeric_rank % 100 != 12:
+                           suffix = 'nd'
+                       elif numeric_rank % 10 == 3 and numeric_rank % 100 != 13:
+                           suffix = 'rd'
+                       else:
+                           suffix = 'th'
+   
+                       record.ccmc_rank = f'{numeric_rank}{suffix}'
+                   except:
+                       record.ccmc_rank = "0th"
+               else:
+                   record.ccmc_rank = "0th"
     
 
     @api.depends('certificate_id','state')
