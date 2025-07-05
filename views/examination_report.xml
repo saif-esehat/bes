@@ -217,6 +217,8 @@
                         </group>
                         <group style="width:50%;">
                             <field name="applied" />
+                            <field name="gsk_prac_oral_appeared" />
+                            <field name="mek_prac_oral_appeared" />
                             <field name="gsk_prac_oral_pass" />
                             <field name="mek_prac_oral_pass" />
                             <field name="gsk_online_pass" />
@@ -226,6 +228,8 @@
                         </group>
                         <group style="width:50%;">
                             <field name="candidate_appeared" />
+                            <field name="gsk_online_appeared" />
+                            <field name="mek_online_appeared" />
                             <field name="gsk_prac_oral_pass_per" />
                             <field name="mek_prac_oral_pass_per" />
                             <field name="gsk_online_pass_per" />

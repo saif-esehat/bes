@@ -335,12 +335,19 @@ class ExaminationReport(models.Model):
                     'institute': institute_id,  # Assuming 2 is the ID of the institute
                     'applied': applied,
                     'candidate_appeared': appeared,
+                    'gsk_prac_oral_appeared': gsk_appeared,
                     'gsk_prac_oral_pass': gsk_passed_count,
                     'gsk_prac_oral_pass_per': gsk_passed_percentage,
+
+                    'mek_prac_oral_appeared': mek_appeared,
                     'mek_prac_oral_pass': mek_passed_count,
                     'mek_prac_oral_pass_per': mek_passed_percentage,
+                    
+                    'gsk_online_appeared': gsk_online_appeared,
                     'gsk_online_pass': gsk_online_passed_count,
                     'gsk_online_pass_per': gsk_online_passed_percentage,
+                    
+                    'mek_online_appeared': mek_online_appeared,
                     'mek_online_pass': mek_online_passed_count,
                     'mek_online_pass_per': mek_online_passed_percentage,
                     'overall_pass': overall_passed,  # Sum of all passes
