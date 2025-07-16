@@ -4217,7 +4217,7 @@ class GPExam(models.Model):
             else:
                 record.attendance_criteria = 'pending'
 
-    @api.depends('mek_oral','mek_prac','gsk_oral','gsk_prac')
+    @api.depends('mek_oral.mek_oral_remarks','mek_prac.mek_practical_remarks','gsk_oral.gsk_oral_remarks','gsk_prac.gsk_practical_remarks')
     def _compute_attendance(self):
         for record in self:
             # import wdb; wdb.set_trace();
