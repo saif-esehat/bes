@@ -244,25 +244,25 @@ class ExpenseController(http.Controller):
                 'date_time': kw.get('left_residence_date_time'),
                 'mode_of_travel': kw.get('left_residence_mode_of_travel'),
                 'expense': kw.get('left_residence_expenses'),
-                'supporting_document': kw.get('left_residence_expenses'),
+                # 'supporting_document': kw.get('supporting_document_left_residence'),
             }),
             ('arrival_institute_line_id', {
                 'date_time': kw.get('arrival_institute_hotel_date_time'),
                 'mode_of_travel': kw.get('arrival_institute_hotel_mode_of_travel'),
                 'expense': kw.get('arrival_institute_hotel_expenses'),
-                'supporting_document': kw.get('left_residence_expenses'),
+                # 'supporting_document': kw.get('supporting_document_arrival_institute'),
             }),
             ('left_institute_line_id', {
                 'date_time': kw.get('left_institute_date_time'),
                 'mode_of_travel': kw.get('left_institute_mode_of_travel'),
                 'expense': kw.get('left_institute_expenses'),
-                'supporting_document': kw.get('left_residence_expenses'),
+                # 'supporting_document': kw.get('supporting_document_left_institute'),
             }),
             ('arrival_residence_line_id', {
                 'date_time': kw.get('arrival_residence_date_time'),
                 'mode_of_travel': kw.get('arrival_residence_mode_of_travel'),
                 'expense': kw.get('arrival_residence_expenses'),
-                'supporting_document': kw.get('left_residence_expenses'),
+                # 'supporting_document': kw.get('supporting_document_left_institute'),
             })
         ]
         

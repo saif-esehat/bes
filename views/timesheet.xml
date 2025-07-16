@@ -6,7 +6,7 @@
         <record id="action_time_sheet_form" model="ir.actions.act_window">
             <field name="name">Time Sheet Report Form</field>
             <field name="res_model">time.sheet.report</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,search</field>
         </record>
 
         <record id="view_time_sheet_report_tree" model="ir.ui.view">
@@ -21,6 +21,23 @@
                     <!-- <field name="place"/> -->
                     <!-- <field name="exam_date"/> -->
                 </tree>
+            </field>
+        </record>
+        
+        <record id="time_sheet_report_search" model="ir.ui.view">
+            <field name="name">time.sheet.report.search</field>
+            <field name="model">time.sheet.report</field>
+            <field name="arch" type="xml">
+            <search string="Time Sheet Search">
+                <field name="examiner"/>
+                <field name="dgs_batch"/>
+                <field name="institutes_id"/>
+                <group string="Group By">
+                    <filter name="group_by_dgs_batch" string="Exam Batch" context="{'group_by':'dgs_batch'}" />
+                    <filter name="group_by_institute" string="Institute" context="{'group_by':'institutes_id'}" />
+                    <filter name="group_by_examiner" string="Examiner" context="{'group_by':'examiner'}" />
+                </group>
+            </search>
             </field>
         </record>
           

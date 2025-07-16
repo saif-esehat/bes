@@ -8,9 +8,9 @@ class TimeSheetReport(models.Model):
     _description = 'Time Sheet Report'
 
     examiner_assignment = fields.Many2one('exam.type.oral.practical.examiners',"Examiner Assignment")
-    examiner = fields.Many2one('bes.examiner',related='examiner_assignment.examiner', string="Examiner",tracking=True)
-    institutes_id = fields.Many2one('bes.institute',related='examiner_assignment.institute_id',string='Name of Institute', tracking=True)
-    dgs_batch = fields.Many2one('dgs.batches',related='examiner_assignment.dgs_batch',string='DGS Batch', tracking=True)
+    examiner = fields.Many2one('bes.examiner',related='examiner_assignment.examiner', string="Examiner",store=True,tracking=True)
+    institutes_id = fields.Many2one('bes.institute',related='examiner_assignment.institute_id',string='Name of Institute',store=True, tracking=True)
+    dgs_batch = fields.Many2one('dgs.batches',related='examiner_assignment.dgs_batch',string='DGS Batch', tracking=True,store=True)
     exam_date = fields.Date("Exam Date",tracking=True,related='examiner_assignment.exam_date')
 
     place = fields.Char(string='Place')
@@ -31,6 +31,13 @@ class TimeSheetReport(models.Model):
     ], string='State', default='pending')
     
     reject_reason = fields.Text("Reject Reason")
+
+
+    def compute_dgs_batch(self):
+        for record in self:
+            record.dgs_batch = record.examiner_assignment.dgs_batch
+            record.institutes_id = record.examiner_assignment.institute_id
+            record.examiner = record.examiner_assignment.examiner
 
     
     @api.depends('travel_details.expenses')
