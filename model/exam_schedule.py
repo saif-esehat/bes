@@ -5888,8 +5888,8 @@ class CCMCExam(models.Model):
             self.state = '4-pending'
             # self.certificate_issue_date = fields.date.today() 
     
-       @api.depends('overall_percentage','state')
-       def _compute_rank(self):
+    @api.depends('overall_percentage','state')
+    def _compute_rank(self):
            for record in self:
                if record.overall_percentage > 0:
                    sorted_records = self.env['ccmc.exam.schedule'].search([
