@@ -413,7 +413,7 @@
                 <t t-set="today_date" t-value="datetime.date.today()"/>
                 <!-- Modal for Updating Details -->
                 <div class="modal fade" id="updateDayModal" tabindex="-1" role="dialog" aria-labelledby="updateDayModalLabel" aria-hidden="true">
-                    <form action="/my/assignments/batches/timesheet/submit" method="POST">
+                    <form action="/my/assignments/batches/timesheet/submit" method="POST" enctype="multipart/form-data">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">

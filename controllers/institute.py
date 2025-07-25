@@ -723,8 +723,17 @@ class InstitutePortal(CustomerPortal):
 
         if request.httprequest.method == "POST":
             name = kw.get("name")
-            indos_no = kw.get("indos_no").strip()
-            gender = "male" if kw.get("gender") == "Male" else "female"
+            # indos_no = kw.get("indos_no").strip()
+            indos_no = kw.get("indos_no","").strip()  # Ensure default empty string if key not present
+            
+            if re.fullmatch(r'^[0-9]{2}[a-zA-Z]{2}[0-9]{4}$', indos_no):
+                pass  # Valid format; proceed
+            else:
+                raise ValidationError(
+                    "INDOS No. must be 8 characters long: 2 digits, 2 letters, 4 digits (e.g., 12AB3456). No spaces allowed."
+                )
+            
+            gender = "male" if kw.get("gender") == "male" else "female"
             date_str = kw.get("dob")
             try:
                 dob = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -806,8 +815,14 @@ class InstitutePortal(CustomerPortal):
 
         if request.httprequest.method == "POST":
             name = kw.get("name")
-            gender = "male" if kw.get("gender") == "Male" else "female"
-            indos_no = kw.get("indos_no").strip()
+            indos_no = kw.get("indos_no","").strip()  # Ensure default empty string if key not present
+            if re.fullmatch(r'^[0-9]{2}[a-zA-Z]{2}[0-9]{4}$', indos_no):
+                pass  # Valid format; proceed
+            else:
+                raise ValidationError(
+                    "INDOS No. must be 8 characters long: 2 digits, 2 letters, 4 digits (e.g., 12AB3456). No spaces allowed."
+                )
+            gender = "male" if kw.get("gender") == "male" else "female"
             date_str = kw.get("dob")
             try:
                 dob = datetime.strptime(date_str, "%Y-%m-%d").date()
