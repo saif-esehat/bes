@@ -423,12 +423,16 @@
                             <td class="text-center">
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
+
+                            <!-- Update Batch Capacity Option Removed as ask by bes  -->
                             
-                            <t t-if="batch.state == '1-ongoing' and not batch.dgs_approval_state">
+                            <!-- <t t-if="batch.state == '1-ongoing' and not batch.dgs_approval_state">
                                 <td class="text-left">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary">Update Batch Capacity</a>
                                 </td>
-                            </t>
+                            </t> -->
+
+                             <!-- Update Batch Capacity Option Removed as ask by bes  -->
                             
                             <!-- <t t-if="batch.state == '1-ongoing'">
                                 <td class="text-left">
@@ -640,11 +644,12 @@
                             <td class="text-center">
                                 <t t-out="batch.dgs_approved_capacity" />
                             </td>
-                            <t t-if="batch.ccmc_state == '1-ongoing' and not batch.dgs_approval_state">
+                            
+                            <!-- <t t-if="batch.ccmc_state == '1-ongoing' and not batch.dgs_approval_state">
                                 <td class="text-center">
                                     <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{batch.id}}" onclick="openTokenModal(this)" data-target="#dgs_approval_modal" class="btn btn-primary btn_cta">Update Batch Capacity</a>
                                 </td>
-                            </t>
+                            </t> -->
 
                             <!-- <t t-if="batch.ccmc_state == '1-ongoing'">
                                 <td class="text-center">
@@ -5130,7 +5135,7 @@
                                                 <t t-esc="course.total"/>
                                         </td>
                                         <td>
-                                            <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{course.id}}" data-target="#updateBatchApproval" onclick="updateBatchApproval(this)">Edit</a>
+                                            <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{course.id}}" data-target="#updateBatchApproval" onclick="updateBatchApproval(this)">Edit</a> -->
                                             <!-- <a href="" style="margin-top: 10px; margin-bottom: 20px;" data-toggle="modal" t-attf-data-id="{{registered_exam.id}}" onclick="openTokenModal(this)" data-target="#updateBatchApproval" class="btn btn-primary btn_cta">Start Exam</a> -->
 
                                         </td>
