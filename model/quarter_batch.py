@@ -246,6 +246,20 @@ class DGSBatch(models.Model):
     
     dgs_approval_button_visible = fields.Boolean("DGS Approval Button Visible",compute="compute_dgs_approval_button_visible")
     
+    
+    def check_pending_timesheet(self):
+        examiners = self.env["exam.type.oral.practical.examiners"].sudo()
+        total_assignments = examiners.search_count([("dgs_batch","=",self.id)])
+        pending_timesheets = examiners.search_count([("dgs_batch","=",self.id),("time_sheet","=",False)])
+        
+        if pending_timesheets > 0:
+            raise ValidationError(
+                f"Timesheets not submitted for all assignments!\n"
+                f"Total assignments: {total_assignments}\n"
+                f"Pending timesheets: {pending_timesheets}"
+            )
+        
+    
     @api.depends('state','dgs_approval_state')
     def compute_dgs_approval_button_visible(self):
         for record in self:
@@ -532,6 +546,8 @@ class DGSBatch(models.Model):
                 record.ccmc_url = "Default URL" 
 
     def move_confirm(self):
+        
+        self.check_pending_timesheet()
         exams = self.env['gp.exam.schedule'].search([('dgs_batch','=',self.id)])
         ccmc_exams = self.env['ccmc.exam.schedule'].search([('dgs_batch','=',self.id)])
         
