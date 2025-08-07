@@ -4815,7 +4815,14 @@ class GPExam(models.Model):
         
     def move_done(self):
                 # import wdb; wdb.set_trace();
-                
+        
+        
+        
+        
+        if self.id == 28332:
+            import wdb; wdb.set_trace();
+        
+        
         if self.attempting_gsk_oral_prac and not self.gsk_oral_prac_assignment:
             self.gsk_oral_prac_attendance = 'absent'
         
