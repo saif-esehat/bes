@@ -4823,8 +4823,13 @@ class InstitutePortal(CustomerPortal):
         )
         # import wdb; wdb.set_trace()
         if request.httprequest.method == "POST":
+            
+            file_content = kw.get("photo").read()
+            filename = kw.get("photo").filename
 
             faculty_details = {
+                "faculty_photo":base64.b64encode(file_content),
+                "faculty_photo_name":filename,
                 "faculty_name": kw.get("full_name"),
                 "dob": kw.get("dob"),
                 "designation": kw.get("designation"),
@@ -4865,8 +4870,15 @@ class InstitutePortal(CustomerPortal):
         )
         # import wdb; wdb.set_trace()
         if request.httprequest.method == "POST":
+            
+            
+            file_content = kw.get("photo").read()
+            filename = kw.get("photo").filename
+
 
             faculty_details = {
+                "faculty_photo":base64.b64encode(file_content),
+                "faculty_photo_name":filename,
                 "faculty_name": kw.get("full_name"),
                 "dob": kw.get("dob"),
                 "designation": kw.get("designation"),

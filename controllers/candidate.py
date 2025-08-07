@@ -689,6 +689,8 @@ class GPCandidatePortal(CustomerPortal):
                 
                 if candidate:
                     transaction_id = kwargs.get('upi_utr_no')
+                    if transaction_id and len(transaction_id) != 12:
+                        raise ValidationError("Transaction ID must be exactly 12 characters long")
                     transaction_date = kwargs.get('payment_date')
                     total_amount = int(kwargs.get('amount'))
                     file_content = kwargs.get("transaction_slip").read()
@@ -881,6 +883,8 @@ class GPCandidatePortal(CustomerPortal):
 
                 if candidate:
                     transaction_id = kwargs.get('upi_utr_no')
+                    if transaction_id and len(transaction_id) != 12:
+                        raise ValidationError("Transaction ID must be exactly 12 characters long")
                     transaction_date = kwargs.get('payment_date')
                     total_amount = int(kwargs.get('amount'))
                     file_content = kwargs.get("transaction_slip").read()

@@ -6315,8 +6315,8 @@
                                         
                                             <div class="col-md-5">
                                                 <div class="form-group">
-                                                    <label for="candidate_photo" class="form-label">Photo</label>
-                                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="displayImage(this)" />
+                                                    <label for="photo" class="form-label">Photo</label>
+                                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" />
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -6478,6 +6478,7 @@
             <script>
                 
                 function displayImage(input) {
+
                     const cardImg = document.querySelector('.card-img');
                     const file = input.files[0];
 
@@ -6566,7 +6567,9 @@
                                             <div class="col-md-5">
                                                 <div class="form-group">
                                                     <label for="candidate_photo" class="form-label">Photo</label>
-                                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="displayImage(this)" />
+                                                    <!-- <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="displayImage(this)" /> -->
+                                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*" />
+
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
