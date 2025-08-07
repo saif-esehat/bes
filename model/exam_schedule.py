@@ -4697,6 +4697,7 @@ class GPExam(models.Model):
                         # raise ValidationError("GSK Online Exam Not Done or Confirmed :"+str(self.gp_candidate.candidate_code))
                         error_msg = _("GSK Online Exam Not Done or Confirmed : '%s'") % (self.gp_candidate.candidate_code)
                         print(error_msg)
+                        self.gsk_online_status = 'failed'
                 
                 else:
                     # self.gsk_online_marks = self.gsk_online.scoring_total
@@ -4709,7 +4710,6 @@ class GPExam(models.Model):
                 # if False:
                 if not (len(self.mek_online) == 0):
                     if mek_online_done:
-                        
                         print("In MEK ONline done")
                         print(self.mek_online)
                         
@@ -4724,6 +4724,7 @@ class GPExam(models.Model):
                         # raise ValidationError("MEK Online Exam Not Done or Confirmed :"+str(self.gp_candidate.candidate_code))
                         error_msg = _("MEK Online Exam Not Done or Confirmed : '%s'") % (self.gp_candidate.candidate_code)
                         print(error_msg)
+                        self.mek_online_status = 'failed'
                 else:
                     self.mek_online_percentage = (self.mek_online_marks/75)*100
                     if self.mek_online_percentage >= 60 :
@@ -4818,12 +4819,6 @@ class GPExam(models.Model):
                 # import wdb; wdb.set_trace();
         
         
-        
-        
-        if self.id == 28332:
-            import wdb; wdb.set_trace();
-        
-        
         if self.attempting_gsk_oral_prac and not self.gsk_oral_prac_assignment:
             self.gsk_oral_prac_attendance = 'absent'
         
@@ -4909,6 +4904,7 @@ class GPExam(models.Model):
                         print("Exam_ID" + self.exam_id)
                         error_msg = _("GSK Online Exam Not Done or Confirmed : '%s'") % (self.gp_candidate.candidate_code)
                         print(error_msg)
+                        self.gsk_online_status = 'failed'
                         # raise ValidationError("GSK Online Exam Not Done or Confirmed")
                 
                 else:
@@ -4942,6 +4938,7 @@ class GPExam(models.Model):
                         print("Exam_ID" + self.exam_id)
                         error_msg = _("MEK Online Exam Not Done or Confirmed : '%s'") % (self.gp_candidate.candidate_code)
                         print(error_msg)
+                        self.mek_online_status = 'failed'
                         # raise ValidationError("MEK Online Exam Not Done or Confirmed")
                 else:
                     self.mek_online_percentage = (self.mek_online_marks/75)*100
