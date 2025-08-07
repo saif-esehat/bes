@@ -420,10 +420,10 @@ class DGSBatch(models.Model):
     def ccmc_get_pass_percentage(self,exams=None):
         if self.repeater_batch:
             # if exams == None:
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)]).sorted(key=lambda r: r.institute_code)
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('absent_status','=','present')]).sorted(key=lambda r: r.institute_code)
         else:
             # if exams == None:
-            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id)]).sorted(key=lambda r: r.institute_code)
+            exams = self.env['ccmc.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('absent_status','=','present')]).sorted(key=lambda r: r.institute_code)
         total_counts = defaultdict(int)
         pass_counts = defaultdict(int)
         # exams = self.env['gp.exam.schedule'].sudo().search([('dgs_batch','=',self.id),('attempt_number','=','1')])
@@ -443,11 +443,15 @@ class DGSBatch(models.Model):
         labels = set((d['institute_code'], d['institute']) for d in candidates)
 
         
+        
         for entry in candidates:
             institute = entry['institute_code']
             total_counts[institute] += 1
             if entry['status'] == 'passed':
                 pass_counts[institute] += 1
+        
+        print(total_counts)                
+        print(pass_counts)
 
         pass_percentages = {institute: (pass_counts[institute] / total) * 100 for institute, total in total_counts.items()}
         # import wdb; wdb.set_trace();

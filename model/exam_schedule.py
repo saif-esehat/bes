@@ -4360,11 +4360,12 @@ class GPExam(models.Model):
     def _compute_rank(self):
            for record in self:
                if record.overall_percentage > 0:
-                   sorted_records = self.env['ccmc.exam.schedule'].search([
-                       ('dgs_batch','=',record.dgs_batch.id),
-                       ('attempt_number','=',1),
-                       ('state','=','3-certified')
-                   ], order='overall_percentage desc, institute_code asc, ccmc_candidate asc')
+                   sorted_records = self.env['gp.exam.schedule'].search([
+                        ('dgs_batch','=',record.dgs_batch.id),
+                        ('attempt_number','=',1),
+                        ('state','=','3-certified')
+                    ], order='overall_percentage desc, institute_code asc, gp_candidate asc')
+
                    
                    total_records = len(sorted_records)
                    top_25_percent = int(total_records * 0.25)
@@ -4383,11 +4384,11 @@ class GPExam(models.Model):
                        else:
                            suffix = 'th'
    
-                       record.ccmc_rank = f'{numeric_rank}{suffix}'
+                       record.rank = f'{numeric_rank}{suffix}'
                    except:
-                       record.ccmc_rank = "0th"
+                       record.rank = "0th"
                else:
-                   record.ccmc_rank = "0th"
+                   record.rank = "0th"
     
     
 
