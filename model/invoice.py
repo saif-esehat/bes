@@ -6,7 +6,6 @@ class CandidateInvoiceResetWizard(models.TransientModel):
     _description = 'Candidate Invoice Reset Wizard'
     
     
-    
     def reset_invoice(self):
         
         invoice_id = self.env.context.get('active_id')
@@ -17,10 +16,22 @@ class CandidateInvoiceResetWizard(models.TransientModel):
         # import wdb;wdb.set_trace()
         
         if invoices.gp_repeater_candidate_ok:
-            invoices.write({'gp_candidate':False,'transaction_id':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
+            
+            gp_exams = self.env["gp.exam.schedule"].sudo().search([("gp_candidate","=",invoices.gp_candidate.id),("dgs_batch","=",invoices.repeater_exam_batch.id)])
+            if  any(exam.state == '1-in_process' for exam in gp_exams):
+                gp_exams.unlink()
+                invoices.write({'gp_candidate':False,'transaction_id':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
+            else:
+                raise UserError("Cannot delete exams that are in process state")
             invoices.button_draft()
+            
         elif invoices.ccmc_repeater_candidate_ok:
-            invoices.write({'ccmc_candidate':False ,'transaction_id':False, 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
+            ccmc_exams =self.env["ccmc.exam.schedule"].sudo().search([("ccmc_candidate","=",invoices.ccmc_candidate.id),("dgs_batch","=",invoices.repeater_exam_batch.id)])            
+            if  any(exam.state == '1-in_process' for exam in ccmc_exams):
+                ccmc_exams.unlink()
+                invoices.write({'ccmc_candidate':False ,'transaction_id':False, 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
+            else:
+                raise UserError("Cannot delete exams that are in process state")
             invoices.button_draft()
             
         
