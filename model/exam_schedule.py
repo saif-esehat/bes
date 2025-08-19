@@ -4821,15 +4821,19 @@ class GPExam(models.Model):
         
         if self.attempting_gsk_oral_prac and not self.gsk_oral_prac_assignment:
             self.gsk_oral_prac_attendance = 'absent'
+            self.gsk_oral_prac_status = 'failed'
         
         if self.attempting_mek_oral_prac and not self.mek_oral_prac_assignment:
             self.mek_oral_prac_attendance = 'absent'
+            self.mek_oral_prac_status = 'failed'
                 
         if self.attempting_gsk_online and not self.gsk_online_assignment:
             self.gsk_online_attendance = 'absent'
+            self.gsk_online_status = 'failed'
         
         if self.attempting_mek_online and not self.mek_online_assignment:
             self.mek_online_attendance = 'absent'
+            self.mek_online_status = 'failed'
 
         if self.exam_violation_state == 'na':
         
