@@ -23,6 +23,7 @@ class SalesOrderInherited(models.Model):
         invoice_vals['transaction_id'] = self.transaction_id
         invoice_vals['transaction_slip'] = self.payment_slip
         invoice_vals['file_name'] = self.slip_file_name
+        invoice_vals['is_book_invoice'] = True
 
         
         return invoice_vals

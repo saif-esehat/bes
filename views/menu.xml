@@ -540,10 +540,29 @@
         </record>
 
 
+         <record id="book_invoice_action" model="ir.actions.act_window">
+            <field name="name">Book Invoices</field>
+            <field name="res_model">account.move</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[
+                ('is_book_invoice', '=', True)
+                ]</field>
+      
+
+        </record>
+
+
         <menuitem id="menu_ccmc_repeater_invoices"
             parent="account.menu_finance_receivables"
             name="CCMC Repeater Candidate Invoices"
             action="ccmc_repeater_invoices_action"
+            groups="account.group_account_manager"
+            sequence="0" />
+
+        <menuitem id="menu_book_invoices"
+            parent="account.menu_finance_receivables"
+            name="Book Invoices"
+            action="book_invoice_action"
             groups="account.group_account_manager"
             sequence="0" />
 

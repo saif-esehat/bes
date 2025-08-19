@@ -18,20 +18,25 @@ class CandidateInvoiceResetWizard(models.TransientModel):
         if invoices.gp_repeater_candidate_ok:
             
             gp_exams = self.env["gp.exam.schedule"].sudo().search([("gp_candidate","=",invoices.gp_candidate.id),("dgs_batch","=",invoices.repeater_exam_batch.id)])
-            if  any(exam.state == '1-in_process' for exam in gp_exams):
-                gp_exams.unlink()
-                invoices.write({'gp_candidate':False,'transaction_id':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
-            else:
-                raise UserError("Cannot delete exams that are in process state")
+            
+            if gp_exams:
+                if  any(exam.state == '1-in_process' for exam in gp_exams):
+                    gp_exams.unlink()
+                    invoices.write({'gp_candidate':False,'transaction_id':False,'repeater_exam_batch':False,'gp_repeater_candidate_ok':False})
+                else:
+                    raise UserError("Cannot delete exams that are in process state")
             invoices.button_draft()
             
         elif invoices.ccmc_repeater_candidate_ok:
             ccmc_exams =self.env["ccmc.exam.schedule"].sudo().search([("ccmc_candidate","=",invoices.ccmc_candidate.id),("dgs_batch","=",invoices.repeater_exam_batch.id)])            
-            if  any(exam.state == '1-in_process' for exam in ccmc_exams):
-                ccmc_exams.unlink()
-                invoices.write({'ccmc_candidate':False ,'transaction_id':False, 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
-            else:
-                raise UserError("Cannot delete exams that are in process state")
+            
+            if ccmc_exams:
+                if  any(exam.state == '1-in_process' for exam in ccmc_exams):
+                    ccmc_exams.unlink()
+                    invoices.write({'ccmc_candidate':False ,'transaction_id':False, 'repeater_exam_batch':False, 'ccmc_repeater_candidate_ok':False})
+                else:
+                    raise UserError("Cannot delete exams that are in process state")
+            
             invoices.button_draft()
             
         
@@ -53,6 +58,8 @@ class BatchInvoice(models.Model):
     
     gp_repeater_candidate_ok = fields.Boolean("GP Repeater Candidate Ok")
     ccmc_repeater_candidate_ok = fields.Boolean("CCMC Repeater Candidate Ok")
+    
+    is_book_invoice = fields.Boolean("Book Invoice")
     
     repeater_exam_batch = fields.Many2one('dgs.batches', string='Exam Batch')
 
