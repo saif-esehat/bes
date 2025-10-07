@@ -89,7 +89,7 @@ class PublicPortal(http.Controller):
         # if True:
         # raise ValidationError("Not allowed")
         try:
-            certificate = requesth.env['gp.exam.schedule'].sudo().search([('id','=',certificate_id)])
+            certificate = request.env['gp.exam.schedule'].sudo().search([('id','=',certificate_id)])
             if certificate.state == "3-certified":
                 certificate_id = certificate.id
             else:

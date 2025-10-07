@@ -3946,7 +3946,7 @@ class GPExam(models.Model):
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance",tracking=True)
+    ],string="GSK P&O Attendance",store=True,compute="_compute_attendance_gsk",tracking=True)
 
     gsk_online_attendance = fields.Selection([
         ('absent','Absent'),
@@ -3957,7 +3957,7 @@ class GPExam(models.Model):
         ('',''),
         ('absent','Absent'),
         ('present','Present'),
-    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance",tracking=True)
+    ],string="MEK P&O Attendance",store=True,compute="_compute_attendance_mek",tracking=True)
     
     mek_online_attendance = fields.Selection([
         ('absent','Absent'),
@@ -4217,8 +4217,8 @@ class GPExam(models.Model):
             else:
                 record.attendance_criteria = 'pending'
 
-    @api.depends('mek_oral.mek_oral_remarks','mek_prac.mek_practical_remarks','gsk_oral.gsk_oral_remarks','gsk_prac.gsk_practical_remarks')
-    def _compute_attendance(self):
+    @api.depends('gsk_oral.gsk_oral_remarks','gsk_prac.gsk_practical_remarks')
+    def _compute_attendance_gsk(self):
         for record in self:
             # import wdb; wdb.set_trace();
             if record.gsk_oral.gsk_oral_remarks and record.gsk_prac.gsk_practical_remarks:
@@ -4229,6 +4229,10 @@ class GPExam(models.Model):
             else:
                 record.gsk_oral_prac_attendance = ''
             
+    
+    @api.depends('mek_oral.mek_oral_remarks','mek_prac.mek_practical_remarks')
+    def _compute_attendance_mek(self):
+        for record in self:
             if record.mek_oral.mek_oral_remarks and record.mek_prac.mek_practical_remarks:
                 if record.mek_oral.mek_oral_remarks.lower() == 'absent' and record.mek_prac.mek_practical_remarks.lower()  == 'absent':
                     record.mek_oral_prac_attendance = 'absent'
@@ -5993,7 +5997,7 @@ class CCMCExam(models.Model):
             # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
             if not (len(self.cookery_bakery)==0) or not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0) or not (len(self.ccmc_online)==0):
 
-                
+                print("Wokring")
                 # if not (len(self.cookery_bakery)==0 and len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0 ):
                     
                 if not (len(self.cookery_bakery)==0):
@@ -6004,8 +6008,10 @@ class CCMCExam(models.Model):
                         error_msg = _("Cookery/Bakery Not Confirmed for'%s'") % (self.ccmc_candidate.candidate_code)
                         print(error_msg)
                     
+                print(not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0))
                 if not (len(self.ccmc_oral)==0 and len(self.ccmc_gsk_oral) == 0):
                     if ccmc_oral_state:
+                        print(ccmc_oral_state)
                         ccmc_oral_marks = self.ccmc_oral.toal_ccmc_rating 
                         self.cookery_oral = ccmc_oral_marks
                         
@@ -6044,7 +6050,7 @@ class CCMCExam(models.Model):
                 #  import wdb; wdb.set_trace(); 
                 self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
                 self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
-                self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
+                self.ccmc_gsk_oral_percentage = (self.ccmc_gsk_oral_marks/20) * 100
                 
                 self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
                 self.overall_percentage = (self.overall_marks/300)*100
@@ -6226,7 +6232,7 @@ class CCMCExam(models.Model):
                 #  import wdb; wdb.set_trace(); 
                 self.cookery_bakery_percentage = (self.cookery_practical/100) * 100
                 self.ccmc_oral_percentage = (self.cookery_oral/80) * 100
-                self.ccmc_gsk_oral_percentage = (ccmc_gsk_marks/20) * 100
+                self.ccmc_gsk_oral_percentage = (self.ccmc_gsk_oral_marks/20) * 100
                 
                 self.cookery_gsk_online_percentage = (self.cookery_gsk_online/100) * 100
                 self.overall_percentage = (self.overall_marks/300)*100
