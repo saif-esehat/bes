@@ -331,7 +331,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="gsk_practical_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.gsk_practical_remarks" required="True"/>
+                                        <input type="text" class="form-control" id="gsk_practical_remarks" name="gsk_practical_remarks" t-att-readonly="gsk_prac_marksheet.gsk_practical_draft_confirm == 'confirm'" t-att-value="gsk_prac_marksheet.gsk_practical_remarks" required="True" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -557,7 +557,7 @@
                                     <div class="form-group">
                                         <label for="remarks_oral_gsk">Remarks Mention If Absent/Good/Average/Weak</label>
                                         
-                                        <input type="text" class="form-control" required="True" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-readonly="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" t-att-value="gsk_marksheet.gsk_oral_remarks"/>
+                                        <input type="text" class="form-control" required="True" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-readonly="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" t-att-value="gsk_marksheet.gsk_oral_remarks" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
                                         
                                     </div>
                                 </div>
@@ -565,7 +565,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_oral_gsk">Total Marks</label>
-                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-readonly="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" t-att-value="gsk_marksheet.gsk_oral_total_marks"/>
+                                        <input type="text" class="form-control" id="remarks_oral_gsk" name="remarks_oral_gsk" t-att-readonly="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" t-att-value="gsk_marksheet.gsk_oral_total_marks" />
                                     </div>
                                 </div>
 
@@ -575,7 +575,6 @@
                                         <select class="form-control" id="state" name="state">
                                             <option value="draft" t-att-selected="gsk_marksheet.gsk_oral_draft_confirm == 'draft'">Draft</option>
                                             <option value="confirm" t-att-selected="gsk_marksheet.gsk_oral_draft_confirm == 'confirm'" >Confirm</option>
-                                        
                                         </select>
                                     </div>
                                 </div>
@@ -780,7 +779,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_oral_mek">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek" t-att-readonly="mek_oral_marksheet.mek_oral_draft_confirm == 'confirm'" t-att-value="mek_oral_marksheet.mek_oral_remarks" required="True"/>
+                                        <input type="text" class="form-control" id="remarks_oral_mek" name="remarks_oral_mek" t-att-readonly="mek_oral_marksheet.mek_oral_draft_confirm == 'confirm'" t-att-value="mek_oral_marksheet.mek_oral_remarks" required="True" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1012,7 +1012,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="remarks_practical_mek">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.mek_practical_remarks" required="True"/>
+                                        <input type="text" class="form-control" id="remarks_practical_mek" name="remarks_practical_mek" t-att-readonly="mek_prac_marksheet.mek_practical_draft_confirm == 'confirm'" t-att-value="mek_prac_marksheet.mek_practical_remarks" required="True" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
                                     
                                     </div>
                                 </div>
@@ -1216,7 +1216,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="cookery_practical_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
-                                    <input type="text" class="form-control" id="cookery_practical_remarks" name="cookery_practical_remarks" t-att-value="cookery_bakery.cookery_practical_remarks" required="True"/>
+                                    <input type="text" class="form-control" id="cookery_practical_remarks" name="cookery_practical_remarks" t-att-value="cookery_bakery.cookery_practical_remarks" required="True" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -1390,7 +1390,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_oral_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="ccmc_oral_remarks" name="ccmc_oral_remarks" t-att-value="ccmc_oral.ccmc_oral_remarks" required="True"/>
+                                        <input type="text" class="form-control" id="ccmc_oral_remarks" name="ccmc_oral_remarks" t-att-value="ccmc_oral.ccmc_oral_remarks" required="True" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1546,7 +1546,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="ccmc_gsk_oral_remarks">Remarks Mention If Absent/Good/Average/Weak</label>
-                                        <input type="text" class="form-control" id="ccmc_gsk_oral_remarks" name="ccmc_gsk_oral_remarks" t-att-value="ccmc_gsk_oral.ccmc_gsk_oral_remarks" required="True"/>
+                                        <input type="text" class="form-control" id="ccmc_gsk_oral_remarks" name="ccmc_gsk_oral_remarks" t-att-value="ccmc_gsk_oral.ccmc_gsk_oral_remarks" required="True" pattern=".*\S+.*" title="This field cannot be empty or contain only spaces"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
