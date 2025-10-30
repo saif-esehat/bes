@@ -302,7 +302,7 @@
                             <field name="roll_no"/>
 
                             <field name="name" placeholder="Candidate" required="1"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
-                            <field name="gender" placeholder="Gender" required="1"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
+                            <field name="gender" placeholder="Gender" required="1" />
                             <field name="institute_id"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
 
                             <field name="indos_no"  attrs="{'readonly': [('edit_profile_status', '!=', True)]}"/>
