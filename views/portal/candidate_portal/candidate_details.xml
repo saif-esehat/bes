@@ -692,7 +692,7 @@
                     <div class="form-group row">
                         <div class="col-md-4">
                             <label for="exam_parts">Applied for Examination(s)  <strong class="text-danger">*</strong></label><br/>
-                            <t t-if="exam.gsk_online_status in ['failed', 'pending']">
+                            <t t-if="exam.gsk_online_status  == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_online" value="gsk_online_repeater" id="gsk_online" class="form-check-input exam-checkbox"/>
                                     <label for="gsk_online" class="form-check-label">GSK Online</label>
@@ -711,7 +711,7 @@
                                 </div>                            
                             </t> -->
 
-                            <t t-if="exam.mek_online_status in ['failed', 'pending']">
+                            <t t-if="exam.mek_online_status  == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="mek_online" value="mek_online_repeater" id="mek_online" class="form-check-input exam-checkbox"/>
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
@@ -723,7 +723,7 @@
                                     <label for="mek_online" class="form-check-label">MEK Online</label>
                                 </div>                            
                             </t>
-                            <t t-if="exam.gsk_oral_prac_status in ['failed', 'pending']">
+                            <t t-if="exam.gsk_oral_prac_status  == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="gsk_practical_oral" value="gsk_po_repeater" id="gsk_practical_oral" class="form-check-input exam-checkbox"/>
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
@@ -735,7 +735,7 @@
                                     <label for="gsk_practical_oral" class="form-check-label">GSK Practical &amp; Oral</label>
                                 </div>
                             </t>
-                            <t t-if="exam.mek_oral_prac_status in ['failed', 'pending']">
+                            <t t-if="exam.mek_oral_prac_status  == 'failed'">
                                 <div class="form-check">
                                     <input type="checkbox" name="mek_practical_oral" value="mek_po_repeater" id="mek_practical_oral" class="form-check-input exam-checkbox" />
                                     <label for="mek_practical_oral" class="form-check-label">MEK Practical &amp; Oral</label>
@@ -751,7 +751,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="fees">Fees to be Paid for Exam</label>
-                            <t t-if="exam.gsk_online_status in ['failed', 'pending']">
+                            <t t-if="exam.gsk_online_status  == 'failed'">
                                 <div class="form-row">
                                    ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'gsk_online_repeater' )]).list_price"/>
                                 </div>
@@ -762,7 +762,7 @@
                                 </div>                           
                             </t>
 
-                            <t t-if="exam.mek_online_status in ['failed', 'pending']">
+                            <t t-if="exam.mek_online_status  == 'failed'">
                                 <div class="form-row">
                                     ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'mek_online_repeater' )]).list_price"/>
                                 </div>
@@ -773,7 +773,7 @@
                                 </div>                             
                             </t>
 
-                            <t t-if="exam.gsk_oral_prac_status in ['failed', 'pending']">
+                            <t t-if="exam.gsk_oral_prac_status  == 'failed'">
                                 <div class="form-row">
                                     ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'gsk_po_repeater' )]).list_price"/>
                                 </div>
@@ -784,7 +784,7 @@
                                 </div> 
                             </t>
 
-                            <t t-if="exam.mek_oral_prac_status in ['failed', 'pending']">
+                            <t t-if="exam.mek_oral_prac_status  == 'failed'">
                                 <div class="form-row">
                                     ₹<span t-esc="env['product.template'].sudo().search([('default_code', '=', 'mek_po_repeater' )]).list_price"/>
                                 </div>
@@ -800,7 +800,7 @@
                         <div class="col-4">
                             <span><strong>Previous Examinamtion(s) Status</strong>(Red means Failed):</span>
                             <div class="form-check">
-                                <t t-if="exam.gsk_online_status in ['failed', 'pending']">
+                                <t t-if="exam.gsk_online_status  == 'failed'">
                                     <span id="gsk_online_status" class="badge badge-danger">GSK Online</span>
                                 </t>
                                 <t t-else="">
@@ -808,7 +808,7 @@
                                 </t>
                             </div>
                             <div class="form-check">
-                                <t t-if="exam.mek_online_status in ['failed', 'pending']">
+                                <t t-if="exam.mek_online_status  == 'failed'">
                                     <span id="mek_online_status" class="badge badge-danger">MEK Online</span>
                                 </t>
                                 <t t-else="">
@@ -816,7 +816,7 @@
                                 </t>
                             </div>
                             <div class="form-check">
-                                <t t-if="exam.gsk_oral_prac_status in ['failed', 'pending']">
+                                <t t-if="exam.gsk_oral_prac_status  == 'failed'">
                                     <span id="gsk_oral_prac_status" class="badge badge-danger">GSK Practical &amp; Oral</span>
                                 </t>
                                 <t t-else="">
@@ -824,7 +824,7 @@
                                 </t>
                             </div>
                             <div class="form-check">
-                                <t t-if="exam.mek_oral_prac_status in ['failed', 'pending']">
+                                <t t-if="exam.mek_oral_prac_status  == 'failed'">
                                     <span id="mek_oral_prac_status" class="badge badge-danger">MEK Practical &amp; Oral</span>
                                 </t>
                                 <t t-else="">
