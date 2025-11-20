@@ -1118,17 +1118,17 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name='exam_attempt_number'/>
-                            <field name='cookery_exam_date'/>
-                            <field name='cookery_examiner'/>
-                            <field name='cookery_bekary_start_time'/>
-                            <field name='cookery_bekary_end_time'/>
+                            <field name='exam_attempt_number' readonly="1"/>
+                            <field name='cookery_exam_date' readonly="1"/>
+                            <field name='cookery_examiner' readonly="1"/>
+                            <field name='cookery_bekary_start_time' readonly="1"/>
+                            <field name='cookery_bekary_end_time' readonly="1"/>
                         </group>
                         
                         <group>
                             <label for="hygien_grooming" />
                             <div>
-                                <field name="hygien_grooming"  nolabel="1"/>
+                                <field name="hygien_grooming"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1137,7 +1137,7 @@
                         <group>
                             <label for="appearance" />
                             <div>
-                                <field name="appearance"  nolabel="1"/>
+                                <field name="appearance"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1145,7 +1145,7 @@
                         <group>
                             <label for="taste" />
                             <div>
-                                <field name="taste"  nolabel="1"/>
+                                <field name="taste"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1153,7 +1153,7 @@
                         <group>
                             <label for="texture" />
                             <div>
-                                <field name="texture"  nolabel="1"/>
+                                <field name="texture"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>9 Marks</span>
                             </div>
@@ -1162,7 +1162,7 @@
                         <group>
                             <label for="appearance_2" />
                             <div>
-                                <field name="appearance_2"  nolabel="1"/>
+                                <field name="appearance_2"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1170,7 +1170,7 @@
                         <group>
                             <label for="taste_2" />
                             <div>
-                                <field name="taste_2"  nolabel="1"/>
+                                <field name="taste_2"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1178,7 +1178,7 @@
                         <group>
                             <label for="texture_2" />
                             <div>
-                                <field name="texture_2"  nolabel="1"/>
+                                <field name="texture_2"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>9 Marks</span>
                             </div>
@@ -1187,7 +1187,7 @@
                         <group>
                             <label for="appearance_3" />
                             <div>
-                                <field name="appearance_3"  nolabel="1"/>
+                                <field name="appearance_3"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>5 Marks</span>
                             </div>
@@ -1195,7 +1195,7 @@
                         <group>
                             <label for="taste_3" />
                             <div>
-                                <field name="taste_3"  nolabel="1"/>
+                                <field name="taste_3"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>5 Marks</span>
                             </div>
@@ -1203,7 +1203,7 @@
                         <group>
                             <label for="texture_3" />
                             <div>
-                                <field name="texture_3"  nolabel="1"/>
+                                <field name="texture_3"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>5 Marks</span>
                             </div>
@@ -1212,7 +1212,7 @@
                         <group>
                             <label for="identification_ingredians" />
                             <div>
-                                <field name="identification_ingredians"  nolabel="1"/>
+                                <field name="identification_ingredians"  nolabel="1" readonly="1"/>
                                             / 
                                 <span>9 Marks</span>
                             </div>
@@ -1220,7 +1220,7 @@
                         <group>
                             <label for="knowledge_of_menu" />
                             <div>
-                                <field name="knowledge_of_menu"  nolabel="1"/>
+                                <field name="knowledge_of_menu"  nolabel="1" readonly="1"/>
                                             / 
                                 <span>8 Marks</span>
                             </div>
@@ -1228,17 +1228,17 @@
                         <group>
                             <label for="total_mrks" />
                             <div>
-                                <field name="total_mrks"  nolabel="1"/>
+                                <field name="total_mrks"  nolabel="1" readonly="1"/>
                                         / 
                                 <span>100 Marks</span>
                             </div>
                         </group>
                            
                         <group>
-                            <field name="cookery_practical_remarks"/>
+                            <field name="cookery_practical_remarks" readonly="1"/>
                         </group>
                         <group>
-                            <field name="cookery_draft_confirm"/>
+                            <field name="cookery_draft_confirm" readonly="1"/>
                         </group>
                             
                     </sheet>
@@ -1258,8 +1258,8 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="ccmc_oral_attempt_no"/>
-                            <field name="ccmc_oral_exam_date"/>
+                            <field name="ccmc_oral_attempt_no" readonly="1"/>
+                            <field name="ccmc_oral_exam_date" readonly="1"/>
                         </group>
                         <span>
                             <h2>
@@ -1269,7 +1269,7 @@
                          <group>
                             <label for="house_keeping" />
                             <div>
-                                <field name="house_keeping" nolabel="1"/>
+                                <field name="house_keeping" nolabel="1" readonly="1"/>
                                         / 
                                 <span>20 Marks</span>
                             </div>
@@ -1277,7 +1277,7 @@
                          <group>
                             <label for="f_b" />
                             <div>
-                                <field name="f_b" nolabel="1"/>
+                                <field name="f_b" nolabel="1" readonly="1"/>
                                         / 
                                 <span>20 Marks</span>
                             </div>
@@ -1285,7 +1285,7 @@
                         <group>
                             <label for="orals_house_keeping" />
                             <div>
-                                <field name="orals_house_keeping" nolabel="1"/>
+                                <field name="orals_house_keeping" nolabel="1" readonly="1"/>
                                         / 
                                 <span>20 Marks</span>
                             </div>
@@ -1293,7 +1293,7 @@
                         <group>
                             <label for="attitude_proffessionalism" />
                             <div>
-                                <field name="attitude_proffessionalism" nolabel="1"/>
+                                <field name="attitude_proffessionalism" nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1301,7 +1301,7 @@
                         <group>
                             <label for="equipment_identification" />
                             <div>
-                                <field name="equipment_identification" nolabel="1"/>
+                                <field name="equipment_identification" nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1325,16 +1325,16 @@
                         <group>
                             <label for="toal_ccmc_rating" />
                             <div>
-                                <field name="toal_ccmc_rating" nolabel="1"/>
+                                <field name="toal_ccmc_rating" nolabel="1" readonly="1"/>
                                         / 
                                 <span>80 Marks</span>
                             </div>
                         </group>
                         <group>
-                            <field name='ccmc_oral_remarks'/> 
+                            <field name='ccmc_oral_remarks' readonly="1"/> 
                         </group>
                         <group>
-                            <field name='ccmc_oral_draft_confirm'/> 
+                            <field name='ccmc_oral_draft_confirm' readonly="1"/> 
                         </group>
                     </sheet>
                     <!-- <div class="oe_chatter">
@@ -1353,8 +1353,8 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="ccmc_gsk_oral_attempt_no"/>
-                            <field name="ccmc_gsk_oral_exam_date"/>
+                            <field name="ccmc_gsk_oral_attempt_no" readonly="1"/>
+                            <field name="ccmc_gsk_oral_exam_date" readonly="1"/>
                         </group>
                         <span>
                             <h2>
@@ -1364,7 +1364,7 @@
                         <group>
                             <label for="gsk_ccmc" />
                             <div>
-                                <field name="gsk_ccmc" nolabel="1"/>
+                                <field name="gsk_ccmc" nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1372,7 +1372,7 @@
                         <group>
                             <label for="safety_ccmc"/>
                             <div>
-                                <field name="safety_ccmc" nolabel="1"/>
+                                <field name="safety_ccmc" nolabel="1" readonly="1"/>
                                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1380,16 +1380,16 @@
                         <group>
                             <label for="toal_ccmc_oral_rating" />
                             <div>
-                                <field name="toal_ccmc_oral_rating" nolabel="1"/>
+                                <field name="toal_ccmc_oral_rating" nolabel="1" readonly="1"/>
                                         / 
                                 <span>20 Marks</span>
                             </div>
                         </group>
                         <group>
-                            <field name='ccmc_gsk_oral_remarks'/> 
+                            <field name='ccmc_gsk_oral_remarks' readonly="1"/> 
                         </group>
                         <group>
-                            <field name='ccmc_oral_draft_confirm'/> 
+                            <field name='ccmc_oral_draft_confirm' readonly="1"/> 
                         </group>
                     </sheet>
                     <!-- <div class="oe_chatter">
@@ -1408,9 +1408,9 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name='mek_prcatical_attempt_no'/>
-                            <field name='mek_practical_exam_date'/>
-                            <field name='exam_id'/>
+                            <field name='mek_prcatical_attempt_no' readonly="1"/>
+                            <field name='mek_practical_exam_date' readonly="1"/>
+                            <field name='exam_id' readonly="1"/>
                         </group>
                         <!-- <group>
                             <label for="using_hand_plumbing_tools_task_1" />
@@ -1433,7 +1433,7 @@
                         <group>
                             <label for="using_hand_plumbing_tools_task_3" />
                             <div >
-                                <field name="using_hand_plumbing_tools_task_3" nolabel="1"/>
+                                <field name="using_hand_plumbing_tools_task_3" nolabel="1" readonly="1"/>
                             / 
                                 <span>30 Marks</span>
                             </div>
@@ -1442,7 +1442,7 @@
                         <group>
                             <label for="use_of_chipping_tools_paint" />
                             <div >
-                                <field name="use_of_chipping_tools_paint" nolabel="1"/>
+                                <field name="use_of_chipping_tools_paint" nolabel="1" readonly="1"/>
                             / 
                                 <span>30 Marks</span>
                             </div>
@@ -1469,7 +1469,7 @@
                         <group>
                             <label for="welding_lathe" />
                             <div >
-                                <field name="welding_lathe" nolabel="1"/>
+                                <field name="welding_lathe" nolabel="1" readonly="1"/>
                             / 
                                 <span>30 Marks</span>
                             </div>
@@ -1487,7 +1487,7 @@
                         <group>
                             <label for="electrical" />
                             <div >
-                                <field name="electrical" nolabel="1"/>
+                                <field name="electrical" nolabel="1" readonly="1"/>
                             / 
                                 <span>10 Marks</span>
                             </div>
@@ -1495,15 +1495,15 @@
 
                         
                         <group style="width:100%;">
-                            <field name="mek_practical_total_marks"/>
+                            <field name="mek_practical_total_marks" readonly="1"/>
                         </group>
 
 
                         <group style="width:100%;">
-                            <field name="mek_practical_remarks"/>
+                            <field name="mek_practical_remarks" readonly="1"/>
                         </group>
                         <group style="width:100%;">
-                            <field name="mek_practical_draft_confirm"/>
+                            <field name="mek_practical_draft_confirm" readonly="1"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -1526,14 +1526,14 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name='mek_oral_attempt_no'/>
-                            <field name='mek_oral_exam_date'/>
-                            <field name='exam_id'/>
+                            <field name='mek_oral_attempt_no' readonly="1"/>
+                            <field name='mek_oral_exam_date' readonly="1"/>
+                            <field name='exam_id' readonly="1"/>
                         </group>
                         <group>
                             <label for="using_of_tools" />
                             <div>
-                                <field name="using_of_tools" nolabel="1"/>
+                                <field name="using_of_tools" nolabel="1" readonly="1"/>
                         / 
                                 <span>20 Marks</span>
                             </div>
@@ -1542,7 +1542,7 @@
                         <group>
                             <label for="welding_lathe_drill_grinder" />
                             <div>
-                                <field name="welding_lathe_drill_grinder" nolabel="1"/>
+                                <field name="welding_lathe_drill_grinder" nolabel="1" readonly="1"/>
                         / 
                                 <span>20 Marks</span>
                             </div>
@@ -1570,7 +1570,7 @@
                         <group>
                             <label for="electrical" />
                             <div>
-                                <field name="electrical" nolabel="1"/>
+                                <field name="electrical" nolabel="1" readonly="1"/>
                         / 
                                 <span>10 Marks</span>
                             </div>
@@ -1579,21 +1579,21 @@
                         <group>
                             <label for="journal" />
                             <div>
-                                <field name="journal" nolabel="1"/>
+                                <field name="journal" nolabel="1" readonly="1"/>
                         / 
                                 <span>25 Marks</span>
                             </div>
                         </group>
 
                         <group style="width:100%;">
-                            <field name="mek_oral_remarks"/>
+                            <field name="mek_oral_remarks" readonly="1"/>
                         </group>
 
                         <group style="width:100%;">
-                            <field name="mek_oral_total_marks"/>
+                            <field name="mek_oral_total_marks" readonly="1"/>
                         </group>
                         <group style="width:100%;">
-                            <field name="mek_oral_draft_confirm"/>
+                            <field name="mek_oral_draft_confirm" readonly="1"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -1613,14 +1613,14 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name='gsk_practical_attempt_no'/>
-                            <field name='gsk_practical_exam_date'/>
-                            <field name='exam_id'/>
+                            <field name='gsk_practical_attempt_no'  readonly="1"/>
+                            <field name='gsk_practical_exam_date' readonly="1"/>
+                            <field name='exam_id' readonly="1"/>
                         </group>
                         <group>
                             <label for="climbing_mast_bosun_chair" />
                             <div>
-                                <field name="climbing_mast_bosun_chair" nolabel="1"/>
+                                <field name="climbing_mast_bosun_chair" nolabel="1" readonly="1"/>
                             / 
                                 <span>30 Marks</span>
                             </div>
@@ -1629,7 +1629,7 @@
                         <group>
                             <label for="buoy_flags_recognition" />
                             <div>
-                                <field name="buoy_flags_recognition" nolabel="1"/>
+                                <field name="buoy_flags_recognition" nolabel="1" readonly="1"/>
                             / 
                                 <span>12 Marks</span>
                             </div>
@@ -1647,7 +1647,7 @@
                         <group>
                             <label for="rig_stage_rig_pilot_rig_scaffolding" />
                             <div>
-                                <field name="rig_stage_rig_pilot_rig_scaffolding" nolabel="1"/>
+                                <field name="rig_stage_rig_pilot_rig_scaffolding" nolabel="1" readonly="1"/>
                             / 
                                 <span>30 Marks</span>
                             </div>
@@ -1674,7 +1674,7 @@
                         <group>
                             <label for="fast_ropes_knots_bend_sounding_rod" />
                             <div>
-                                <field name="fast_ropes_knots_bend_sounding_rod" nolabel="1"/>
+                                <field name="fast_ropes_knots_bend_sounding_rod" nolabel="1" readonly="1"/>
                             / 
                                 <span>30 Marks</span>
                             </div>
@@ -1699,15 +1699,15 @@
                         </group> -->
 
                         <group style="width:100%;">
-                            <field name="gsk_practical_total_marks"/>
+                            <field name="gsk_practical_total_marks" readonly="1"/>
                         </group>
 
 
                         <group style="width:100%;">
-                            <field name="gsk_practical_remarks"/>
+                            <field name="gsk_practical_remarks" readonly="1"/>
                         </group>
                         <group style="width:100%;">
-                            <field name="gsk_practical_draft_confirm"/>
+                            <field name="gsk_practical_draft_confirm" readonly="1"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
