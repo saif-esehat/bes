@@ -1544,14 +1544,15 @@ class ExaminerPortal(CustomerPortal):
         )
 
         merge_format = workbook.add_format(
-            {
-                "bold": True,
-                # 'align':    'center',
-                "valign": "vcenter",
-                "font_size": 20,
-                "font_color": "black",
-                "border": 1,  # Add border to clearly see the cells
-            }
+            { 
+             "bold": True, 
+             "valign": "vcenter", 
+             "font_size": 20, 
+             "font_color": "black", 
+             "border": 1, 
+             # Add border to clearly see the cells 
+             }
+
         )
 
         instruction = workbook.add_format(
@@ -1578,7 +1579,9 @@ class ExaminerPortal(CustomerPortal):
         gsk_oral_sheet.merge_range(
             "A1:D1", examiner_assignments.institute_id.name, merge_format
         )
-        gsk_oral_sheet.write("E1:F1","Examiner Name: "+ examiner_assignments.examiner.name, merge_format)
+        gsk_oral_sheet.merge_range("E1:G1","Examiner Name: "+ examiner_assignments.examiner.name, merge_format)
+        gsk_oral_sheet.merge_range("H1:K1","Signature :       ", merge_format)
+
 
         gsk_oral_sheet.write(
             "A2:D2",
@@ -1586,11 +1589,11 @@ class ExaminerPortal(CustomerPortal):
             instruction,
         )
         gsk_oral_sheet.write(
-            "H2:I2",
+            "G2:H2",
             "Exam Date:" + examiner_assignments.exam_date.strftime("%d-%b-%y"),
             merge_format,
         )
-        gsk_oral_sheet.write("J2:K2", "Subject: GSK Oral", merge_format)
+        gsk_oral_sheet.write("H2:I2", "Subject: GSK Oral", merge_format)
 
         header_oral = [
             "Sr No.",
@@ -1683,7 +1686,10 @@ class ExaminerPortal(CustomerPortal):
         gsk_practical_sheet.write(
             "G1:H1","Exam Date: "+ examiner_assignments.exam_date.strftime("%d-%b-%y"), merge_format
         )
-        gsk_practical_sheet.write("I1:K1", "Subject: GSK Practical", merge_format)
+        
+        gsk_practical_sheet.merge_range("H1:I1", "Signature:            ", merge_format)
+        
+        gsk_practical_sheet.write("J1:L1", "Subject: GSK Practical", merge_format)
 
         # Write the header row for the practical sheet
         header_prac = [
@@ -1884,18 +1890,21 @@ class ExaminerPortal(CustomerPortal):
         mek_oral_sheet.merge_range(
             "A1:D1", examiner_assignments.institute_id.name, merge_format
         )
-        mek_oral_sheet.write("E1:H1","Examiner Name: "+ examiner_assignments.examiner.name, merge_format)
+        
+        mek_oral_sheet.merge_range("E1:H1","Examiner Name: "+ examiner_assignments.examiner.name, merge_format)
+        mek_oral_sheet.merge_range("I1:K1","Signature : ", merge_format)
+
         mek_oral_sheet.write(
             "A2:D2",
             "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",
             instruction,
         )
-        mek_oral_sheet.write(
-            "H2:I2",
+        mek_oral_sheet.merge_range(
+            "G2:H2",
             "Exam Date:" + examiner_assignments.exam_date.strftime("%d-%b-%y"),
             merge_format,
         )
-        mek_oral_sheet.write("J2:K2", "Subject: MEK Oral", merge_format)
+        mek_oral_sheet.write("I2:J2", "Subject: MEK Oral", merge_format)
 
         marks_values_10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         marks_values_20 = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
@@ -1992,12 +2001,19 @@ class ExaminerPortal(CustomerPortal):
         mek_practical_sheet.write(
             "E1:F1","Examiner Name: " + examiner_assignments.examiner.name, merge_format
         )
+        
+        mek_practical_sheet.merge_range(
+            "G1:H1",
+            "Signature :         ",
+            merge_format,
+        )
+        
         mek_practical_sheet.write(
-            "H1:I1",
+            "I1:J1",
             "Exam Date:" + examiner_assignments.exam_date.strftime("%d-%b-%y"),
             merge_format,
         )
-        mek_practical_sheet.write("I1:K1", "Subject: MEK Practical", merge_format)
+        mek_practical_sheet.write("K1:L1", "Subject: MEK Practical", merge_format)
 
         # Write the header row for the practical sheet
         header_prac = [
@@ -2491,8 +2507,11 @@ class ExaminerPortal(CustomerPortal):
         ccmc_cookery_bakery_sheet.merge_range(
             "A1:D1", examiner_assignments.institute_id.name, merge_format
         )
-        ccmc_cookery_bakery_sheet.write(
-            "F1:H1", examiner_assignments.examiner.name, merge_format
+        ccmc_cookery_bakery_sheet.merge_range(
+            "E1:F1", "Signature :               ", merge_format
+        )
+        ccmc_cookery_bakery_sheet.merge_range(
+            "G1:H1", examiner_assignments.examiner.name, merge_format
         )
         ccmc_cookery_bakery_sheet.write(
             "A2:D2",
@@ -2801,15 +2820,21 @@ class ExaminerPortal(CustomerPortal):
         ccmc_oral_summary_sheet.merge_range(
             "A1:D1", examiner_assignments.institute_id.name, merge_format
         )
-        ccmc_oral_summary_sheet.write(
-            "F1:G1", examiner_assignments.examiner.name, merge_format
+        
+        ccmc_oral_summary_sheet.merge_range(
+            "E1:F1", "Signature :                   ", merge_format
         )
+        
+        ccmc_oral_summary_sheet.merge_range(
+            "G1:H1", examiner_assignments.examiner.name, merge_format
+        )
+        
         ccmc_oral_summary_sheet.write(
             "A2:D2",
             "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",
             instruction,
         )
-        ccmc_oral_summary_sheet.write("H1:I1", "Subject: CCMC Oral", merge_format)
+        ccmc_oral_summary_sheet.merge_range("I1:J1", "Subject: CCMC Oral", merge_format)
         ccmc_oral_summary_sheet.write(
             "H2:I2",
             "Exam Date:" + examiner_assignments.exam_date.strftime("%d-%b-%y"),
@@ -3029,8 +3054,15 @@ class ExaminerPortal(CustomerPortal):
             "After filling the marks please save the file. Go back to the page where you download this excel and upload it.",
             instruction,
         )
-        ccmc_gsk_oral_sheet.write(
-            "G1:H1",
+        
+        ccmc_gsk_oral_sheet.merge_range(
+            "F1:G1",
+            "Signature :                    ",
+            merge_format,
+        )
+        
+        ccmc_gsk_oral_sheet.merge_range(
+            "H1:J1",
             "Exam Date:" + examiner_assignments.exam_date.strftime("%d-%b-%y"),
             merge_format,
         )
