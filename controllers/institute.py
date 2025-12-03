@@ -8,16 +8,18 @@ import io
 from io import StringIO
 from datetime import datetime
 import xlsxwriter
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 import json
 from io import BytesIO
 import xlrd
 import re
+from .candidate import check_user_groups
 
 
 class InstitutePortal(CustomerPortal):
 
     @http.route(["/my/gpbatch"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_institute")
     def GPBatchList(self, **kw):
         user_id = request.env.user.id
         institute_id = (
@@ -43,6 +45,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def UpdateBatchApprovalCapacity(self, **kw):
 
         batch_id = int(kw.get("batch_id"))
@@ -71,6 +74,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def UpdateCCMCBatchApprovalCapacity(self, **kw):
 
         batch_id = int(kw.get("batch_id"))
@@ -93,6 +97,7 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
     @http.route(["/my/ccmcbatch"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_institute")    
     def CCMCBatchList(self, **kw):
         user_id = request.env.user.id
         institute_id = (
@@ -266,6 +271,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def GPcandidateProfileView(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
         candidate = (
@@ -298,6 +304,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CcmcCandidateProfileView(self, candidate_id, **kw):
         # import wdb; wdb.set_trace()
         candidate = (
@@ -703,6 +710,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CreateGPcandidate(self, **kw):
 
         user_id = request.env.user.id
@@ -797,6 +805,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CreateCCMCcandidate(self, **kw):
         user_id = request.env.user.id
 
@@ -881,6 +890,7 @@ class InstitutePortal(CustomerPortal):
             return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
     @http.route("/my/confirmccmcuser", type="http", auth="public", website=True)
+    @check_user_groups("bes.group_institute")    
     def CreateCCMCUser(self, **kw):
 
         batch = (
@@ -916,6 +926,7 @@ class InstitutePortal(CustomerPortal):
         return request.redirect("/my/ccmcbatch/candidates/" + str(batch_id))
 
     @http.route(["/my/deleteccmccandidate"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_institute")
     def DeleteCCMCcandidate(self, **kw):
 
         user_id = request.env.user.id
@@ -946,6 +957,7 @@ class InstitutePortal(CustomerPortal):
         # import wdb; wdb.set_trace();
 
     @http.route("/confirmgpuser", type="http", auth="public", website=True)
+    @check_user_groups("bes.group_institute")
     def CreateGPUser(self, **kw):
 
         batch = (
@@ -987,6 +999,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    
     def GPcandidateFormView(self, batch_id, **kw):
 
         # import wdb; wdb.set_trace();
@@ -1153,6 +1166,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def GPFacultiesFormView(self, batch_id, **kw):
         # import wdb; wdb.set_trace();
         states = (
@@ -1223,6 +1237,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CcmcFacultiesFormView(self, batch_id, **kw):
 
         states = (
@@ -1294,6 +1309,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def GPcandidateListView(
         self,
         batch_id,
@@ -1417,6 +1433,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CcmcCandidateListView(self, batch_id, page=1, search="", search_in="All", **kw):
         # import wdb; wdb.set_trace()
 
@@ -1518,6 +1535,7 @@ class InstitutePortal(CustomerPortal):
     @http.route(
         ["/my/gpbatch/faculties/<int:batch_id>"], type="http", auth="user", website=True
     )
+    @check_user_groups("bes.group_institute")
     def GPFacultyListView(self, batch_id, **kw):
         user_id = request.env.user.id
 
@@ -1546,6 +1564,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CcmcFacultyListView(self, batch_id, **kw):
         # import wdb; wdb.set_trace()
 
@@ -1572,6 +1591,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def GPFacultyProfileView(self, batch_id, faculties_id, **kw):
         # import  wdb; wdb.set_trace()
         user_id = request.env.user.id
@@ -1605,6 +1625,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def CCMCFacultyProfileView(self, batch_id, faculties_id, **kw):
         user_id = request.env.user.id
 
@@ -1632,6 +1653,7 @@ class InstitutePortal(CustomerPortal):
         return request.render("bes.ccmc_faculty_profile_view", vals)
 
     @http.route(["/my/institute_document/list"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_institute")
     def InstituteDocumentList(self, **kw):
 
         user_id = request.env.user.id
@@ -2241,6 +2263,8 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    
+    
     def AddCcmcSTCW(self, **kw):
 
         candidate_id = kw.get("candidate_id")
@@ -4081,6 +4105,7 @@ class InstitutePortal(CustomerPortal):
             return phone_number  # If there's
 
     @http.route(["/my/uploadgpcandidatedata"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_institute")    
     def UploadGPCandidateData(self, **kw):
         # import wdb; wdb.set_trace()
         user_id = request.env.user.id
@@ -4428,6 +4453,7 @@ class InstitutePortal(CustomerPortal):
         return formatted_date
 
     @http.route(["/my/uploadccmccandidatedata"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_institute")
     def UploadCCMCCandidateData(self, **kw):
         user_id = request.env.user.id
         institute_id = (
@@ -4812,6 +4838,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def UpdateFacultyDetails(self, **kw):
 
         # import wdb; wdb.set_trace()
@@ -4859,6 +4886,7 @@ class InstitutePortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_institute")
     def UpdateCCMCFacultyDetails(self, **kw):
 
         # import wdb; wdb.set_trace()
@@ -5591,6 +5619,7 @@ class InstitutePortal(CustomerPortal):
     @http.route(
         ["/my/uploadgpcandidatestcwdata"], type="http", auth="user", website=True
     )
+    @check_user_groups("bes.group_institute")
     def UploadGPCandidateSTCWData(self, **kw):
         user_id = request.env.user.id
         institute_id = (
@@ -6022,6 +6051,7 @@ class InstitutePortal(CustomerPortal):
     @http.route(
         ["/my/uploadccmccandidatestcwdata"], type="http", auth="user", website=True
     )
+    @check_user_groups("bes.group_institute")
     def UploadCCMCCandidateSTCWData(self, **kw):
         # import wdb; wdb.set_trace()
         user_id = request.env.user.id
