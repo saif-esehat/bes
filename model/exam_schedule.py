@@ -710,7 +710,7 @@ class CCMCExaminerAssignmentWizard(models.TransientModel):
                     examiner = record.examiner.id
                     exam_date = record.exam_date
                     exam_type = record.exam_type
-                    
+                    confirm_context = True
                     assignment = self.env["exam.type.oral.practical.examiners"].with_context({"marksheet_ids":record.ccmc_marksheet_ids ,'confirm_context':confirm_context}).create({
                                                                                             'prac_oral_id':prac_oral_id,
                                                                                             'institute_id':institute_id,
