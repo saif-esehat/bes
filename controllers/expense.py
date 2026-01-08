@@ -77,8 +77,12 @@ class ExpenseController(http.Controller):
         # import wdb;wdb.set_trace();
         user_id = request.env.user.id
         examiner = request.env['bes.examiner'].sudo().search([('user_id','=',user_id)])
-
+        print('assignment_id')
+        print(assignment_id)
+        
         assignment = request.env['exam.type.oral.practical.examiners'].sudo().search([('id','=',assignment_id)])
+        print('assignment.id')
+        print(assignment.id)
         timesheets = request.env['time.sheet.report'].sudo().search([('examiner_assignment','=',assignment.id)])
         
         # Get associated institute and duty records
