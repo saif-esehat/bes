@@ -16,7 +16,7 @@ from odoo.exceptions import UserError
 from odoo.tools import html_escape
 import mimetypes
 from pytz import timezone
-
+from .candidate import check_user_groups
 from functools import wraps
 
 
@@ -398,6 +398,7 @@ class ExaminerPortal(CustomerPortal):
         return request.redirect("/my/examiner/online_exam")
 
     @http.route(["/my/assignments"], type="http", auth="user", website=True)
+    @check_user_groups("bes.group_examiners")
     def ExaminerAssignmentListView(self, **kw):
         # import wdb; wdb.set_trace()
 
@@ -435,6 +436,7 @@ class ExaminerPortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_examiners")
     def ExaminerAssignmentBatchListView(self, batch_id, **kw):
         # import wdb; wdb.set_trace()
 
@@ -464,6 +466,7 @@ class ExaminerPortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    @check_user_groups("bes.group_examiners")
     def ExaminerAssignmentCandidateListView(self, batch_id, assignment_id, **kw):
 
         user_id = request.env.user.id
@@ -656,6 +659,7 @@ class ExaminerPortal(CustomerPortal):
         return json.dumps({"status": "success"})
 
     @http.route("/open_candidate_form", type="http", auth="user", website=True)
+    @check_user_groups("bes.group_examiners")
     def open_candidate_form(self, **rec):
 
         # import wdb;wdb.set_trace();
@@ -692,6 +696,7 @@ class ExaminerPortal(CustomerPortal):
             search_value = rec.get("search_value") or request.params.get("search_value")
 
     @http.route("/open_ccmc_candidate_form", type="http", auth="user", website=True)
+    @check_user_groups("bes.group_examiners")
     def open_ccmc_candidate_form(self, **rec):
 
         if "rec_id" in rec:
@@ -733,6 +738,7 @@ class ExaminerPortal(CustomerPortal):
         website=True,
         method=["POST", "GET"],
     )
+    @check_user_groups("bes.group_examiners")
     def open_gsk_oral_form(self, **rec):
         # import wdb;wdb.set_trace();
         candidate = request.env["gp.candidate"].sudo()
@@ -840,6 +846,7 @@ class ExaminerPortal(CustomerPortal):
         website=True,
         method=["POST", "GET"],
     )
+    @check_user_groups("bes.group_examiners")
     def open_gsk_practical_form(self, **rec):
 
         # import wdb;wdb.set_trace();
@@ -942,6 +949,7 @@ class ExaminerPortal(CustomerPortal):
         website=True,
         method=["POST", "GET"],
     )
+    @check_user_groups("bes.group_examiners")
     def open_mek_oral_form(self, **rec):
         candidate = request.env["gp.candidate"].sudo()
         print(
@@ -1134,6 +1142,7 @@ class ExaminerPortal(CustomerPortal):
         website=True,
         method=["POST", "GET"],
     )
+    @check_user_groups("bes.group_examiners")
     def open_cookery_bakery_form(self, **rec):
 
         # import wdb;wdb.set_trace();
@@ -1288,6 +1297,7 @@ class ExaminerPortal(CustomerPortal):
         website=True,
         method=["POST", "GET"],
     )
+    @check_user_groups("bes.group_examiners")
     def open_ccmc_oral_form(self, **rec):
 
         # import wdb;wdb.set_trace();
@@ -1372,6 +1382,7 @@ class ExaminerPortal(CustomerPortal):
         website=True,
         method=["POST", "GET"],
     )
+    @check_user_groups("bes.group_examiners")
     def open_ccmc_gsk_oral_form(self, **rec):
 
         candidate = request.env["ccmc.candidate"].sudo()
@@ -1444,6 +1455,7 @@ class ExaminerPortal(CustomerPortal):
         auth="user",
         website=True,
     )
+    
     def download_gsk_marksheet(self, batch_id, assignment_id, **rec):
 
         user_id = request.env.user.id

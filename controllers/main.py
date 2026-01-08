@@ -2,6 +2,7 @@ from odoo import http
 from odoo.http import request
 
 
+
 class CandidateController(http.Controller):
 
 	@http.route('/candidate',type='http', website=True, csrf=False, auth='public')

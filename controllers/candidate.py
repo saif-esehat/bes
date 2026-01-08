@@ -35,6 +35,7 @@ def _rotate_session(httprequest):
                 httprequest.session, request.env
             )
         httprequest.session.modified = True
+        httprequest.session.permanent = False
 
 
 class GPCandidatePortal(CustomerPortal):

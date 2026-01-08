@@ -3805,6 +3805,7 @@ class GPExam(models.Model):
     ], string='GSK Online Status', default='pending',tracking=True)
     
     gsk_online_assignment = fields.Boolean('gsk_online_assignment')
+    witheld_result = fields.Boolean('Witheld Result', tracking=True)
     
     edit_marksheet_status = fields.Boolean('edit_marksheet_status',compute='_compute_is_in_group')
 
@@ -5295,6 +5296,7 @@ class CCMCExam(models.Model):
     ccmc_online = fields.Many2one("survey.user_input",string="CCMC Online",tracking=True)
     
     ccmc_online_assignment = fields.Boolean('ccmc_online_assignment',tracking=True)
+    witheld_result = fields.Boolean('Witheld Result', tracking=True)
 
     attempt_number = fields.Integer("Attempt Number",tracking=True)
     

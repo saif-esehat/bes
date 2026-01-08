@@ -70,6 +70,30 @@
             </t>
 
         </xpath>
+        <xpath expr="//form" position="after">
+            <script type="text/javascript">
+                <![CDATA[
+                document.addEventListener("DOMContentLoaded", function () {
+                    const form = document.querySelector('form[action="/my/account"]');
+
+                    if (!form) return;
+
+                    form.addEventListener("submit", function () {
+                        const fields = ['name','email','phone','street','city','zipcode','vat'];
+
+                        fields.forEach(function(fieldName) {
+                            const input = form.querySelector('[name="' + fieldName + '"]');
+                            if (input && input.value) {
+                                input.value = btoa(unescape(encodeURIComponent(input.value)));
+                            }
+                        });
+                    });
+                });
+                ]]>
+            </script>
+
+        </xpath>
+
         <xpath expr="//label[@for='state_id']/parent::div" position="replace">
 
             <t t-if="env.user.has_group('bes.group_gp_candidates')">
