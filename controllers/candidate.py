@@ -451,6 +451,22 @@ class GPCandidatePortal(CustomerPortal):
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
+        # Check if encrypted parameters are passed in the JSON request
+        # Some clients might send encrypted_login and encrypted_password
+        json_data = request.jsonrequest
+        if json_data:
+            enc_login = json_data.get('encrypted_login')
+            enc_pwd = json_data.get('encrypted_password')
+            if enc_login and enc_pwd:
+                try:
+                    import base64
+                    login = base64.b64decode(enc_login).decode('utf-8')
+                    password = base64.b64decode(enc_pwd).decode('utf-8')
+                except Exception as e:
+                    import logging
+                    _logger = logging.getLogger(__name__)
+                    _logger.warning("Password decode failed in authenticate: %s", e)
+        
         request.session.authenticate(db, login, password)
         result = request.env["ir.http"].session_info()
         _rotate_session(request)
