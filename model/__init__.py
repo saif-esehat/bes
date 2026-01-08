@@ -11,6 +11,7 @@ from . import exam_schedule
 from . import admit_card
 from . import expense
 from . import batches_report
+from . import ir_attachment
 from .marksheets import mek
 from .marksheets import gsk
 from . import quarter_batch
@@ -33,7 +34,3 @@ from .iv_exam import written_examination
 from .ship_visits import gp_ship_visit
 from .ship_visits import ccmc_ship_visit
 from .iv_exam import iv_invigilator
-
-
-
-
