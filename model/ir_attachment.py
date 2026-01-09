@@ -18,20 +18,31 @@ class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
     def _validate_file(self, vals):
-        if vals.get('datas') and vals.get('name'):
-            # Extension check
-            ext = os.path.splitext(vals['name'])[1].lower()
-            if ext not in ALLOWED_EXTENSIONS:
-                raise ValidationError(
-                    "File type not allowed. Allowed formats: PDF, JPG, PNG, DOCX, CSV, XLSX"
-                )
+        if not vals.get('datas'):
+            return
 
-            # MIME check (real content)
+        # Decode file
+        try:
             file_bytes = base64.b64decode(vals['datas'])
-            mime = magic.from_buffer(file_bytes, mime=True)
+        except Exception:
+            raise ValidationError("Invalid file encoding.")
 
-            if mime not in ALLOWED_MIMES:
-                raise ValidationError("Invalid or unsafe file type detected.")
+        # Detect real MIME
+        mime = magic.from_buffer(file_bytes, mime=True)
+
+        if mime not in ALLOWED_MIMES:
+            raise ValidationError("Invalid or unsafe file type detected.")
+
+        # OPTIONAL: extension check only if extension exists
+        filename = vals.get('name', '')
+        ext = os.path.splitext(filename)[1].lower()
+
+        if ext:
+            expected_ext = EXTENSION_BY_MIME.get(mime)
+            if expected_ext and ext != expected_ext:
+                raise ValidationError(
+                    f"File extension does not match file content ({expected_ext})."
+                )
 
     @api.model
     def create(self, vals):
