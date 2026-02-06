@@ -14,6 +14,8 @@ from io import BytesIO
 import xlrd
 import logging
 from odoo.exceptions import ValidationError
+from .candidate import check_user_groups
+
 
 name_ = 'bes.ship_visit'  # Example name for your logger
 logger = logging.getLogger(name_)
@@ -78,6 +80,7 @@ class GPShipVisitPortalController(http.Controller):
 
 
     @http.route(['/my/ship_visits/<int:batch_id>'], type='http', auth='user', website=True)
+    @check_user_groups("bes.group_institute")
     def portal_my_ship_visit(self, batch_id, **kw):
         user_id = request.env.user.id
 
@@ -111,6 +114,7 @@ class GPShipVisitPortalController(http.Controller):
     #     return request.render('bes.portal_ccmc_ship_visits_po', vals)
 
     @http.route(['/my/ccmc_ship_visits/<int:batch_id>'], type='http', auth='user', website=True)
+    @check_user_groups("bes.group_institute")
     def portal_my_sccmchip_visit(self, batch_id, **kw):
         user_id = request.env.user.id
 
@@ -427,6 +431,7 @@ class GPShipVisitPortalController(http.Controller):
           
 
     @http.route(['/my/ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
+    @check_user_groups("bes.group_institute")
     def portal_gp_ship_visit_edit(self,ship_visit_id,**kw):
         visit = request.env['gp.batches.ship.visit'].sudo().browse(int(ship_visit_id))
         vals = {'visit': visit,'batch_id':visit.gp_ship_batch_id.id, 'page_name': 'gpship_edit'}
@@ -436,6 +441,7 @@ class GPShipVisitPortalController(http.Controller):
  
   #   ccmc  ship visit
     @http.route(['/my/ccmc_ship_visits/edit/<int:ship_visit_id>'], type='http', auth='user', website=True, methods=['GET'], csrf=False)
+    @check_user_groups("bes.group_institute")
     def portal_ccmc_ship_visit_edit(self, ship_visit_id, **kw):
         visit = request.env['ccmc.batches.ship.visit'].sudo().browse(int(ship_visit_id))
 

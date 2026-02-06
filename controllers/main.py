@@ -1,5 +1,8 @@
 from odoo import http
 from odoo.http import request
+import base64
+import logging
+
 
 
 class CandidateController(http.Controller):

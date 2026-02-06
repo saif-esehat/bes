@@ -154,7 +154,7 @@
                             <field name="hold_admit_card" readonly='1' />
                             <field name="ceo_override" readonly='1' />
                             <field name="hold_certificate" readonly='1' />
-                            
+                            <field name="witheld_result" readonly='0' />
                             <field name="dgs_batch" readonly="1"/>
                             <field name="gp_candidate" readonly="1"/>
                             <field name="candidate_code" readonly="1"/>
@@ -504,6 +504,7 @@
                             <field name="hold_admit_card" readonly='1' />
                             <field name="ceo_override" readonly='1' />
                             <field name="hold_certificate" readonly='1' />
+                            <field name="witheld_result" readonly='0' />
                             
                             <field name="dgs_batch" readonly="1"/>
                             <field name="ccmc_candidate" readonly="1"/>

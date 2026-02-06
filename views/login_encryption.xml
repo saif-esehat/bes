@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Override web.login template to add hidden fields for encrypted data (optional) -->
+    <template id="web_login_encryption" inherit_id="web.login" name="Login Encryption">
+
+        <xpath expr="//form[contains(@class,'oe_login_form')]"
+               position="attributes">
+            <attribute name="onsubmit">
+                return encryptLoginPayload();
+            </attribute>
+        </xpath>
+        <xpath expr="//form[@class='oe_login_form']" position="inside">
+            <!-- Hidden fields will be added by JavaScript, but we can add placeholders -->
+            <input type="hidden" name="encrypted_login" id="encrypted_login" t-att-value="''"/>
+            <input type="hidden" name="encrypted_password" id="encrypted_password" t-att-value="''"/>
+
+        </xpath>
+
+
+        <xpath expr="//form" position="after">
+            <script type="text/javascript">
+            function encryptLoginPayload() {
+                
+                const pwd = document.getElementById("password").value;
+
+                const login = document.getElementById("login").value;
+
+
+                const encoded_login = btoa(unescape(encodeURIComponent(login)));
+                // Simple obfuscation (Base64)
+                const encoded_pass = btoa(unescape(encodeURIComponent(pwd)));
+
+                document.getElementById("encrypted_password").value = encoded_pass;
+                document.getElementById("password").value = "********";
+
+
+                document.getElementById("encrypted_login").value = encoded_login;
+                document.getElementById("login").value = "********";
+
+                return true;
+            }
+    </script>
+
+        </xpath>
+    </template>
+</odoo>
