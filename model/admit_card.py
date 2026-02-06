@@ -40,6 +40,18 @@ class CandidateAdmitCardGp(models.AbstractModel):
                 
                 # if not docs.institute_id.code == "M05":
             
+            # Get COO configuration based on batch date
+            coo_config = {}
+            if docs1 and docs1[0].dgs_batch and docs1[0].dgs_batch.to_date:
+                batch_date = docs1[0].dgs_batch.to_date
+                coo_config = self.env['bes.coo.configuration'].get_current_config(
+                    batch_date=batch_date,
+                    officer_type='coo'
+                )
+            else:
+                # Fallback to default if no batch date
+                coo_config = self.env['bes.coo.configuration'].get_current_config(officer_type='coo')
+            
             # candidate_image = base64.b64encode(docs1.candidate_image).decode()
             
             # try:
@@ -50,7 +62,8 @@ class CandidateAdmitCardGp(models.AbstractModel):
             return {
                 'doc_ids': docids,
                 'doc_model': 'gp.exam.schedule',
-                'docs': docs1
+                'docs': docs1,
+                'coo_config': coo_config
                 }
 
 
@@ -86,7 +99,18 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
                 raise ValidationError("Admit Card Not Generated STCW  Criteria not Complied")
             
             # if not docs.institute_id.code == "M05":
-                
+        
+        # Get COO configuration based on batch date
+        coo_config = {}
+        if docs1 and docs1[0].dgs_batch and docs1[0].dgs_batch.to_date:
+            batch_date = docs1[0].dgs_batch.to_date
+            coo_config = self.env['bes.coo.configuration'].get_current_config(
+                batch_date=batch_date,
+                officer_type='coo'
+            )
+        else:
+            # Fallback to default if no batch date
+            coo_config = self.env['bes.coo.configuration'].get_current_config(officer_type='coo')
 
         # import wdb; wdb.set_trace();
         
@@ -99,6 +123,7 @@ class CandidateAdmitCardCcmc(models.AbstractModel):
         return {
             'doc_ids': docids,
             'doc_model': 'ccmc.exam.schedule',
-            'docs': docs1
+            'docs': docs1,
+            'coo_config': coo_config
             }
 

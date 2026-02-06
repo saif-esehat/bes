@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- COO Configuration Form View -->
+        <record id="view_coo_configuration_form" model="ir.ui.view">
+            <field name="name">bes.coo.configuration.form</field>
+            <field name="model">bes.coo.configuration</field>
+            <field name="arch" type="xml">
+                <form string="COO/CEO Configuration">
+                    <!-- <header>
+                        <button name="action_save" type="object" string="Save" class="btn-primary"/>
+                        <button name="action_cancel" type="object" string="Discard" class="btn-secondary"/>
+                    </header> -->
+                    <sheet>
+                        <group>
+                            <group string="COO Configuration">
+                                <field name="coo_name"/>
+                                <field name="coo_designation"/>
+                                <field name="coo_signature_image" widget="image" class="oe_avatar"/>
+                            </group>
+                            <group string="CEO Configuration">
+                                <field name="ceo_name"/>
+                                <field name="ceo_designation"/>
+                                <field name="ceo_signature_image" widget="image" class="oe_avatar"/>
+                            </group>
+                            <group string="Configuration Settings">
+                                <field name="cutoff_date"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- COO Configuration Tree View -->
+        <record id="view_coo_configuration_tree" model="ir.ui.view">
+            <field name="name">bes.coo.configuration.tree</field>
+            <field name="model">bes.coo.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="COO/CEO Configurations">
+                    <field name="coo_name"/>
+                    <field name="coo_designation"/>
+                    <field name="ceo_name"/>
+                    <field name="ceo_designation"/>
+                    <field name="cutoff_date"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- COO Configuration Action -->
+        <record id="action_coo_configuration" model="ir.actions.act_window">
+            <field name="name">COO/CEO Configuration</field>
+            <field name="res_model">bes.coo.configuration</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure COO and CEO details for reports. The cutoff date determines when this configuration becomes active.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_coo_configuration" 
+                  name="COO/CEO Configuration" 
+                  parent="bes_menu" 
+                  sequence="100"
+                  action="action_coo_configuration"
+                  groups="bes.group_bes_admin,bes.group_bes_coo"/>
+    </data>
+</odoo>

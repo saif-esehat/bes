@@ -144,17 +144,18 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                         <img class="img img-responsive" t-attf-src="/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png" alt="" style="width: 130px; height: 75px;"/>
+                                         <img class="img img-responsive" t-if="coo_config.get('signature_image')" t-att-src="'data:image/png;base64,' + coo_config.get('signature_image')" alt="" style="width: 130px; height: 75px;"/>
+                                         <img class="img img-responsive" t-else="" t-att-src="'/bes/static/src/img/Ravindra_Nath_tripathi-NoBg_Sign.png'" alt="" style="width: 130px; height: 75px;"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <span style="color: #000000; font-size:22px; font-weight:900; font-family: 'TimesNewRomanBold';">Ravindra Nath Tripathi</span>
+                                        <span style="color: #000000; font-size:22px; font-weight:900; font-family: 'TimesNewRomanBold';" t-esc="coo_config.get('name', 'Ravindra Nath Tripathi')"/>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12" style="height:max-content;">
-                                        <span style="color:#4c2d8b; font-size:22px; font-family:'TimesNewRoman'; font-weight:light; ">Marine Engineering Officer</span>
+                                        <span style="color:#4c2d8b; font-size:22px; font-family:'TimesNewRoman'; font-weight:light; " t-esc="coo_config.get('designation', 'Marine Engineering Officer')"/>
                                     </div>
                                 </div>
                                 <div class="row">

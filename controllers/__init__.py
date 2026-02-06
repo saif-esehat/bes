@@ -6,3 +6,5 @@ from . import public
 from . import expense
 from . import ship_visit
 from . import survey
+from . import auth
+from . import batches_controller

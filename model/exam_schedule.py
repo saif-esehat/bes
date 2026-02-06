@@ -2576,6 +2576,9 @@ class ExamOralPracticalExaminers(models.Model):
     
     
     
+    
+    
+    
     all_marksheet_confirmed = fields.Selection([
                     ('na', 'Online'),
                     ('pending', 'Pending'),
@@ -5145,13 +5148,25 @@ class GPCertificate(models.AbstractModel):
             # User is in the group
             raise ValidationError("Please Contact Administrator")
 
+        # Get COO configuration based on batch date
+        coo_config = {}
+        if docs1 and docs1.dgs_batch and docs1.dgs_batch.to_date:
+            batch_date = docs1.dgs_batch.to_date
+            coo_config = self.env['bes.coo.configuration'].get_current_config(
+                batch_date=batch_date,
+                officer_type='coo'
+            )
+        else:
+            # Fallback to default if no batch date
+            coo_config = self.env['bes.coo.configuration'].get_current_config(officer_type='coo')
         
         if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
             return {
                 'docids': docids,
                 'doc_model': 'gp.exam.schedule',
                 'data': data,
-                'docs': docs1
+                'docs': docs1,
+                'coo_config': coo_config
             }
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")
@@ -6405,7 +6420,7 @@ class CcmcCertificate(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         docs1 = self.env['ccmc.exam.schedule'].sudo().browse(docids)
 
-        #If causing error uncomment this line 
+        #If causing error uncomment this line
         # Check if all records meet the certificate criteria
         # if all(doc.certificate_criteria == 'passed' for doc in docs):
         user_id = self.env.user
@@ -6413,12 +6428,26 @@ class CcmcCertificate(models.AbstractModel):
         if user_id.has_group('bes.download_not_allowed'):
             # User is in the group
             raise ValidationError("Please Contact Administrator")
+        
+        # Get COO configuration based on batch date
+        coo_config = {}
+        if docs1 and docs1.dgs_batch and docs1.dgs_batch.to_date:
+            batch_date = docs1.dgs_batch.to_date
+            coo_config = self.env['bes.coo.configuration'].get_current_config(
+                batch_date=batch_date,
+                officer_type='coo'
+            )
+        else:
+            # Fallback to default if no batch date
+            coo_config = self.env['bes.coo.configuration'].get_current_config(officer_type='coo')
+        
         if docs1.certificate_criteria == 'passed'  :
             return {
                 'docids': docids,
                 'doc_model': 'ccmc.exam.schedule',
                 'data': data,
-                'docs': docs1
+                'docs': docs1,
+                'coo_config': coo_config
             }
         else:
             raise ValidationError("Certificate criteria not met. Report cannot be generated.")

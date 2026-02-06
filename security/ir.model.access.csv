@@ -235,3 +235,8 @@ bes.group_bes_admin_create_gp_last_exam,access_create_gp_last_exam,bes.model_cre
 bes.group_bes_admin_create_ccmc_last_exam,access_create_ccmc_last_exam,bes.model_create_ccmc_last_exam,bes.group_bes_admin,0,0,0,0
 bes.group_bes_admin_create_gp_last_exam,access_create_gp_last_exam,bes.model_create_gp_last_exam,bes.group_bes_ceo,1,1,1,1
 bes.group_bes_admin_create_ccmc_last_exam,access_create_ccmc_last_exam,bes.model_create_ccmc_last_exam,bes.group_bes_ceo,1,1,1,1
+
+access_batch_document_bes_admin,batch.document.bes.admin,model_batch_document,group_bes_admin,1,1,1,1
+
+access_coo_configuration_bes_admin,coo.configuration.bes.admin,model_bes_coo_configuration,bes.group_bes_admin,1,1,1,1
+access_coo_configuration_bes_coo,coo.configuration.bes.coo,model_bes_coo_configuration,bes.group_bes_coo,1,1,1,1

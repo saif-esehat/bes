@@ -549,6 +549,7 @@
                             <field name="repeater_batch"/>
                             <field name="is_march_september"/>
                             <field name="visible_generate_report" invisible="1"/>
+                            <field name="documents_uploaded"/>
                             <field name="dgs_approval_state"/>
                         </group>
                         <group attrs="{'invisible': [('repeater_batch', '=', False)]}">
@@ -668,6 +669,27 @@
                         <group>
                             <field name="gp_plot_image" widget="image" />
                             <field name="ccmc_plot_image" widget="image" />
+                        </group>
+                        <group string="Documents">
+                            <field name="document_ids" widget="one2many_list">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="document_filename" invisible="1" />
+
+                                    <field name="document_file" filename="document_filename"/>
+                                    <field name="upload_date"/>
+                                    <field name="description"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="document_filename" invisible="1" />
+                                        <field name="document_file" filename="document_filename"/>
+                                        <field name="upload_date"/>
+                                        <field name="description"/>
+                                    </group>
+                                </form>
+                            </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">

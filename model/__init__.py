@@ -33,6 +33,7 @@ from .iv_exam import written_examination
 from .ship_visits import gp_ship_visit
 from .ship_visits import ccmc_ship_visit
 from .iv_exam import iv_invigilator
+from . import coo_configuration
 
 
 

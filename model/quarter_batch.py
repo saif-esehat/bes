@@ -148,6 +148,8 @@ class DGSBatch(models.Model):
                       widget="date", 
                       date_format="%b-%y",tracking=True)
     
+    documents_uploaded = fields.Boolean("Documents Uploaded")
+    document_ids = fields.One2many("batch.document", "dgs_batch_id", string="Documents")
 
     
     exam_pass_date = fields.Date(string="Date of Examination Passed:",tracking=True)
@@ -1049,3 +1051,19 @@ class GPBatchShipVisitReport(models.AbstractModel):
 #             # 'report_type': report_type,
 #             # 'course': course
 #         }
+
+class BatchDocument(models.Model):
+    _name = "batch.document"
+    _description = "Batch Documents"
+    
+    name = fields.Char("Document Name", required=True)
+    document_file = fields.Binary("Document File", required=True)
+    document_filename = fields.Char("File Name")
+    upload_date = fields.Date("Upload Date", default=fields.Date.today)
+    description = fields.Text("Description")
+    dgs_batch_id = fields.Many2one("dgs.batches", string="DGS Batch", required=True, ondelete="cascade")
+    
+    @api.onchange('document_file')
+    def _onchange_document_file(self):
+        if self.document_file and not self.name:
+            self.name = self.document_filename or "Document"
