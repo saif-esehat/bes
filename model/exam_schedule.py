@@ -5153,13 +5153,13 @@ class GPCertificate(models.AbstractModel):
         coo_config = {}
         if docs1 and docs1.dgs_batch and docs1.dgs_batch.to_date:
             batch_date = docs1.dgs_batch.to_date
-            coo_config = self.env['bes.coo.configuration'].get_current_config(
+            coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(
                 batch_date=batch_date,
                 officer_type='coo'
             )
         else:
             # Fallback to default if no batch date
-            coo_config = self.env['bes.coo.configuration'].get_current_config(officer_type='coo')
+            coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(officer_type='coo')
         
         if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
             return {
@@ -6435,13 +6435,13 @@ class CcmcCertificate(models.AbstractModel):
         coo_config = {}
         if docs1 and docs1.dgs_batch and docs1.dgs_batch.to_date:
             batch_date = docs1.dgs_batch.to_date
-            coo_config = self.env['bes.coo.configuration'].get_current_config(
+            coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(
                 batch_date=batch_date,
                 officer_type='coo'
             )
         else:
             # Fallback to default if no batch date
-            coo_config = self.env['bes.coo.configuration'].get_current_config(officer_type='coo')
+            coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(officer_type='coo')
         
         if docs1.certificate_criteria == 'passed'  :
             return {
