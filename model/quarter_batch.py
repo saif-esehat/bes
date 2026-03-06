@@ -569,9 +569,7 @@ class DGSBatch(models.Model):
         ccmc_exams
         for exam in exams:
             exam.dgs_approval()
-        
-        exams._compute_rank()    
-        
+        exams._compute_rank()
         for exam in ccmc_exams:
             exam.dgs_approval()
         ccmc_exams._compute_rank()
