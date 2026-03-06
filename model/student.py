@@ -2695,6 +2695,8 @@ class CreateGPLastExam(models.TransientModel):
             'mek_online_status': 'passed' if mek_online_percentage >= 60 else 'failed',
             'state':'2-done',
         })
+        
+        gp_exam.write({'attempt_number': self.attempt_number})
         gp_exam.compute_dgs_visible()
         gp_exam.dgs_approval()
         gp_exam.compute_certificate_criteria()

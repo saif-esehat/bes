@@ -2657,7 +2657,7 @@ class ExamOralPracticalExaminers(models.Model):
         
         for examiner in online_assignment:
             if config_param == 'production':  
-                api_url = "http://178.18.255.245:5000/api/ip/remove"
+                api_url = "http://213.136.78.116:5000/api/ip/remove"
                 ip_list = [ip.strip() for ip in examiner.ipaddr.split(',') if ip.strip()]
             
                 for ip in ip_list:
@@ -2665,7 +2665,12 @@ class ExamOralPracticalExaminers(models.Model):
                         "ip": ip,
                         "location": "survey"
                     }
-                    response = requests.post(api_url, json=data, timeout=5)
+                    response = requests.post(
+                        api_url,
+                        json=data,
+                        headers={"X-API-KEY": "bestrust2025"},
+                        timeout=5
+                    )
             examiner.commence_exam = False
             if examiner.course.course_code == 'GP':
                 if examiner.subject.name == "GSK":
@@ -6615,19 +6620,21 @@ class OnlineExamWizard(models.TransientModel):
         # Make POST requests to external API for each IP
         
         config_param = self.env['ir.config_parameter'].sudo().get_param('bes.server_type')
-        
-        print(config_param)
-        
+                
         if config_param == 'production':  
-            api_url = "http://178.18.255.245:5000/api/ip/add"
+            api_url = "http://213.136.78.116:5000/api/ip/add"
             ip_list = [ip.strip() for ip in self.ip_address.split(',') if ip.strip()]
             
-            for ip in ip_list:
-                data = {
-                    "ip": ip,
-                    "location": "survey"
-                }
-                response = requests.post(api_url, json=data, timeout=5)
+            data = {
+                "ips": ip_list,
+                "location": "survey"
+            }
+
+            response = requests.post(
+                api_url,
+                json=data,
+                headers={"X-API-KEY": "bestrust2025"},
+                timeout=5)
             
         # Original functionality - Fetch the related examiner and set the IP address
         online_assignment = self.env['exam.type.oral.practical.examiners'].sudo().search([
