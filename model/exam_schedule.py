@@ -5154,16 +5154,22 @@ class GPCertificate(models.AbstractModel):
             # User is in the group
             raise ValidationError("Please Contact Administrator")
 
-        # Get COO configuration based on batch date
+        # Get COO configuration based on cut-off date
         coo_config = {}
-        if docs1 and docs1.dgs_batch and docs1.dgs_batch.to_date:
-            batch_date = docs1.dgs_batch.to_date
+        # Determine cut-off date: reissued_date if exists, else certificate_issue_date
+        cutoff_date = None
+        if docs1 and docs1.reissued_date:
+            cutoff_date = docs1.reissued_date
+        elif docs1 and docs1.certificate_issue_date:
+            cutoff_date = docs1.certificate_issue_date
+
+        if cutoff_date:
             coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(
-                batch_date=batch_date,
+                batch_date=cutoff_date,
                 officer_type='coo'
             )
         else:
-            # Fallback to default if no batch date
+            # Fallback to default if no cut-off date
             coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(officer_type='coo')
         
         if docs1.certificate_criteria == 'passed' and docs1.certificate_id:
@@ -6436,16 +6442,22 @@ class CcmcCertificate(models.AbstractModel):
             # User is in the group
             raise ValidationError("Please Contact Administrator")
         
-        # Get COO configuration based on batch date
+        # Get COO configuration based on cut-off date
         coo_config = {}
-        if docs1 and docs1.dgs_batch and docs1.dgs_batch.to_date:
-            batch_date = docs1.dgs_batch.to_date
+        # Determine cut-off date: reissued_date if exists, else certificate_issue_date
+        cutoff_date = None
+        if docs1 and docs1.reissued_date:
+            cutoff_date = docs1.reissued_date
+        elif docs1 and docs1.certificate_issue_date:
+            cutoff_date = docs1.certificate_issue_date
+
+        if cutoff_date:
             coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(
-                batch_date=batch_date,
+                batch_date=cutoff_date,
                 officer_type='coo'
             )
         else:
-            # Fallback to default if no batch date
+            # Fallback to default if no cut-off date
             coo_config = self.env['bes.coo.configuration'].sudo().get_current_config(officer_type='coo')
         
         if docs1.certificate_criteria == 'passed'  :
